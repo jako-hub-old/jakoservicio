@@ -21,5 +21,19 @@ class Juego
      */
     private $fecha;
 
+    /**
+     * @ORM\Column(name="nombre", type="string",length=100, nullable=true)
+     */
+    private $nombre;
+
+    /**
+     * @ORM\OneToMany(targetEntity="JuegoJugador", mappedBy="juegoRel")
+     */
+    protected $juegosJugadoresJuegoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="JuegoInvitacion", mappedBy="juegoRel")
+     */
+    protected $juegosInvitacionesJuegoRel;
 
 }

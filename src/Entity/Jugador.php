@@ -26,54 +26,34 @@ class Jugador
     private $correo;
 
     /**
-     * @return mixed
+     * @ORM\OneToMany(targetEntity="JuegoJugador", mappedBy="jugadorRel")
      */
-    public function getCodigoJugadorPk()
-    {
-        return $this->codigoJugadorPk;
-    }
+    protected $juegosJugadoresJugadorRel;
 
     /**
-     * @param mixed $codigoJugadorPk
+     * @ORM\OneToMany(targetEntity="JuegoInvitacion", mappedBy="jugadorRel")
      */
-    public function setCodigoJugadorPk($codigoJugadorPk): void
-    {
-        $this->codigoJugadorPk = $codigoJugadorPk;
-    }
+    protected $juegosInvitacionesJugadorRel;
 
     /**
-     * @return mixed
+     * @ORM\OneToMany(targetEntity="JugadorAmigo", mappedBy="jugadorRel")
      */
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
+    protected $jugadoresAmigosJugadorRel;
 
     /**
-     * @param mixed $nombre
+     * @ORM\OneToMany(targetEntity="JugadorAmigo", mappedBy="jugadorAmigoRel")
      */
-    public function setNombre($nombre): void
-    {
-        $this->nombre = $nombre;
-    }
+    protected $jugadoresAmigosJugadorAmigoRel;
 
     /**
-     * @return mixed
+     * @ORM\OneToMany(targetEntity="JugadorSolicitud", mappedBy="jugadorRel")
      */
-    public function getCorreo()
-    {
-        return $this->correo;
-    }
+    protected $jugadoresSolicitudesJugadorRel;
 
     /**
-     * @param mixed $correo
+     * @ORM\OneToMany(targetEntity="JugadorSolicitud", mappedBy="jugadorSolicitudRel")
      */
-    public function setCorreo($correo): void
-    {
-        $this->correo = $correo;
-    }
-
-
+    protected $jugadoresSolicitudesJugadorSolicitudRel;
 
 }
 
