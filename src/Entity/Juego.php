@@ -27,6 +27,16 @@ class Juego
     private $nombre;
 
     /**
+     * @ORM\Column(name="jugadores", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $jugadores = 0;
+
+    /**
+     * @ORM\Column(name="jugadores_confirmados", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $jugadoresConfirmados = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="JuegoJugador", mappedBy="juegoRel")
      */
     protected $juegosJugadoresJuegoRel;

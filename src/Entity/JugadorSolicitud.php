@@ -27,6 +27,16 @@ class JugadorSolicitud
     private $codigoJugadorSolicitudFk;
 
     /**
+     * @ORM\Column(name="estado_aceptada", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAceptada = false;
+
+    /**
+     * @ORM\Column(name="estado_rechazada", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoRechazada = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="jugadoresSolicitudesJugadorRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */

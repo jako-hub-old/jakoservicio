@@ -27,6 +27,16 @@ class JuegoInvitacion
     private $codigoJugadorFk;
 
     /**
+     * @ORM\Column(name="estado_aceptada", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAceptada = false;
+
+    /**
+     * @ORM\Column(name="estado_rechazada", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoRechazada = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Juego", inversedBy="juegosInvitacionesJuegoRel")
      * @ORM\JoinColumn(name="codigo_juego_fk", referencedColumnName="codigo_juego_pk")
      */
