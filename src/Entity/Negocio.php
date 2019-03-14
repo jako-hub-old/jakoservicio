@@ -5,16 +5,16 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\EscenarioRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\NegocioRepository")
  */
-class Escenario
+class Negocio
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(name="codigo_escenario_pk",type="integer")
+     * @ORM\Column(name="codigo_negocio_pk",type="integer")
      */
-    private $codigoEscenarioPk;
+    private $codigoNegocioPk;
 
     /**
      * @ORM\Column(name="nombre", type="string",length=255, nullable=true)
