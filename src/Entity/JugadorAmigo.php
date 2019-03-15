@@ -17,12 +17,12 @@ class JugadorAmigo
     private $codigoJugadorAmigoPk;
 
     /**
-     * @ORM\Column(name="codigo_jugador_fk", type="string", length=25)
+     * @ORM\Column(name="codigo_jugador_fk", type="integer")
      */
     private $codigoJugadorFk;
 
     /**
-     * @ORM\Column(name="codigo_jugador_amigo_fk", type="string", length=25)
+     * @ORM\Column(name="codigo_jugador_amigo_fk", type="integer")
      */
     private $codigoJugadorAmigoFk;
 

@@ -20,7 +20,10 @@ class Negocio
      * @ORM\Column(name="nombre", type="string",length=255, nullable=true)
      */
     private $nombre;
-    
 
+    /**
+     * @ORM\OneToMany(targetEntity="Escenario", mappedBy="negocioRel")
+     */
+    protected $escenariosNegocioRel;
 
 }

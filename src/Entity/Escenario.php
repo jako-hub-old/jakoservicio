@@ -20,7 +20,21 @@ class Escenario
      * @ORM\Column(name="nombre", type="string",length=255, nullable=true)
      */
     private $nombre;
-    
 
+    /**
+     * @ORM\Column(name="codigo_negocio_fk" , type="integer")
+     */
+    private $codigoNegocioFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Negocio", inversedBy="escenariosNegocioRel")
+     * @ORM\JoinColumn(name="codigo_negocio_fk", referencedColumnName="codigo_negocio_pk")
+     */
+    protected $negocioRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="EscenarioReserva", mappedBy="escenarioRel")
+     */
+    protected $escenariosReservasEscenarioRel;
 
 }

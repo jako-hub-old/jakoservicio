@@ -22,7 +22,7 @@ class JuegoJugador
     private $codigoJuegoFk;
 
     /**
-     * @ORM\Column(name="codigo_jugador_fk", type="string", length=25)
+     * @ORM\Column(name="codigo_jugador_fk", type="integer")
      */
     private $codigoJugadorFk;
 

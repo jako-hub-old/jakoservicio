@@ -10,10 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
 class Jugador
 {
     /**
-     * @ORM\Column(name="codigo_jugador_pk", type="string", length=25)
      * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(name="codigo_jugador_pk",type="integer")
      */
     private $codigoJugadorPk;
+
+    /**
+     * @ORM\Column(name="identificacion", type="string",length=20, nullable=true)
+     */
+    private $identificacion;
 
     /**
      * @ORM\Column(name="nombre", type="string",length=255, nullable=true)
@@ -21,9 +27,19 @@ class Jugador
     private $nombre;
 
     /**
+     * @ORM\Column(name="apellido", type="string",length=255, nullable=true)
+     */
+    private $apellido;
+
+    /**
      * @ORM\Column(name="correo", type="string", length=120)
      */
     private $correo;
+
+    /**
+     * @ORM\Column(name="seudonimo", type="string",length=30, nullable=true)
+     */
+    private $seudonimo;
 
     /**
      * @ORM\OneToMany(targetEntity="JuegoJugador", mappedBy="jugadorRel")
@@ -54,6 +70,11 @@ class Jugador
      * @ORM\OneToMany(targetEntity="JugadorSolicitud", mappedBy="jugadorSolicitudRel")
      */
     protected $jugadoresSolicitudesJugadorSolicitudRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Usuario", mappedBy="jugadorRel")
+     */
+    protected $usuariosJugadorRel;
 
 }
 
