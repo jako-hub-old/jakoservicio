@@ -27,6 +27,16 @@ class Escenario
     private $codigoNegocioFk;
 
     /**
+     * @ORM\Column(name="latitud", type="float", nullable=true, options={"default" : 0})
+     */
+    private $latitud = 0;
+
+    /**
+     * @ORM\Column(name="longitud", type="float", nullable=true, options={"default" : 0})
+     */
+    private $longitud = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Negocio", inversedBy="escenariosNegocioRel")
      * @ORM\JoinColumn(name="codigo_negocio_fk", referencedColumnName="codigo_negocio_pk")
      */
@@ -36,5 +46,10 @@ class Escenario
      * @ORM\OneToMany(targetEntity="EscenarioReserva", mappedBy="escenarioRel")
      */
     protected $escenariosReservasEscenarioRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Juego", mappedBy="escenarioRel")
+     */
+    protected $juegosEscenarioRel;
 
 }

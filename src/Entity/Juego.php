@@ -37,6 +37,43 @@ class Juego
     private $jugadoresConfirmados = 0;
 
     /**
+     * @ORM\Column(name="latitud", type="float", nullable=true, options={"default" : 0})
+     */
+    private $latitud = 0;
+
+    /**
+     * @ORM\Column(name="longitud", type="float", nullable=true, options={"default" : 0})
+     */
+    private $longitud = 0;
+
+    /**
+     * @ORM\Column(name="codigo_usuario_administrador_fk", type="integer")
+     */
+    private $codigoUsuarioAdministradorFk;
+
+    /**
+     * @ORM\Column(name="acceso", type="string",length=10, nullable=true)
+     */
+    private $acceso;
+
+    /**
+     * @ORM\Column(name="codigo_escenario_fk", type="integer")
+     */
+    private $codigoEscenarioFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="juegosUsuarioAdministradorRel")
+     * @ORM\JoinColumn(name="codigo_usuario_administrador_fk", referencedColumnName="codigo_usuario_pk")
+     */
+    protected $usuarioAdministradorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Escenario", inversedBy="juegosEscenarioRel")
+     * @ORM\JoinColumn(name="codigo_escenario_fk", referencedColumnName="codigo_escenario_pk")
+     */
+    protected $escenarioRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="JuegoJugador", mappedBy="juegoRel")
      */
     protected $juegosJugadoresJuegoRel;
@@ -45,5 +82,10 @@ class Juego
      * @ORM\OneToMany(targetEntity="JuegoInvitacion", mappedBy="juegoRel")
      */
     protected $juegosInvitacionesJuegoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="JuegoDetalle", mappedBy="juegoRel")
+     */
+    protected $juegosDetallesJuegoRel;
 
 }

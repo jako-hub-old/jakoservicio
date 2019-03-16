@@ -37,11 +37,6 @@ class Jugador
     private $correo;
 
     /**
-     * @ORM\Column(name="seudonimo", type="string",length=30, nullable=true)
-     */
-    private $seudonimo;
-
-    /**
      * @ORM\OneToMany(targetEntity="JuegoJugador", mappedBy="jugadorRel")
      */
     protected $juegosJugadoresJugadorRel;
@@ -75,6 +70,11 @@ class Jugador
      * @ORM\OneToMany(targetEntity="Usuario", mappedBy="jugadorRel")
      */
     protected $usuariosJugadorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="JuegoDetalle", mappedBy="jugadorRel")
+     */
+    protected $juegosDetallesJugadorRel;
 
 }
 
