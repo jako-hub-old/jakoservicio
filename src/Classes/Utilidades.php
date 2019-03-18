@@ -4,17 +4,17 @@ namespace App\Classes;
 
 /**
  * Esta clase de utilidades sirve de repositorio de funciones útiles en toda la aplicación.
- * Class Utils
+ * Class Utilidades
  * @package App\Classes
  * @author Jorge Alejandro Quiroz Serna <jakop.box@gmail.com>
  */
-final class Utils {
+final class Utilidades {
     private $directorioDiccionarios = "";
     private $diccionario = null;
     private $_;
 
     /**
-     * Utils constructor.
+     * Utilidades constructor.
      * El constructor se hace privado para ir de la mano con el patrón singleton.
      */
     private function __construct() {
@@ -32,12 +32,12 @@ final class Utils {
 
     /**
      * Esta función returna la instancia única de esta clase.
-     * @return Utils|null
+     * @return Utilidades|null
      */
     public static function get() {
         static $instance = null;
         if($instance ===  null) {
-            $instance = new Utils();
+            $instance = new Utilidades();
         }
         return $instance;
     }
@@ -57,7 +57,7 @@ final class Utils {
      * @param $codigo
      * @return mixed
      */
-    public static function v($codigo) {
+    public static function validacion($codigo) {
         self::get()->cargarDiccionario();
         return self::get()->traduccionSimple("validacion_{$codigo}");
     }
@@ -67,7 +67,7 @@ final class Utils {
      * @param $codigo
      * @return mixed
      */
-    public static function e($codigo) {
+    public static function error($codigo) {
         self::get()->cargarDiccionario();
         return self::get()->traduccionSimple("error_{$codigo}");
     }

@@ -17,12 +17,17 @@ class Usuario
     private $codigoUsuarioPk;
 
     /**
-     * @ORM\Column(name="usuario", type="string",length=30, nullable=true)
+     * @ORM\Column(name="usuario", type="string", length=30)
      */
     private $usuario;
 
     /**
-     * @ORM\Column(name="seudonimo", type="string",length=30, nullable=true)
+     * @ORM\Column(name="clave", type="string", length=30)
+     */
+    private $clave;
+
+    /**
+     * @ORM\Column(name="seudonimo", type="string", length=30)
      */
     private $seudonimo;
 
@@ -41,6 +46,120 @@ class Usuario
      * @ORM\OneToMany(targetEntity="Juego", mappedBy="usuarioAdministradorRel")
      */
     protected $juegosUsuarioAdministradorRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUsuarioPk()
+    {
+        return $this->codigoUsuarioPk;
+    }
+
+    /**
+     * @param mixed $codigoUsuarioPk
+     */
+    public function setCodigoUsuarioPk($codigoUsuarioPk): void
+    {
+        $this->codigoUsuarioPk = $codigoUsuarioPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeudonimo()
+    {
+        return $this->seudonimo;
+    }
+
+    /**
+     * @param mixed $seudonimo
+     */
+    public function setSeudonimo($seudonimo): void
+    {
+        $this->seudonimo = $seudonimo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoJugadorFk()
+    {
+        return $this->codigoJugadorFk;
+    }
+
+    /**
+     * @param mixed $codigoJugadorFk
+     */
+    public function setCodigoJugadorFk($codigoJugadorFk): void
+    {
+        $this->codigoJugadorFk = $codigoJugadorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJugadorRel()
+    {
+        return $this->jugadorRel;
+    }
+
+    /**
+     * @param mixed $jugadorRel
+     */
+    public function setJugadorRel($jugadorRel): void
+    {
+        $this->jugadorRel = $jugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJuegosUsuarioAdministradorRel()
+    {
+        return $this->juegosUsuarioAdministradorRel;
+    }
+
+    /**
+     * @param mixed $juegosUsuarioAdministradorRel
+     */
+    public function setJuegosUsuarioAdministradorRel($juegosUsuarioAdministradorRel): void
+    {
+        $this->juegosUsuarioAdministradorRel = $juegosUsuarioAdministradorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClave()
+    {
+        return $this->clave;
+    }
+
+    /**
+     * @param mixed $clave
+     */
+    public function setClave($clave): void
+    {
+        $this->clave = $clave;
+    }
+
+
 
 }
 

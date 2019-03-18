@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Classes\Utilidades;
+use App\Entity\Jugador;
 use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -39,10 +41,42 @@ class UsuarioRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
         $clave = $datos['clave']?? '';
+        $seudonimo = $datos['seudonimo']?? '';
+        if($usuario && $clave && $seudonimo) {
+            $usuarioExiste = $em->getRepository(Usuario::class)->validarUsuarioExiste($usuario);
+            if(!$usuarioExiste) {
+                $arJugador = new Jugador();
+                $em->persist($arJugador);
+
+                $arUsuario = new Usuario();
+                $arUsuario->setUsuario($usuario);
+                $arUsuario->setSeudonimo($seudonimo);
+                $arUsuario->setClave($clave);
+                $arUsuario->setJugadorRel($arJugador);
+                $em->persist($arUsuario);
+
+                $em->flush();
+                return true;
+            } else {
+                return [
+                    'validacion' => Utilidades::validacion(1),
+                ];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
     }
 
-    public function validarUsuarioExistente() {
-
+    /**
+     * @param $usuario
+     * @return bool
+     */
+    public function validarUsuarioExiste($usuario) {
+        $em = $this->getEntityManager();
+        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
+        return $arUsuario ? true : false;
     }
 
 }

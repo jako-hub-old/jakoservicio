@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Classes\Utilidades;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -18,6 +19,7 @@ class ApiPruebaController extends FOSRestController {
      */
     public function prueba(Request $request) {
         try {
+            $prueba = Utilidades::validacion(1);
             return ['prueba' => "Prueba de capa controladora"];
         } catch (\Exception $e) {
             return [
