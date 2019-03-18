@@ -32,6 +32,11 @@ class Jugador
     private $apellido;
 
     /**
+     * @ORM\Column(name="nombre_corto", type="string",length=255, nullable=true)
+     */
+    private $nombreCorto;
+
+    /**
      * @ORM\Column(name="correo", type="string", length=120)
      */
     private $correo;
