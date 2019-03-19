@@ -55,7 +55,7 @@ class JuegoRepository extends ServiceEntityRepository
      * @param $filtros
      * @return array
      */
-    public function lista()
+    public function buscar()
     {
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
@@ -81,7 +81,7 @@ class JuegoRepository extends ServiceEntityRepository
      * @param $filtros
      * @return array
      */
-    public function listaJugador($filtros)
+    public function jugador($filtros)
     {
         $em = $this->getEntityManager();
         $jugador = $filtros['jugador']?? false;

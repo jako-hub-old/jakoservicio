@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Classes\Utilidades;
 use App\Entity\Jugador;
 use App\Entity\JugadorAmigo;
+use App\Entity\JugadorSolicitud;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -35,4 +36,18 @@ class JugadorRepository extends ServiceEntityRepository
             ];
         }
     }
+
+    public function buscar()
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        $qb->from(Jugador::class, "j")
+            ->select("j.codigoJugadorPk as codigo_jugador")
+            ->addSelect("j.nombreCorto as nombre_corto")
+            ->addSelect("j.seudonimo");
+        $arJugadores =  $qb->getQuery()->getResult();
+        return $arJugadores;
+
+    }
+
 }

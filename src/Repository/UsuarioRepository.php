@@ -92,7 +92,7 @@ class UsuarioRepository extends ServiceEntityRepository
      * @param $datos
      * @return array|bool
      */
-    public function validar($datos) {
+    public function autenticar($datos) {
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
         $clave = $datos['clave']?? '';

@@ -33,12 +33,12 @@ class ApiJuegoController extends FOSRestController {
 
     /**
      * @return array
-     * @Rest\Post("/v1/juego/lista")
+     * @Rest\Post("/v1/juego/buscar")
      */
-    public function lista(Request $request) {
+    public function buscar(Request $request) {
         try {
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Juego::class)->lista();
+            return $em->getRepository(Juego::class)->buscar();
         } catch (\Exception $e) {
             return [
                 'error' => true,
@@ -64,13 +64,13 @@ class ApiJuegoController extends FOSRestController {
 
     /**
      * @return array
-     * @Rest\Post("/v1/juego/listajugador")
+     * @Rest\Post("/v1/juego/jugador")
      */
-    public function listaJugador(Request $request) {
+    public function jugador(Request $request) {
         try {
             $raw = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Juego::class)->listaJugador($raw);
+            return $em->getRepository(Juego::class)->jugador($raw);
         } catch (\Exception $e) {
             return [
                 'error' => true,
