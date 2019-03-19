@@ -48,4 +48,118 @@ class JuegoInvitacion
      */
     protected $jugadorRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoJuegoInvitacionPk()
+    {
+        return $this->codigoJuegoInvitacionPk;
+    }
+
+    /**
+     * @param mixed $codigoJuegoInvitacionPk
+     */
+    public function setCodigoJuegoInvitacionPk($codigoJuegoInvitacionPk): void
+    {
+        $this->codigoJuegoInvitacionPk = $codigoJuegoInvitacionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoJuegoFk()
+    {
+        return $this->codigoJuegoFk;
+    }
+
+    /**
+     * @param mixed $codigoJuegoFk
+     */
+    public function setCodigoJuegoFk($codigoJuegoFk): void
+    {
+        $this->codigoJuegoFk = $codigoJuegoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoJugadorFk()
+    {
+        return $this->codigoJugadorFk;
+    }
+
+    /**
+     * @param mixed $codigoJugadorFk
+     */
+    public function setCodigoJugadorFk($codigoJugadorFk): void
+    {
+        $this->codigoJugadorFk = $codigoJugadorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAceptada()
+    {
+        return $this->estadoAceptada;
+    }
+
+    /**
+     * @param mixed $estadoAceptada
+     */
+    public function setEstadoAceptada($estadoAceptada): void
+    {
+        $this->estadoAceptada = $estadoAceptada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoRechazada()
+    {
+        return $this->estadoRechazada;
+    }
+
+    /**
+     * @param mixed $estadoRechazada
+     */
+    public function setEstadoRechazada($estadoRechazada): void
+    {
+        $this->estadoRechazada = $estadoRechazada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJuegoRel()
+    {
+        return $this->juegoRel;
+    }
+
+    /**
+     * @param mixed $juegoRel
+     */
+    public function setJuegoRel($juegoRel): void
+    {
+        $this->juegoRel = $juegoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJugadorRel()
+    {
+        return $this->jugadorRel;
+    }
+
+    /**
+     * @param mixed $jugadorRel
+     */
+    public function setJugadorRel($jugadorRel): void
+    {
+        $this->jugadorRel = $jugadorRel;
+    }
+
+
+
 }

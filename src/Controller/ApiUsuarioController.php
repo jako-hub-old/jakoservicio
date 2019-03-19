@@ -38,7 +38,7 @@ class ApiUsuarioController extends FOSRestController {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            return $em->getRepository(Usuario::class)->registrar($raw);
+            return $em->getRepository(Usuario::class)->nuevo($raw);
         } catch (\Exception $e) {
             return [
                 'error' => true,

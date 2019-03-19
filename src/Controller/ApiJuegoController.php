@@ -17,6 +17,53 @@ class ApiJuegoController extends FOSRestController {
 
     /**
      * @return array
+     * @Rest\Post("/v1/juego/nuevo")
+     */
+    public function nuevo(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Juego::class)->nuevo($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/lista")
+     */
+    public function lista(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            return $em->getRepository(Juego::class)->lista();
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/detalle")
+     */
+    public function detalle(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
+            return $em->getRepository(Juego::class)->detalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return array
      * @Rest\Post("/v1/juego/listajugador")
      */
     public function listaJugador(Request $request) {
@@ -31,5 +78,52 @@ class ApiJuegoController extends FOSRestController {
         }
     }
 
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/unir")
+     */
+    public function unir(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
+            return $em->getRepository(Juego::class)->unir($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/retirar")
+     */
+    public function retirar(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
+            return $em->getRepository(Juego::class)->retirar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/invitar")
+     */
+    public function invitar(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
+            return $em->getRepository(Juego::class)->invitar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
 
 }

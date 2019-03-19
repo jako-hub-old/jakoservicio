@@ -28,7 +28,6 @@ class UsuarioRepository extends ServiceEntityRepository
         $qb->from(Usuario::class, "u")
             ->select("u.codigoUsuarioPk as codigo_usuario")
             ->addSelect("u.codigoJugadorFk as codigo_jugador")
-            ->addSelect("u.seudonimo")
             ->addSelect("u.usuario")
             ->addSelect("j.nombreCorto as jugador_nombre_corto")
             ->leftJoin("u.jugadorRel", "j");
@@ -47,25 +46,25 @@ class UsuarioRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function registrar($datos) {
+    public function nuevo($datos) {
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
         $clave = $datos['clave']?? '';
-        $seudonimo = $datos['seudonimo']?? '';
-        if($usuario && $clave && $seudonimo) {
+        if($usuario && $clave) {
             $usuarioExiste = $em->getRepository(Usuario::class)->validarUsuarioExiste($usuario);
             if(!$usuarioExiste) {
                 $arJugador = new Jugador();
                 $em->persist($arJugador);
+                $em->flush();
 
                 $arUsuario = new Usuario();
+                $arUsuario->setCodigoUsuarioPk($arJugador->getCodigoJugadorPk());
                 $arUsuario->setUsuario($usuario);
-                $arUsuario->setSeudonimo($seudonimo);
                 $arUsuario->setClave($clave);
                 $arUsuario->setJugadorRel($arJugador);
                 $em->persist($arUsuario);
-
                 $em->flush();
+
                 return true;
             } else {
                 return [

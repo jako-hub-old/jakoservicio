@@ -38,5 +38,86 @@ class JugadorAmigo
      */
     protected $jugadorAmigoRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoJugadorAmigoPk()
+    {
+        return $this->codigoJugadorAmigoPk;
+    }
+
+    /**
+     * @param mixed $codigoJugadorAmigoPk
+     */
+    public function setCodigoJugadorAmigoPk($codigoJugadorAmigoPk): void
+    {
+        $this->codigoJugadorAmigoPk = $codigoJugadorAmigoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoJugadorFk()
+    {
+        return $this->codigoJugadorFk;
+    }
+
+    /**
+     * @param mixed $codigoJugadorFk
+     */
+    public function setCodigoJugadorFk($codigoJugadorFk): void
+    {
+        $this->codigoJugadorFk = $codigoJugadorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoJugadorAmigoFk()
+    {
+        return $this->codigoJugadorAmigoFk;
+    }
+
+    /**
+     * @param mixed $codigoJugadorAmigoFk
+     */
+    public function setCodigoJugadorAmigoFk($codigoJugadorAmigoFk): void
+    {
+        $this->codigoJugadorAmigoFk = $codigoJugadorAmigoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJugadorRel()
+    {
+        return $this->jugadorRel;
+    }
+
+    /**
+     * @param mixed $jugadorRel
+     */
+    public function setJugadorRel($jugadorRel): void
+    {
+        $this->jugadorRel = $jugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJugadorAmigoRel()
+    {
+        return $this->jugadorAmigoRel;
+    }
+
+    /**
+     * @param mixed $jugadorAmigoRel
+     */
+    public function setJugadorAmigoRel($jugadorAmigoRel): void
+    {
+        $this->jugadorAmigoRel = $jugadorAmigoRel;
+    }
+
+
 }
 

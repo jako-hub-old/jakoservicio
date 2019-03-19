@@ -25,4 +25,54 @@ class Posicion
      */
     protected $juegosDetallesPosicionRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoPosicionPk()
+    {
+        return $this->codigoPosicionPk;
+    }
+
+    /**
+     * @param mixed $codigoPosicionPk
+     */
+    public function setCodigoPosicionPk($codigoPosicionPk): void
+    {
+        $this->codigoPosicionPk = $codigoPosicionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJuegosDetallesPosicionRel()
+    {
+        return $this->juegosDetallesPosicionRel;
+    }
+
+    /**
+     * @param mixed $juegosDetallesPosicionRel
+     */
+    public function setJuegosDetallesPosicionRel($juegosDetallesPosicionRel): void
+    {
+        $this->juegosDetallesPosicionRel = $juegosDetallesPosicionRel;
+    }
+
+
+
 }

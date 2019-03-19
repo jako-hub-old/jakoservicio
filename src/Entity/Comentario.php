@@ -32,15 +32,15 @@ class Comentario
     private $codigoJuegoFk;
 
     /**
-     * @ORM\Column(name="codigo_usuario_fk", type="integer")
+     * @ORM\Column(name="codigo_jugador_fk", type="integer")
      */
-    private $codigoUsuarioFk;
+    private $codigoJugadorFk;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="comentariosUsuarioRel")
-     * @ORM\JoinColumn(name="codigo_usuario_fk", referencedColumnName="codigo_usuario_pk")
+     * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="comentariosJugadorRel")
+     * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
-    protected $usuarioRel;
+    protected $jugadorRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="Juego", inversedBy="comentariosJuegoRel")
@@ -115,33 +115,33 @@ class Comentario
     /**
      * @return mixed
      */
-    public function getCodigoUsuarioFk()
+    public function getCodigoJugadorFk()
     {
-        return $this->codigoUsuarioFk;
+        return $this->codigoJugadorFk;
     }
 
     /**
-     * @param mixed $codigoUsuarioFk
+     * @param mixed $codigoJugadorFk
      */
-    public function setCodigoUsuarioFk($codigoUsuarioFk): void
+    public function setCodigoJugadorFk($codigoJugadorFk): void
     {
-        $this->codigoUsuarioFk = $codigoUsuarioFk;
+        $this->codigoJugadorFk = $codigoJugadorFk;
     }
 
     /**
      * @return mixed
      */
-    public function getUsuarioRel()
+    public function getJugadorRel()
     {
-        return $this->usuarioRel;
+        return $this->jugadorRel;
     }
 
     /**
-     * @param mixed $usuarioRel
+     * @param mixed $jugadorRel
      */
-    public function setUsuarioRel($usuarioRel): void
+    public function setJugadorRel($jugadorRel): void
     {
-        $this->usuarioRel = $usuarioRel;
+        $this->jugadorRel = $jugadorRel;
     }
 
     /**
@@ -159,7 +159,6 @@ class Comentario
     {
         $this->juegoRel = $juegoRel;
     }
-
 
 
 }

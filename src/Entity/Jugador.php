@@ -42,6 +42,11 @@ class Jugador
     private $correo;
 
     /**
+     * @ORM\Column(name="seudonimo", type="string", length=30, nullable=true)
+     */
+    private $seudonimo;
+
+    /**
      * @ORM\OneToMany(targetEntity="JuegoInvitacion", mappedBy="jugadorRel")
      */
     protected $juegosInvitacionesJugadorRel;
@@ -75,6 +80,16 @@ class Jugador
      * @ORM\OneToMany(targetEntity="JuegoDetalle", mappedBy="jugadorRel")
      */
     protected $juegosDetallesJugadorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Comentario", mappedBy="jugadorRel")
+     */
+    protected $comentariosJugadorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Juego", mappedBy="jugadorRel")
+     */
+    protected $juegosJugadorRel;
 
     /**
      * @return mixed
@@ -170,6 +185,22 @@ class Jugador
     public function setCorreo($correo): void
     {
         $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeudonimo()
+    {
+        return $this->seudonimo;
+    }
+
+    /**
+     * @param mixed $seudonimo
+     */
+    public function setSeudonimo($seudonimo): void
+    {
+        $this->seudonimo = $seudonimo;
     }
 
     /**
@@ -283,6 +314,39 @@ class Jugador
     {
         $this->juegosDetallesJugadorRel = $juegosDetallesJugadorRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getComentariosJugadorRel()
+    {
+        return $this->comentariosJugadorRel;
+    }
+
+    /**
+     * @param mixed $comentariosJugadorRel
+     */
+    public function setComentariosJugadorRel($comentariosJugadorRel): void
+    {
+        $this->comentariosJugadorRel = $comentariosJugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJuegosJugadorRel()
+    {
+        return $this->juegosJugadorRel;
+    }
+
+    /**
+     * @param mixed $juegosJugadorRel
+     */
+    public function setJuegosJugadorRel($juegosJugadorRel): void
+    {
+        $this->juegosJugadorRel = $juegosJugadorRel;
+    }
+
 
 
 }

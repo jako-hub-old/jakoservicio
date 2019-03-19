@@ -47,9 +47,9 @@ class Juego
     private $longitud = 0;
 
     /**
-     * @ORM\Column(name="codigo_usuario_administrador_fk", type="integer")
+     * @ORM\Column(name="codigo_jugador_fk", type="integer")
      */
-    private $codigoUsuarioAdministradorFk;
+    private $codigoJugadorFk;
 
     /**
      * @ORM\Column(name="acceso", type="string",length=10, nullable=true)
@@ -62,10 +62,10 @@ class Juego
     private $codigoEscenarioFk;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="juegosUsuarioAdministradorRel")
-     * @ORM\JoinColumn(name="codigo_usuario_administrador_fk", referencedColumnName="codigo_usuario_pk")
+     * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="juegosJugadorRel")
+     * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
-    protected $usuarioAdministradorRel;
+    protected $jugadorRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="Escenario", inversedBy="juegosEscenarioRel")
@@ -203,17 +203,17 @@ class Juego
     /**
      * @return mixed
      */
-    public function getCodigoUsuarioAdministradorFk()
+    public function getCodigoJugadorFk()
     {
-        return $this->codigoUsuarioAdministradorFk;
+        return $this->codigoJugadorFk;
     }
 
     /**
-     * @param mixed $codigoUsuarioAdministradorFk
+     * @param mixed $codigoJugadorFk
      */
-    public function setCodigoUsuarioAdministradorFk($codigoUsuarioAdministradorFk): void
+    public function setCodigoJugadorFk($codigoJugadorFk): void
     {
-        $this->codigoUsuarioAdministradorFk = $codigoUsuarioAdministradorFk;
+        $this->codigoJugadorFk = $codigoJugadorFk;
     }
 
     /**
@@ -251,17 +251,17 @@ class Juego
     /**
      * @return mixed
      */
-    public function getUsuarioAdministradorRel()
+    public function getJugadorRel()
     {
-        return $this->usuarioAdministradorRel;
+        return $this->jugadorRel;
     }
 
     /**
-     * @param mixed $usuarioAdministradorRel
+     * @param mixed $jugadorRel
      */
-    public function setUsuarioAdministradorRel($usuarioAdministradorRel): void
+    public function setJugadorRel($jugadorRel): void
     {
-        $this->usuarioAdministradorRel = $usuarioAdministradorRel;
+        $this->jugadorRel = $jugadorRel;
     }
 
     /**
@@ -327,6 +327,7 @@ class Juego
     {
         $this->comentariosJuegoRel = $comentariosJuegoRel;
     }
+
 
 
 }
