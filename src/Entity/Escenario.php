@@ -52,4 +52,134 @@ class Escenario
      */
     protected $juegosEscenarioRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoEscenarioPk()
+    {
+        return $this->codigoEscenarioPk;
+    }
+
+    /**
+     * @param mixed $codigoEscenarioPk
+     */
+    public function setCodigoEscenarioPk($codigoEscenarioPk): void
+    {
+        $this->codigoEscenarioPk = $codigoEscenarioPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoNegocioFk()
+    {
+        return $this->codigoNegocioFk;
+    }
+
+    /**
+     * @param mixed $codigoNegocioFk
+     */
+    public function setCodigoNegocioFk($codigoNegocioFk): void
+    {
+        $this->codigoNegocioFk = $codigoNegocioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLatitud()
+    {
+        return $this->latitud;
+    }
+
+    /**
+     * @param mixed $latitud
+     */
+    public function setLatitud($latitud): void
+    {
+        $this->latitud = $latitud;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLongitud()
+    {
+        return $this->longitud;
+    }
+
+    /**
+     * @param mixed $longitud
+     */
+    public function setLongitud($longitud): void
+    {
+        $this->longitud = $longitud;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNegocioRel()
+    {
+        return $this->negocioRel;
+    }
+
+    /**
+     * @param mixed $negocioRel
+     */
+    public function setNegocioRel($negocioRel): void
+    {
+        $this->negocioRel = $negocioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEscenariosReservasEscenarioRel()
+    {
+        return $this->escenariosReservasEscenarioRel;
+    }
+
+    /**
+     * @param mixed $escenariosReservasEscenarioRel
+     */
+    public function setEscenariosReservasEscenarioRel($escenariosReservasEscenarioRel): void
+    {
+        $this->escenariosReservasEscenarioRel = $escenariosReservasEscenarioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJuegosEscenarioRel()
+    {
+        return $this->juegosEscenarioRel;
+    }
+
+    /**
+     * @param mixed $juegosEscenarioRel
+     */
+    public function setJuegosEscenarioRel($juegosEscenarioRel): void
+    {
+        $this->juegosEscenarioRel = $juegosEscenarioRel;
+    }
+
+
+
 }

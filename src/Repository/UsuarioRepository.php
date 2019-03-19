@@ -15,10 +15,14 @@ class UsuarioRepository extends ServiceEntityRepository
         parent::__construct($registry, Usuario::class);
     }
 
+    /**
+     * @param $filtros
+     * @return mixed
+     */
     public function lista($filtros)
     {
-        $usuario = $filtros['usuario']?? false;
         $em = $this->getEntityManager();
+        $usuario = $filtros['usuario']?? false;
 
         $qb = $em->createQueryBuilder();
         $qb->from(Usuario::class, "u")
@@ -37,6 +41,12 @@ class UsuarioRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param $datos
+     * @return array|bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function registrar($datos) {
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
@@ -77,6 +87,28 @@ class UsuarioRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
         return $arUsuario ? true : false;
+    }
+
+    /**
+     * @param $datos
+     * @return array|bool
+     */
+    public function validar($datos) {
+        $em = $this->getEntityManager();
+        $usuario = $datos['usuario']?? '';
+        $clave = $datos['clave']?? '';
+        if($usuario && $clave) {
+            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario, 'clave' => $clave]);
+            if($arUsuario) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
     }
 
 }

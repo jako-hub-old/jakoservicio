@@ -48,6 +48,11 @@ class Usuario
     protected $juegosUsuarioAdministradorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comentario", mappedBy="usuarioRel")
+     */
+    protected $comentariosUsuarioRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoUsuarioPk()
@@ -157,6 +162,22 @@ class Usuario
     public function setClave($clave): void
     {
         $this->clave = $clave;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentariosUsuarioRel()
+    {
+        return $this->comentariosUsuarioRel;
+    }
+
+    /**
+     * @param mixed $comentariosUsuarioRel
+     */
+    public function setComentariosUsuarioRel($comentariosUsuarioRel): void
+    {
+        $this->comentariosUsuarioRel = $comentariosUsuarioRel;
     }
 
 

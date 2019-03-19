@@ -26,4 +26,54 @@ class Negocio
      */
     protected $escenariosNegocioRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoNegocioPk()
+    {
+        return $this->codigoNegocioPk;
+    }
+
+    /**
+     * @param mixed $codigoNegocioPk
+     */
+    public function setCodigoNegocioPk($codigoNegocioPk): void
+    {
+        $this->codigoNegocioPk = $codigoNegocioPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEscenariosNegocioRel()
+    {
+        return $this->escenariosNegocioRel;
+    }
+
+    /**
+     * @param mixed $escenariosNegocioRel
+     */
+    public function setEscenariosNegocioRel($escenariosNegocioRel): void
+    {
+        $this->escenariosNegocioRel = $escenariosNegocioRel;
+    }
+
+
+
 }

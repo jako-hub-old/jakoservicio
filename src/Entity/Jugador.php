@@ -42,11 +42,6 @@ class Jugador
     private $correo;
 
     /**
-     * @ORM\OneToMany(targetEntity="JuegoJugador", mappedBy="jugadorRel")
-     */
-    protected $juegosJugadoresJugadorRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="JuegoInvitacion", mappedBy="jugadorRel")
      */
     protected $juegosInvitacionesJugadorRel;
@@ -175,22 +170,6 @@ class Jugador
     public function setCorreo($correo): void
     {
         $this->correo = $correo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getJuegosJugadoresJugadorRel()
-    {
-        return $this->juegosJugadoresJugadorRel;
-    }
-
-    /**
-     * @param mixed $juegosJugadoresJugadorRel
-     */
-    public function setJuegosJugadoresJugadorRel($juegosJugadoresJugadorRel): void
-    {
-        $this->juegosJugadoresJugadorRel = $juegosJugadoresJugadorRel;
     }
 
     /**
