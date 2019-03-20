@@ -22,12 +22,20 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        echo "Traducción\n";
-        echo Utilidades::t('validacion_1') . "\n";
-        echo Utilidades::validacion('1') . "\n";
-        echo Utilidades::t('error_1') . "\n";
-        echo Utilidades::error('1') . "\n";
-        exit();
+        $basic  = new \Nexmo\Client\Credentials\Basic('68f3f797', 'ZwXadzBwzVmV1mBa');
+        $client = new \Nexmo\Client($basic);
+
+        $message = $client->message()->send([
+            'to' => '573205015059',
+            'from' => 'Nexmo',
+            'text' => 'Hello from Nexmo'
+        ]);
+//        echo "Traducción\n";
+//        echo Utilidades::t('validacion_1') . "\n";
+//        echo Utilidades::validacion('1') . "\n";
+//        echo Utilidades::t('error_1') . "\n";
+//        echo Utilidades::error('1') . "\n";
+//        exit();
     }
 
 }

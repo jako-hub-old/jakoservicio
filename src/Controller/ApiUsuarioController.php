@@ -32,39 +32,6 @@ class ApiUsuarioController extends FOSRestController {
 
     /**
      * @return array
-     * @Rest\Post("/v1/usuario/nuevo")
-     */
-    public function nuevo(Request $request) {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $raw = json_decode($request->getContent(), true);
-            return $em->getRepository(Usuario::class)->nuevo($raw);
-        } catch (\Exception $e) {
-            return [
-                'error' => true,
-            ];
-        }
-    }
-
-
-    /**
-     * @return array
-     * @Rest\Post("/v1/usuario/autenticar")
-     */
-    public function autenticar(Request $request) {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $raw = json_decode($request->getContent(), true);
-            return $em->getRepository(Usuario::class)->autenticar($raw);
-        } catch (\Exception $e) {
-            return [
-                'error' => true,
-            ];
-        }
-    }
-
-    /**
-     * @return array
      * @Rest\Post("/v1/usuario/validar")
      */
     public function validar(Request $request) {
@@ -78,4 +45,21 @@ class ApiUsuarioController extends FOSRestController {
             ];
         }
     }
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/usuario/verificar")
+     */
+    public function verificar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Usuario::class)->verificar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 }

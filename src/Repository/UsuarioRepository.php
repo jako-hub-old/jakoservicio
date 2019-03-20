@@ -40,35 +40,38 @@ class UsuarioRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * @param $datos
-     * @return array|bool
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function nuevo($datos) {
+    public function validar($datos) {
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
-        if($usuario) {
-            $usuarioExiste = $em->getRepository(Usuario::class)->validarUsuarioExiste($usuario);
-            if(!$usuarioExiste) {
-                $arJugador = new Jugador();
-                $em->persist($arJugador);
-                $em->flush();
-
-                $codigo = $this->generarCodigo(6);
-                $arUsuario = new Usuario();
-                $arUsuario->setCodigoUsuarioPk($arJugador->getCodigoJugadorPk());
-                $arUsuario->setUsuario($usuario);
+        $imei = $datos['imei']?? '';
+        if($usuario && $imei) {
+            $arUsuario = $this->usuarioIngreso($usuario, $imei);
+            if($arUsuario->getEstadoVerificado()) {
+                if($imei == $arUsuario->getImei()) {
+                    return [
+                        "verificado" => true
+                    ];
+                } else {
+                    $codigo = $this->generarCodigo(4);
+                    $arUsuario->setCodigoVerificacion($codigo);
+                    $arUsuario->setImei($imei);
+                    $arUsuario->setEstadoVerificado(0);
+                    $em->persist($arUsuario);
+                    $em->flush();
+                    $this->enviarCodigo($usuario, $codigo);
+                    return [
+                        "verificado" => false
+                    ];
+                }
+            } else {
+                $codigo = $this->generarCodigo(4);
                 $arUsuario->setCodigoVerificacion($codigo);
-                $arUsuario->setJugadorRel($arJugador);
+                $arUsuario->setImei($imei);
                 $em->persist($arUsuario);
                 $em->flush();
-
-                return true;
-            } else {
+                $this->enviarCodigo($usuario, $codigo);
                 return [
-                    'validacion' => Utilidades::validacion(1),
+                    "verificado" => false
                 ];
             }
         } else {
@@ -78,49 +81,54 @@ class UsuarioRepository extends ServiceEntityRepository
         }
     }
 
+    private function usuarioIngreso($usuario, $imei) {
+        $em = $this->getEntityManager();
+        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
+        if(!$arUsuario) {
+            $arJugador = new Jugador();
+            $em->persist($arJugador);
+            $em->flush();
+
+            $arUsuario = new Usuario();
+            $arUsuario->setCodigoUsuarioPk($arJugador->getCodigoJugadorPk());
+            $arUsuario->setUsuario($usuario);
+            $arUsuario->setJugadorRel($arJugador);
+            $arUsuario->setImei($imei);
+            $em->persist($arUsuario);
+            $em->flush();
+        }
+        return $arUsuario;
+    }
+
     private function generarCodigo($longitud) {
         $key = '';
-        $pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+        $pattern = '1234567890';
         $max = strlen($pattern)-1;
         for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
         return $key;
     }
 
-    /**
-     * @param $usuario
-     * @return bool
-     */
-    public function validarUsuarioExiste($usuario) {
-        $em = $this->getEntityManager();
-        $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
-        return $arUsuario ? true : false;
+    private function enviarCodigo($telefono, $codigo) {
+        $basic  = new \Nexmo\Client\Credentials\Basic('68f3f797', 'ZwXadzBwzVmV1mBa');
+        $client = new \Nexmo\Client($basic);
+        $message = $client->message()->send([
+            'to' => '573205015059',
+            'from' => 'jakoservicio',
+            'text' => "jako-{$codigo}"
+        ]);
     }
 
-
-    public function validar($datos) {
+    public function verificar($datos) {
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
-        if($usuario) {
+        $imei = $datos['imei']?? '';
+        $codigo = $datos['codigo']?? '';
+        if($usuario && $imei && $codigo) {
             $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
-            return $arUsuario ? true : false;
-        } else {
-            return [
-                'error_controlado' => Utilidades::error(2),
-            ];
-        }
-    }
-
-    /**
-     * @param $datos
-     * @return array|bool
-     */
-    public function autenticar($datos) {
-        $em = $this->getEntityManager();
-        $usuario = $datos['usuario']?? '';
-        $codigo = $datos['codigo_verificacion']?? '';
-        if($usuario && $codigo) {
-            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario, 'codigoVerificacion' => $codigo]);
-            if($arUsuario) {
+            if($arUsuario->getCodigoVerificacion() == $codigo && $arUsuario->getImei() == $imei) {
+                $arUsuario->setEstadoVerificado(1);
+                $em->persist($arUsuario);
+                $em->flush();
                 return true;
             } else {
                 return false;
@@ -131,5 +139,4 @@ class UsuarioRepository extends ServiceEntityRepository
             ];
         }
     }
-
 }

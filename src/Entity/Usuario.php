@@ -26,14 +26,19 @@ class Usuario
     private $usuario;
 
     /**
-     * @ORM\Column(name="codigo_verificacion", type="string", length=30, nullable=true)
-     */
-    private $codigoVerificacion;
-
-    /**
      * @ORM\Column(name="estado_verificado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoVerificado = false;
+
+    /**
+     * @ORM\Column(name="imei", type="string", length=30, nullable=true)
+     */
+    private $imei;
+
+    /**
+     * @ORM\Column(name="codigo_verificacion", type="string", length=10, nullable=true)
+     */
+    private $codigoVerificacion;
 
     /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="usuariosJugadorRel")
@@ -92,22 +97,6 @@ class Usuario
     /**
      * @return mixed
      */
-    public function getCodigoVerificacion()
-    {
-        return $this->codigoVerificacion;
-    }
-
-    /**
-     * @param mixed $codigoVerificacion
-     */
-    public function setCodigoVerificacion($codigoVerificacion): void
-    {
-        $this->codigoVerificacion = $codigoVerificacion;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEstadoVerificado()
     {
         return $this->estadoVerificado;
@@ -124,6 +113,22 @@ class Usuario
     /**
      * @return mixed
      */
+    public function getImei()
+    {
+        return $this->imei;
+    }
+
+    /**
+     * @param mixed $imei
+     */
+    public function setImei($imei): void
+    {
+        $this->imei = $imei;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getJugadorRel()
     {
         return $this->jugadorRel;
@@ -135,6 +140,22 @@ class Usuario
     public function setJugadorRel($jugadorRel): void
     {
         $this->jugadorRel = $jugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVerificacion()
+    {
+        return $this->codigoVerificacion;
+    }
+
+    /**
+     * @param mixed $codigoVerificacion
+     */
+    public function setCodigoVerificacion($codigoVerificacion): void
+    {
+        $this->codigoVerificacion = $codigoVerificacion;
     }
 
 
