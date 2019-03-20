@@ -49,18 +49,18 @@ class UsuarioRepository extends ServiceEntityRepository
     public function nuevo($datos) {
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
-        $clave = $datos['clave']?? '';
-        if($usuario && $clave) {
+        if($usuario) {
             $usuarioExiste = $em->getRepository(Usuario::class)->validarUsuarioExiste($usuario);
             if(!$usuarioExiste) {
                 $arJugador = new Jugador();
                 $em->persist($arJugador);
                 $em->flush();
 
+                $codigo = $this->generarCodigo(6);
                 $arUsuario = new Usuario();
                 $arUsuario->setCodigoUsuarioPk($arJugador->getCodigoJugadorPk());
                 $arUsuario->setUsuario($usuario);
-                $arUsuario->setClave($clave);
+                $arUsuario->setCodigoVerificacion($codigo);
                 $arUsuario->setJugadorRel($arJugador);
                 $em->persist($arUsuario);
                 $em->flush();
@@ -76,6 +76,14 @@ class UsuarioRepository extends ServiceEntityRepository
                 'error_controlado' => Utilidades::error(2),
             ];
         }
+    }
+
+    private function generarCodigo($longitud) {
+        $key = '';
+        $pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+        $max = strlen($pattern)-1;
+        for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
+        return $key;
     }
 
     /**
@@ -95,9 +103,9 @@ class UsuarioRepository extends ServiceEntityRepository
     public function autenticar($datos) {
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
-        $clave = $datos['clave']?? '';
-        if($usuario && $clave) {
-            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario, 'clave' => $clave]);
+        $codigo = $datos['codigo_verificacion']?? '';
+        if($usuario && $codigo) {
+            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario, 'codigoVerificacion' => $codigo]);
             if($arUsuario) {
                 return true;
             } else {

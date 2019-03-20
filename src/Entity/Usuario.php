@@ -26,9 +26,14 @@ class Usuario
     private $usuario;
 
     /**
-     * @ORM\Column(name="clave", type="string", length=30)
+     * @ORM\Column(name="codigo_verificacion", type="string", length=30, nullable=true)
      */
-    private $clave;
+    private $codigoVerificacion;
+
+    /**
+     * @ORM\Column(name="estado_verificado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoVerificado = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="usuariosJugadorRel")
@@ -87,17 +92,33 @@ class Usuario
     /**
      * @return mixed
      */
-    public function getClave()
+    public function getCodigoVerificacion()
     {
-        return $this->clave;
+        return $this->codigoVerificacion;
     }
 
     /**
-     * @param mixed $clave
+     * @param mixed $codigoVerificacion
      */
-    public function setClave($clave): void
+    public function setCodigoVerificacion($codigoVerificacion): void
     {
-        $this->clave = $clave;
+        $this->codigoVerificacion = $codigoVerificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoVerificado()
+    {
+        return $this->estadoVerificado;
+    }
+
+    /**
+     * @param mixed $estadoVerificado
+     */
+    public function setEstadoVerificado($estadoVerificado): void
+    {
+        $this->estadoVerificado = $estadoVerificado;
     }
 
     /**
