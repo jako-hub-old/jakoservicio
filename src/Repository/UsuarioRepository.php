@@ -96,6 +96,20 @@ class UsuarioRepository extends ServiceEntityRepository
         return $arUsuario ? true : false;
     }
 
+
+    public function validar($datos) {
+        $em = $this->getEntityManager();
+        $usuario = $datos['usuario']?? '';
+        if($usuario) {
+            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
+            return $arUsuario ? true : false;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
     /**
      * @param $datos
      * @return array|bool

@@ -62,4 +62,20 @@ class ApiUsuarioController extends FOSRestController {
             ];
         }
     }
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/usuario/validar")
+     */
+    public function validar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Usuario::class)->validar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
 }
