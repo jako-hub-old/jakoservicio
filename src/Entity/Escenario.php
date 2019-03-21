@@ -53,6 +53,11 @@ class Escenario
     protected $juegosEscenarioRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Reserva", mappedBy="escenarioRel")
+     */
+    protected $reservasEscenarioRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEscenarioPk()
@@ -178,6 +183,22 @@ class Escenario
     public function setJuegosEscenarioRel($juegosEscenarioRel): void
     {
         $this->juegosEscenarioRel = $juegosEscenarioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReservasEscenarioRel()
+    {
+        return $this->reservasEscenarioRel;
+    }
+
+    /**
+     * @param mixed $reservasEscenarioRel
+     */
+    public function setReservasEscenarioRel($reservasEscenarioRel): void
+    {
+        $this->reservasEscenarioRel = $reservasEscenarioRel;
     }
 
 

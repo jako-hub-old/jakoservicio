@@ -16,6 +16,7 @@ class EscenarioRepository extends ServiceEntityRepository
     public function lista($datos)
     {
         $em = $this->getEntityManager();
+        $negocio = $datos['negocio']?? false;
         $qb = $em->createQueryBuilder();
         $qb->from(Escenario::class, "e")
             ->select("e.codigoEscenarioPk as codigo_escenario")
@@ -23,6 +24,10 @@ class EscenarioRepository extends ServiceEntityRepository
             ->addSelect("e.nombre")
             ->addSelect("n.nombre as negocio_nombre")
             ->leftJoin("e.negocioRel", "n");
+        if($negocio) {
+            $qb->andWhere("e.codigoNegocioFk={$negocio}");
+        }
+
         $arEscenarios =  $qb->getQuery()->getResult();
         return $arEscenarios;
     }

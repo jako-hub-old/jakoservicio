@@ -34,4 +34,20 @@ class ApiEscenarioController extends FOSRestController {
     }
 
 
+    /**
+     * @return array
+     * @Rest\Post("/v1/escenario/listareserva")
+     */
+    public function listaReserva(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
+            return $em->getRepository(Escenario::class)->lista($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 }
