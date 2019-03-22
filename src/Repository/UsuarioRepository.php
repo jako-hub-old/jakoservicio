@@ -112,7 +112,7 @@ class UsuarioRepository extends ServiceEntityRepository
         $basic  = new \Nexmo\Client\Credentials\Basic('68f3f797', 'ZwXadzBwzVmV1mBa');
         $client = new \Nexmo\Client($basic);
         $message = $client->message()->send([
-            'to' => '573205015059',
+            'to' => "57{$telefono}",
             'from' => 'jakoservicio',
             'text' => "jako-{$codigo}"
         ]);
