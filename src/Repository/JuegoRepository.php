@@ -255,11 +255,13 @@ class JuegoRepository extends ServiceEntityRepository
             if($arJuego && count($arJuego) > 0) {
                 $arJuego = $arJuego[0];
                 $qb = $em->createQueryBuilder();
+                $fotoUsuarioTemporal = "https://i0.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1";
                 $qb->from(Comentario::class, "c")
                     ->select("c.codigoComentarioPk as codigo_comentario")
                     ->addSelect("c.fecha")
                     ->addSelect("c.comentario")
                     ->addSelect("j.seudonimo as jugador_seudonimo")
+                    ->addSelect("'{$fotoUsuarioTemporal}' as foto_usuario")
                     ->leftJoin("c.jugadorRel", "j")
                     ->where("c.codigoJuegoFk ={$juego}")
                     ->orderBy("c.fecha", "ASC");
@@ -288,8 +290,8 @@ class JuegoRepository extends ServiceEntityRepository
                     'escenario_nombre' => $arJuego['escenario_nombre'],
                     'negocio_nombre' => $arJuego['negocio_nombre'],
                     'jugador_seudonimo' => $arJuego['jugador_seudonimo'],
-                    'comentarios' => array($arComentarios),
-                    'detalles' => array($arJuegoDetalles)
+                    'comentarios' => $arComentarios,
+                    'detalles' => $arJuegoDetalles
                 ];
                 return $juego;
             } else {

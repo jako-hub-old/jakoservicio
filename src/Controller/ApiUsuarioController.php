@@ -62,4 +62,38 @@ class ApiUsuarioController extends FOSRestController {
         }
     }
 
+    /**
+     * @param Request $request
+     * @Rest\Post("/v1/usuario/informacion")
+     * @return array|mixed
+     */
+    public function informacionUsuario(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Usuario::class)->informacionUsuario($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @Rest\Post("/v1/usuario/guardar/pseudonimo")
+     * @return array|mixed
+     */
+    public function guardarPseudonimo(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Usuario::class)->guardarPseudonimo($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 }

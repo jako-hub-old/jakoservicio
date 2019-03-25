@@ -8,6 +8,7 @@ return [
     'validacion_6'  => 'No existe el juego',
     'validacion_7'  => 'Ya se envio la solicitud',
     'validacion_8'  => 'Ya solicitud ya tiene una respuesta',
+    'validacion_9'  => 'Ya existe un jugador con ese seudonimo',
     'error_1'       => 'Ocurrió un error inesperado',
     'error_2'       => 'No se suministraron los datos requeridos para la api',
 ];

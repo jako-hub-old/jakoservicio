@@ -49,7 +49,8 @@ class UsuarioRepository extends ServiceEntityRepository
             if($arUsuario->getEstadoVerificado()) {
                 if($imei == $arUsuario->getImei()) {
                     return [
-                        "verificado" => true
+                        "verificado" => true,
+                        "codigo_usuario" => $arUsuario->getCodigoUsuarioPk(),
                     ];
                 } else {
                     $codigo = $this->generarCodigo(4);
@@ -129,9 +130,64 @@ class UsuarioRepository extends ServiceEntityRepository
                 $arUsuario->setEstadoVerificado(1);
                 $em->persist($arUsuario);
                 $em->flush();
-                return true;
+                return [
+                    'verificado' => true,
+                    'codigo_usuario' => $arUsuario->getCodigoUsuarioPk(),
+                ];
             } else {
                 return false;
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function informacionUsuario($datos) {
+        $codigoUsuario = $datos['codigo_usuario']?? '0';
+        $em = $this->getEntityManager();
+        $arUsuario = $em->getRepository(Usuario::class)->find($codigoUsuario);
+        if($arUsuario && $arUsuario instanceof  Usuario) {
+            $arJugador = $arUsuario->getJugadorRel();
+            return [
+                'identificacion'    => $arJugador->getIdentificacion(),
+                'nombre'            => $arJugador->getNombre(),
+                'nombre_corto'      => $arJugador->getNombreCorto(),
+                'apellido'          => $arJugador->getApellido(),
+                'correo'            => $arJugador->getCorreo(),
+                'seudonimo'         => $arJugador->getSeudonimo(),
+            ];
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function guardarPseudonimo($datos) {
+        $em = $this->getEntityManager();
+        $codigoUsuario = $datos['codigo_usuario']?? 0;
+        $seudonimo = $datos['seudonimo']?? '';
+        $arUsuario = $em->getRepository(Usuario::class)->find($codigoUsuario);
+        if($arUsuario && $arUsuario instanceof Usuario && $seudonimo) {
+            $arJugador = $arUsuario->getJugadorRel();
+            $qb = $em->createQueryBuilder()->from(Jugador::class, "j")
+                    ->select("j")
+                    ->where("j.seudonimo = '{$seudonimo}'")
+                    ->andWhere("j.codigoJugadorPk <> '{$arJugador->getCodigoJugadorPk()}'")
+                    ->setMaxResults(1);
+            $arrExistente = $qb->getQuery()->getResult();
+            if($arrExistente) {
+                return [
+                    'validacion' => Utilidades::validacion(9),
+                ];
+            } else {
+
+                $arJugador->setSeudonimo($seudonimo);
+                $em->persist($arJugador);
+                $em->flush($arJugador);
+                return true;
             }
         } else {
             return [

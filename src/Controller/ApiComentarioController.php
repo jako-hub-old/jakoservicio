@@ -31,5 +31,22 @@ class ApiComentarioController extends FOSRestController {
         }
     }
 
+    /**
+     * @param Request $request
+     * @Rest\Post("/v1/comentario/lista")
+     * @return array|mixed
+     */
+    public function listar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Comentario::class)->listar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 
 }
