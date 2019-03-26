@@ -7,6 +7,7 @@ use App\Entity\Comentario;
 use App\Entity\Escenario;
 use App\Entity\Juego;
 use App\Entity\JuegoDetalle;
+use App\Entity\JuegoEquipo;
 use App\Entity\JuegoInvitacion;
 use App\Entity\JuegoJugador;
 use App\Entity\Jugador;
@@ -275,10 +276,20 @@ class JuegoRepository extends ServiceEntityRepository
                     ->addSelect("jd.numero")
                     ->addSelect("p.nombre as posicion_nombre")
                     ->addSelect("j.nombreCorto as jugador_nombre_corto")
+                    ->addSelect("jd.codigoJuegoEquipoFk as codigo_equipo")
                     ->leftJoin("jd.jugadorRel", "j")
                     ->leftJoin("jd.posicionRel", "p")
                     ->where("jd.codigoJuegoFk ={$juego}");
                 $arJuegoDetalles = $qb->getQuery()->getResult();
+
+                $qb = $em->createQueryBuilder();
+                $qb->from(JuegoEquipo::class, "je")
+                    ->select("je.codigoJuegoEquipoPk as codigo_juego_equipo")
+                    ->addSelect("je.nombre")
+                    ->addSelect("je.jugadores as jugadores")
+                    ->addSelect("je.jugadoresConfirmados as jugadores_confirmados")
+                    ->where("je.codigoJuegoFk ={$juego}");
+                $arJuegoEquipos = $qb->getQuery()->getResult();
 
                 $juego = [
                     'codigo_juego' => $arJuego['codigo_juego'],
@@ -291,7 +302,8 @@ class JuegoRepository extends ServiceEntityRepository
                     'negocio_nombre' => $arJuego['negocio_nombre'],
                     'jugador_seudonimo' => $arJuego['jugador_seudonimo'],
                     'comentarios' => $arComentarios,
-                    'detalles' => $arJuegoDetalles
+                    'detalles' => $arJuegoDetalles,
+                    'equipos' => $arJuegoEquipos
                 ];
                 return $juego;
             } else {

@@ -37,6 +37,11 @@ class JuegoDetalle
     private $codigoPosicionFk;
 
     /**
+     * @ORM\Column(name="codigo_juego_equipo_fk", type="integer", nullable=true, options={"default" : null})
+     */
+    private $codigoJuegoEquipoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Juego", inversedBy="juegosDetallesJuegoRel")
      * @ORM\JoinColumn(name="codigo_juego_fk", referencedColumnName="codigo_juego_pk")
      */
@@ -53,6 +58,12 @@ class JuegoDetalle
      * @ORM\JoinColumn(name="codigo_posicion_fk", referencedColumnName="codigo_posicion_pk")
      */
     protected $posicionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="JuegoEquipo", inversedBy="juegosDetallesJuegoEquipoRel")
+     * @ORM\JoinColumn(name="codigo_juego_equipo_fk", referencedColumnName="codigo_juego_equipo_pk")
+     */
+    protected $juegoEquipoRel;
 
     /**
      * @return mixed
@@ -180,6 +191,38 @@ class JuegoDetalle
     public function setPosicionRel($posicionRel): void
     {
         $this->posicionRel = $posicionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoJuegoEquipoFk()
+    {
+        return $this->codigoJuegoEquipoFk;
+    }
+
+    /**
+     * @param mixed $codigoJuegoEquipoFk
+     */
+    public function setCodigoJuegoEquipoFk($codigoJuegoEquipoFk): void
+    {
+        $this->codigoJuegoEquipoFk = $codigoJuegoEquipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJuegoEquipoRel()
+    {
+        return $this->juegoEquipoRel;
+    }
+
+    /**
+     * @param mixed $juegoEquipoRel
+     */
+    public function setJuegoEquipoRel($juegoEquipoRel): void
+    {
+        $this->juegoEquipoRel = $juegoEquipoRel;
     }
 
 

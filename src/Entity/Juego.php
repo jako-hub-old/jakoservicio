@@ -84,6 +84,11 @@ class Juego
     protected $juegosDetallesJuegoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="JuegoEquipo", mappedBy="juegoRel")
+     */
+    protected $juegosEquiposJuegoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="Comentario", mappedBy="juegoRel")
      */
     protected $comentariosJuegoRel;
@@ -326,6 +331,22 @@ class Juego
     public function setComentariosJuegoRel($comentariosJuegoRel): void
     {
         $this->comentariosJuegoRel = $comentariosJuegoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJuegosEquiposJuegoRel()
+    {
+        return $this->juegosEquiposJuegoRel;
+    }
+
+    /**
+     * @param mixed $juegosEquiposJuegoRel
+     */
+    public function setJuegosEquiposJuegoRel($juegosEquiposJuegoRel): void
+    {
+        $this->juegosEquiposJuegoRel = $juegosEquiposJuegoRel;
     }
 
 
