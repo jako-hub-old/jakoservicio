@@ -32,9 +32,14 @@ class Reserva
     private $fechaHasta;
 
     /**
-     * @ORM\Column(name="codigo_jugador_fk", type="integer")
+     * @ORM\Column(name="codigo_jugador_fk", type="integer", nullable=true)
      */
     private $codigoJugadorFk;
+
+    /**
+     * @ORM\Column(name="estado_pagado", type="boolean", options={"default" : false}, nullable=true)
+     */
+    private $estadoPagado = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Escenario", inversedBy="reservasEscenarioRel")
@@ -158,6 +163,22 @@ class Reserva
     public function setJugadorRel($jugadorRel): void
     {
         $this->jugadorRel = $jugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoPagado()
+    {
+        return $this->estadoPagado;
+    }
+
+    /**
+     * @param mixed $estadoPagado
+     */
+    public function setEstadoPagado($estadoPagado): void
+    {
+        $this->estadoPagado = $estadoPagado;
     }
 
 

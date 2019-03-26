@@ -59,6 +59,7 @@ class JuegoRepository extends ServiceEntityRepository
     public function buscar()
     {
         $em = $this->getEntityManager();
+        $fecha = new \DateTime('now');
         $qb = $em->createQueryBuilder();
         $qb->from(Juego::class, "j")
             ->select("j.codigoJuegoPk as codigo_juego")
@@ -72,7 +73,8 @@ class JuegoRepository extends ServiceEntityRepository
             ->addSelect("ju.seudonimo as jugador_seudonimo")
             ->leftJoin("j.escenarioRel", "e")
             ->leftJoin("e.negocioRel", "n")
-            ->leftJoin("j.jugadorRel", "ju");
+            ->leftJoin("j.jugadorRel", "ju")
+        ->where("j.fecha >= '".$fecha->format('Y-m-d H:i')."'");
         $arJuegos =  $qb->getQuery()->getResult();
         return $arJuegos;
 

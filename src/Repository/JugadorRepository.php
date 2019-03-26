@@ -6,6 +6,7 @@ use App\Classes\Utilidades;
 use App\Entity\Jugador;
 use App\Entity\JugadorAmigo;
 use App\Entity\JugadorSolicitud;
+use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -48,6 +49,40 @@ class JugadorRepository extends ServiceEntityRepository
         $arJugadores =  $qb->getQuery()->getResult();
         return $arJugadores;
 
+    }
+
+    public function informacionComplementaria($raw) {
+        $em = $this->getEntityManager();
+        $usuario = $raw['usuario']?? 0;
+        $seudonimo = $raw['seudonimo']?? '';
+        $nombreCorto = $raw['nombre_corto']?? '';
+        $correo = $raw['correo']?? '';
+        if($usuario && $seudonimo && $nombreCorto && $correo) {
+            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
+            $arJugador = $arUsuario->getJugadorRel();
+            $qb = $em->createQueryBuilder()->from(Jugador::class, "j")
+                ->select("j")
+                ->where("j.seudonimo = '{$seudonimo}'")
+                ->andWhere("j.codigoJugadorPk <> '{$arJugador->getCodigoJugadorPk()}'")
+                ->setMaxResults(1);
+            $arrExistente = $qb->getQuery()->getResult();
+            if($arrExistente) {
+                return [
+                    'validacion' => Utilidades::validacion(9),
+                ];
+            } else {
+                $arJugador->setSeudonimo($seudonimo);
+                $arJugador->setCorreo($correo);
+                $arJugador->setNombreCorto($nombreCorto);
+                $em->persist($arJugador);
+                $em->flush($arJugador);
+                return true;
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
     }
 
 }

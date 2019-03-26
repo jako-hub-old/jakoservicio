@@ -47,4 +47,21 @@ class ApiJugadorController extends FOSRestController {
         }
     }
 
+    /**
+     * @param Request $request
+     * @Rest\Post("/v1/jugador/informacion/complementaria")
+     * @return array|mixed
+     */
+    public function guardarPseudonimo(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Jugador::class)->informacionComplementaria($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 }

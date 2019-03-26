@@ -5,6 +5,7 @@ use App\Classes\Utilidades;
 use App\Entity\Escenario;
 use App\Entity\Juego;
 use App\Entity\Jugador;
+use App\Entity\Reserva;
 use App\Entity\Usuario;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -15,34 +16,17 @@ use Symfony\Component\HttpFoundation\Request;
  * Class ApiEscenarioController
  * @package App\Controller}
  */
-class ApiEscenarioController extends FOSRestController {
+class ApiReservaController extends FOSRestController {
 
     /**
      * @return array
-     * @Rest\Post("/v1/escenario/lista")
+     * @Rest\Post("/v1/reserva/nuevo")
      */
-    public function lista(Request $request) {
+    public function nuevo(Request $request) {
         try {
-            $raw = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Escenario::class)->lista($raw);
-        } catch (\Exception $e) {
-            return [
-                'error' => true,
-            ];
-        }
-    }
-
-
-    /**
-     * @return array
-     * @Rest\Post("/v1/escenario/reserva")
-     */
-    public function listaReserva(Request $request) {
-        try {
             $raw = json_decode($request->getContent(), true);
-            $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Escenario::class)->lista($raw);
+            return $em->getRepository(Reserva::class)->nuevo($raw);
         } catch (\Exception $e) {
             return [
                 'error' => true,
