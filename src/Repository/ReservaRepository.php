@@ -28,7 +28,7 @@ class ReservaRepository extends ServiceEntityRepository
         $fechaDesde = $datos['fecha_desde']?? '';
         $fechaHasta = $datos['fecha_hasta']?? '';
         $escenario = $datos['escenario']?? '';
-        $jugador = $datos['escenario']?? '';
+        $jugador = $datos['jugador']?? '';
         if($fechaDesde && $fechaHasta && $escenario) {
             $fechaDesde = date_create($fechaDesde);
             $fechaHasta = date_create($fechaHasta);
