@@ -44,7 +44,9 @@ class JuegoRepository extends ServiceEntityRepository
             $arJuego->setAcceso($acceso);
             $em->persist($arJuego);
             $em->flush();
-            return true;
+            return [
+                'codigo_juego' => $arJuego->getCodigoJuegoPk(),
+            ];
         } else {
             return [
                 'error_controlado' => Utilidades::error(2),
