@@ -30,12 +30,19 @@ class JuegoRepository extends ServiceEntityRepository
         $nombre = $datos['nombre']?? '';
         $numeroJugadores = $datos['numero_jugadores']?? '';
         $acceso = $datos['acceso']?? '';
+        $codigoJuego = $datos['codigo_juego']?? 0;
         if($jugador && $escenario && $fecha && $nombre && $numeroJugadores && $acceso) {
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arEscenario = $em->getRepository(Escenario::class)->find($escenario);
             $fecha = date_create($fecha);
 
-            $arJuego = new Juego();
+            if($codigoJuego) {
+                $arJuego = $em->getRepository(Juego::class)->find($codigoJuego);
+                if(!$arJuego) $arJuego = new Juego();
+            } else {
+                $arJuego = new Juego();
+            }
+
             $arJuego->setJugadorRel($arJugador);
             $arJuego->setEscenarioRel($arEscenario);
             $arJuego->setFecha($fecha);
