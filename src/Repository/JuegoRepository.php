@@ -135,7 +135,7 @@ class JuegoRepository extends ServiceEntityRepository
                 ->setMaxResults(2);
                 $arComentarios = $qb->getQuery()->getResult();
 
-                $juegos = [
+                $juegos[] = [
                     'codigo_juego_detalle' => $arJuegoJugador['codigo_juego_detalle'],
                     'codigo_juego' => $arJuegoJugador['codigo_juego'],
                     'juego_nombre' => $arJuegoJugador['juego_nombre'],
