@@ -170,11 +170,13 @@ class JuegoRepository extends ServiceEntityRepository
         $juego = $datos['juego']?? false;
         $posicion = $datos['posicion']?? false;
         $numero = $datos['numero']?? false;
+        $equipo = $datos['equipo']?? false;
         if($jugador && $juego && $posicion && $numero) {
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arJuego = $em->getRepository(Juego::class)->find($juego);
             $arPosicion = $em->getRepository(Posicion::class)->find($posicion);
-            if($arJugador && $arJuego && $arPosicion) {
+            $arEquipo = $em->getRepository(Posicion::class)->find($equipo);
+            if($arJugador && $arJuego && $arPosicion && $arEquipo) {
                 $arJuegoDetalle = $em->getRepository(JuegoDetalle::class)->findOneBy(['codigoJuegoFk' => $juego, 'codigoJugadorFk' => $jugador]);
                 if(!$arJuegoDetalle) {
                     if($arJuego->getJugadoresConfirmados() < $arJuego->getJugadores()) {
@@ -183,6 +185,7 @@ class JuegoRepository extends ServiceEntityRepository
                         $arJuegoDetalle->setJugadorRel($arJugador);
                         $arJuegoDetalle->setPosicionRel($arPosicion);
                         $arJuegoDetalle->setNumero($numero);
+                        $arJuegoDetalle->setJuegoEquipoRel($arEquipo);
                         $em->persist($arJuegoDetalle);
 
                         $arJuego->setJugadoresConfirmados($arJuego->getJugadoresConfirmados() + 1);
