@@ -171,7 +171,7 @@ class JuegoRepository extends ServiceEntityRepository
         $posicion = $datos['posicion']?? false;
         $numero = $datos['numero']?? false;
         $equipo = $datos['equipo']?? false;
-        if($jugador && $juego && $posicion && $numero) {
+        if($jugador && $juego && $posicion && $numero && $equipo) {
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arJuego = $em->getRepository(Juego::class)->find($juego);
             $arPosicion = $em->getRepository(Posicion::class)->find($posicion);
