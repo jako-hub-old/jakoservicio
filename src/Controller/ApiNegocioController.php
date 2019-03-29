@@ -22,7 +22,7 @@ class ApiNegocioController extends FOSRestController {
      * @return array
      * @Rest\Post("/v1/negocio/buscar")
      */
-    public function lista(Request $request) {
+    public function buscar(Request $request) {
         try {
             $raw = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();

@@ -28,27 +28,32 @@ class JuegoRepository extends ServiceEntityRepository
         $escenario = $datos['escenario']?? '';
         $fecha = $datos['fecha']?? '';
         $nombre = $datos['nombre']?? '';
-        $numeroJugadores = $datos['numero_jugadores']?? '';
         $acceso = $datos['acceso']?? '';
-        $codigoJuego = $datos['codigo_juego']?? 0;
-        if($jugador && $escenario && $fecha && $nombre && $numeroJugadores && $acceso) {
+        $arrEquipos = $codigoJuego = $datos['equipos']?? 0;
+        if($jugador && $escenario && $fecha && $nombre && $acceso) {
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arEscenario = $em->getRepository(Escenario::class)->find($escenario);
             $fecha = date_create($fecha);
 
-            if($codigoJuego) {
-                $arJuego = $em->getRepository(Juego::class)->find($codigoJuego);
-                if(!$arJuego) $arJuego = new Juego();
-            } else {
-                $arJuego = new Juego();
-            }
-
+            $arJuego = new Juego();
             $arJuego->setJugadorRel($arJugador);
             $arJuego->setEscenarioRel($arEscenario);
             $arJuego->setFecha($fecha);
             $arJuego->setNombre($nombre);
-            $arJuego->setJugadores($numeroJugadores);
             $arJuego->setAcceso($acceso);
+            $em->persist($arJuego);
+            $jugadores = 0;
+            if($arrEquipos) {
+                foreach ($arrEquipos as $arrEquipo) {
+                    $arJuegoEquipo = new JuegoEquipo();
+                    $arJuegoEquipo->setJuegoRel($arJuego);
+                    $arJuegoEquipo->setNombre($arrEquipo['nombre']);
+                    $arJuegoEquipo->setJugadores($arrEquipo['jugadores']);
+                    $em->persist($arJuegoEquipo);
+                    $jugadores += $arrEquipo['jugadores'];
+                }
+            }
+            $arJuego->setJugadores($jugadores);
             $em->persist($arJuego);
             $em->flush();
             return [

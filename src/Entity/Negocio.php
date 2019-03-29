@@ -52,10 +52,21 @@ class Negocio
     private $codigoCiudadFk;
 
     /**
+     * @ORM\Column(name="codigo_negocio_tipo_fk", type="integer", nullable=true)
+     */
+    private $codigoNegocioTipoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Ciudad", inversedBy="negociosCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="NegocioTipo", inversedBy="negociosNegocioTipoRel")
+     * @ORM\JoinColumn(name="codigo_negocio_tipo_fk", referencedColumnName="codigo_negocio_tipo_pk")
+     */
+    protected $negocioTipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="Escenario", mappedBy="negocioRel")
@@ -92,22 +103,6 @@ class Negocio
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEscenariosNegocioRel()
-    {
-        return $this->escenariosNegocioRel;
-    }
-
-    /**
-     * @param mixed $escenariosNegocioRel
-     */
-    public function setEscenariosNegocioRel($escenariosNegocioRel): void
-    {
-        $this->escenariosNegocioRel = $escenariosNegocioRel;
     }
 
     /**
@@ -209,6 +204,22 @@ class Negocio
     /**
      * @return mixed
      */
+    public function getCodigoNegocioTipoFk()
+    {
+        return $this->codigoNegocioTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoNegocioTipoFk
+     */
+    public function setCodigoNegocioTipoFk($codigoNegocioTipoFk): void
+    {
+        $this->codigoNegocioTipoFk = $codigoNegocioTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCiudadRel()
     {
         return $this->ciudadRel;
@@ -220,6 +231,38 @@ class Negocio
     public function setCiudadRel($ciudadRel): void
     {
         $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNegocioTipoRel()
+    {
+        return $this->negocioTipoRel;
+    }
+
+    /**
+     * @param mixed $negocioTipoRel
+     */
+    public function setNegocioTipoRel($negocioTipoRel): void
+    {
+        $this->negocioTipoRel = $negocioTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEscenariosNegocioRel()
+    {
+        return $this->escenariosNegocioRel;
+    }
+
+    /**
+     * @param mixed $escenariosNegocioRel
+     */
+    public function setEscenariosNegocioRel($escenariosNegocioRel): void
+    {
+        $this->escenariosNegocioRel = $escenariosNegocioRel;
     }
 
 

@@ -34,4 +34,20 @@ class ApiReservaController extends FOSRestController {
         }
     }
 
+    /**
+     * @return array
+     * @Rest\Post("/v1/reserva/escenario")
+     */
+    public function escenario(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Reserva::class)->escenario($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 }

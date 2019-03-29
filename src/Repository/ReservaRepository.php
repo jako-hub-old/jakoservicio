@@ -52,5 +52,29 @@ class ReservaRepository extends ServiceEntityRepository
         }
     }
 
+    public function escenario($raw) {
+        $em = $this->getEntityManager();
+        $fecha = $raw['fecha']?? '';
+        $escenario = $raw['escenario']?? '';
+        if($fecha && $escenario) {
+            $qb = $em->createQueryBuilder();
+            $qb->from(Reserva::class, "r")
+                ->select("r.codigoReservaPk as codigo_reserva")
+                ->addSelect("r.fechaDesde as fecha_desde")
+                ->addSelect("r.fechaHasta as fecha_hasta")
+                ->addSelect("r.estadoPagado as estado_pagado")
+                ->addSelect("j.nombreCorto as jugador_nombre_corto")
+                ->addSelect("j.seudonimo as jugador_seudonimo")
+                ->leftJoin("r.jugadorRel", "j")
+                ->where("r.codigoEscenarioFk = {$escenario}")
+                ->andWhere("r.fechaDesde >= '$fecha 00:00:00' AND r.fechaDesde <= '$fecha 23:59:59'");
+            $arReservas = $qb->getQuery()->getResult();
+            return $arReservas;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
 
 }

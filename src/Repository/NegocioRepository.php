@@ -28,12 +28,25 @@ class NegocioRepository extends ServiceEntityRepository
             ->addSelect("n.puntuacion")
             ->addSelect("c.nombre as ciudad_nombre")
             ->addSelect("d.nombre as departamento_nombre")
+            ->addSelect("nt.nombre as negocio_tipo_nombre")
         ->leftJoin("n.ciudadRel", "c")
-        ->leftJoin("c.departamentoRel", "d");
+        ->leftJoin("c.departamentoRel", "d")
+        ->leftJoin("n.negocioTipoRel", "nt");
         if($nombre) {
             $qb->andWhere("n.nombre LIKE '%{$nombre}%'");
         }
         $arNegocios =  $qb->getQuery()->getResult();
+        $i = 0;
+        foreach ($arNegocios as $arNegocio) {
+            $qb = $em->createQueryBuilder();
+            $qb->from(Escenario::class, "e")
+                ->select("e.codigoEscenarioPk as codigo_escenario")
+                ->addSelect('e.nombre')
+                ->where("e.codigoNegocioFk = " . $arNegocio['codigo_negocio']);
+            $arEscenarios = $qb->getQuery()->getResult();
+            $arNegocios[$i]['escenarios'] = $arEscenarios;
+            $i++;
+        }
         return $arNegocios;
 
     }
