@@ -175,7 +175,7 @@ class JuegoRepository extends ServiceEntityRepository
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arJuego = $em->getRepository(Juego::class)->find($juego);
             $arPosicion = $em->getRepository(Posicion::class)->find($posicion);
-            $arEquipo = $em->getRepository(Posicion::class)->find($equipo);
+            $arEquipo = $em->getRepository(JuegoEquipo::class)->find($equipo);
             if($arJugador && $arJuego && $arPosicion && $arEquipo) {
                 $arJuegoDetalle = $em->getRepository(JuegoDetalle::class)->findOneBy(['codigoJuegoFk' => $juego, 'codigoJugadorFk' => $jugador]);
                 if(!$arJuegoDetalle) {
