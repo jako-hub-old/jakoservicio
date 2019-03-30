@@ -122,7 +122,8 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.nombre as juego_nombre")
                 ->addSelect("j.jugadores as juego_jugadores")
                 ->addSelect("j.jugadoresConfirmados as juego_jugadores_confirmados")
-                ->addSelect("j.fecha as juego_fecha")
+                ->addSelect("j.fechaDesde as juego_fecha_desde")
+                ->addSelect("j.fechaHasta as juego_fecha_hasta")
                 ->addSelect("j.acceso as juego_acceso")
                 ->addSelect("e.nombre as escenario_nombre")
                 ->addSelect("n.nombre as negocio_nombre")
@@ -153,7 +154,8 @@ class JuegoRepository extends ServiceEntityRepository
                     'juego_nombre' => $arJuegoJugador['juego_nombre'],
                     'juego_jugadores' => $arJuegoJugador['juego_jugadores'],
                     'juego_jugadores_confirmados' => $arJuegoJugador['juego_jugadores_confirmados'],
-                    'juego_fecha' => $arJuegoJugador['juego_fecha'],
+                    'juego_fecha_desde' => $arJuegoJugador['juego_fecha_desde'],
+                    'juego_fecha_hasta' => $arJuegoJugador['juego_fecha_hasta'],
                     'juego_acceso' => $arJuegoJugador['juego_acceso'],
                     'escenario_nombre' => $arJuegoJugador['escenario_nombre'],
                     'negocio_nombre' => $arJuegoJugador['negocio_nombre'],
