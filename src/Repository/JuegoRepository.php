@@ -13,6 +13,7 @@ use App\Entity\JuegoJugador;
 use App\Entity\Jugador;
 use App\Entity\Posicion;
 use App\Entity\Publicacion;
+use App\Entity\Reserva;
 use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -34,42 +35,49 @@ class JuegoRepository extends ServiceEntityRepository
         $acceso = $datos['acceso']?? '';
         $arrEquipos = $codigoJuego = $datos['equipos']?? 0;
         if($jugador && $escenario && $fechaDesde && $fechaHasta && $nombre && $acceso) {
-            $arJugador = $em->getRepository(Jugador::class)->find($jugador);
-            $arEscenario = $em->getRepository(Escenario::class)->find($escenario);
             $fechaDesde = date_create($fechaDesde);
             $fechaHasta = date_create($fechaHasta);
-            $arJuego = new Juego();
-            $arJuego->setJugadorRel($arJugador);
-            $arJuego->setEscenarioRel($arEscenario);
-            $arJuego->setFechaDesde($fechaDesde);
-            $arJuego->setFechaHasta($fechaHasta);
-            $arJuego->setNombre($nombre);
-            $arJuego->setAcceso($acceso);
-            $arJuego->setVrCosto(0.05);
-            $em->persist($arJuego);
-            $jugadores = 0;
-            if($arrEquipos) {
-                foreach ($arrEquipos as $arrEquipo) {
-                    $arJuegoEquipo = new JuegoEquipo();
-                    $arJuegoEquipo->setJuegoRel($arJuego);
-                    $arJuegoEquipo->setNombre($arrEquipo['nombre']);
-                    $arJuegoEquipo->setJugadores($arrEquipo['jugadores']);
-                    $em->persist($arJuegoEquipo);
-                    $jugadores += $arrEquipo['jugadores'];
+            //if($em->getRepository(Reserva::class)->validarDisponibilidad($fechaDesde->format('Y-m-d H:i:s'), $fechaHasta->format('Y-m-d H:i:s'), $escenario)) {
+                $arJugador = $em->getRepository(Jugador::class)->find($jugador);
+                $arEscenario = $em->getRepository(Escenario::class)->find($escenario);
+
+                $arJuego = new Juego();
+                $arJuego->setJugadorRel($arJugador);
+                $arJuego->setEscenarioRel($arEscenario);
+                $arJuego->setFechaDesde($fechaDesde);
+                $arJuego->setFechaHasta($fechaHasta);
+                $arJuego->setNombre($nombre);
+                $arJuego->setAcceso($acceso);
+                $arJuego->setVrCosto(0.05);
+                $em->persist($arJuego);
+                $jugadores = 0;
+                if($arrEquipos) {
+                    foreach ($arrEquipos as $arrEquipo) {
+                        $arJuegoEquipo = new JuegoEquipo();
+                        $arJuegoEquipo->setJuegoRel($arJuego);
+                        $arJuegoEquipo->setNombre($arrEquipo['nombre']);
+                        $arJuegoEquipo->setJugadores($arrEquipo['jugadores']);
+                        $em->persist($arJuegoEquipo);
+                        $jugadores += $arrEquipo['jugadores'];
+                    }
                 }
-            }
-            $arJuego->setJugadores($jugadores);
-            $em->persist($arJuego);
+                $arJuego->setJugadores($jugadores);
+                $em->persist($arJuego);
 
-            $arPublicacion = new Publicacion();
-            $arPublicacion->setJugadorRel($arJugador);
-            $arPublicacion->setJuegoRel($arJuego);
-            $em->persist($arPublicacion);
+                $arPublicacion = new Publicacion();
+                $arPublicacion->setJugadorRel($arJugador);
+                $arPublicacion->setJuegoRel($arJuego);
+                $em->persist($arPublicacion);
 
-            $em->flush();
-            return [
-                'codigo_juego' => $arJuego->getCodigoJuegoPk(),
-            ];
+                $em->flush();
+                return [
+                    'codigo_juego' => $arJuego->getCodigoJuegoPk(),
+                ];
+            /*} else {
+                return [
+                    'validacion' => Utilidades::validacion(12),
+                ];
+            }*/
         } else {
             return [
                 'error_controlado' => Utilidades::error(2),

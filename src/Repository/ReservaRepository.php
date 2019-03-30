@@ -77,4 +77,17 @@ class ReservaRepository extends ServiceEntityRepository
         }
     }
 
+    public function validarDisponibilidad($fechaDesde, $fechaHasta, $codigoEscenario) {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        $qb->from(Reserva::class, "r")
+            ->select("r.codigoReservaPk as codigo_reserva")
+            ->where("r.codigoEscenarioFk = {$codigoEscenario}")
+            ->andWhere(" (((r.fechaDesde BETWEEN '$fechaDesde' AND '$fechaHasta') OR (r.fechaHasta BETWEEN '$fechaDesde' AND '$fechaHasta')) "
+                . "OR (r.fechaDesde > '$fechaDesde' AND r.fechaDesde < '$fechaHasta') "
+                . "OR (r.fechaHasta > '$fechaHasta' AND r.fechaDesde < '$fechaDesde'))");
+        $arReservas = $qb->getQuery()->getResult();
+
+        return false;
+    }
 }

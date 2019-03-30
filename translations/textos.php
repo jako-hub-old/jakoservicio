@@ -11,6 +11,7 @@ return [
     'validacion_9'  => 'Ya existe un jugador con ese seudonimo',
     'validacion_10'  => 'No esxiste el usuario',
     'validacion_11'  => 'No tiene puntos suficientes para unirse a este juego',
+    'validacion_12'  => 'El escenario no tiene disponibilidad para estas fechas',
     'error_1'       => 'Ocurrió un error inesperado',
     'error_2'       => 'No se suministraron los datos requeridos para la api',
 ];
