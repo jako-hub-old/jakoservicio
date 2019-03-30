@@ -41,6 +41,11 @@ class Usuario
     private $codigoVerificacion;
 
     /**
+     * @ORM\Column(name="crear_juego", type="boolean", options={"default" : false}, nullable=true)
+     */
+    private $crearJuego = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="usuariosJugadorRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -156,6 +161,22 @@ class Usuario
     public function setCodigoVerificacion($codigoVerificacion): void
     {
         $this->codigoVerificacion = $codigoVerificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCrearJuego()
+    {
+        return $this->crearJuego;
+    }
+
+    /**
+     * @param mixed $crearJuego
+     */
+    public function setCrearJuego($crearJuego): void
+    {
+        $this->crearJuego = $crearJuego;
     }
 
 

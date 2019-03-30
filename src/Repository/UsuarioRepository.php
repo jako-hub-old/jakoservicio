@@ -133,6 +133,7 @@ class UsuarioRepository extends ServiceEntityRepository
                 return [
                     'verificado' => true,
                     'codigo_usuario' => $arUsuario->getCodigoUsuarioPk(),
+                    'crear_juego' => $arUsuario->getCrearJuego(),
                 ];
             } else {
                 return false;
@@ -144,25 +145,33 @@ class UsuarioRepository extends ServiceEntityRepository
         }
     }
 
-    public function informacionUsuario($datos) {
-        $codigoUsuario = $datos['codigo_usuario']?? '0';
-        $em = $this->getEntityManager();
-        $arUsuario = $em->getRepository(Usuario::class)->find($codigoUsuario);
-        if($arUsuario && $arUsuario instanceof  Usuario) {
-            $arJugador = $arUsuario->getJugadorRel();
-            return [
-                'identificacion'    => $arJugador->getIdentificacion(),
-                'nombre'            => $arJugador->getNombre(),
-                'nombre_corto'      => $arJugador->getNombreCorto(),
-                'apellido'          => $arJugador->getApellido(),
-                'correo'            => $arJugador->getCorreo(),
-                'seudonimo'         => $arJugador->getSeudonimo(),
-            ];
+    public function informacionUsuario($raw) {
+        $codigoUsuario = $raw['codigo_usuario']?? '0';
+        if($codigoUsuario) {
+            $em = $this->getEntityManager();
+            $arUsuario = $em->getRepository(Usuario::class)->find($codigoUsuario);
+            if($arUsuario) {
+                $arJugador = $arUsuario->getJugadorRel();
+                return [
+                    'identificacion'    => $arJugador->getIdentificacion(),
+                    'nombre'            => $arJugador->getNombre(),
+                    'nombre_corto'      => $arJugador->getNombreCorto(),
+                    'apellido'          => $arJugador->getApellido(),
+                    'correo'            => $arJugador->getCorreo(),
+                    'seudonimo'         => $arJugador->getSeudonimo(),
+                ];
+            } else {
+                return [
+                    'validacion' => Utilidades::validacion(10)
+                ];
+            }
         } else {
             return [
                 'error_controlado' => Utilidades::error(2),
             ];
         }
+
+
     }
 
 }
