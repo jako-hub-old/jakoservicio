@@ -13,6 +13,7 @@ use App\Entity\JuegoJugador;
 use App\Entity\Jugador;
 use App\Entity\Posicion;
 use App\Entity\Publicacion;
+use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -44,6 +45,7 @@ class JuegoRepository extends ServiceEntityRepository
             $arJuego->setFechaHasta($fechaHasta);
             $arJuego->setNombre($nombre);
             $arJuego->setAcceso($acceso);
+            $arJuego->setVrCosto(0.05);
             $em->persist($arJuego);
             $jugadores = 0;
             if($arrEquipos) {
@@ -89,7 +91,8 @@ class JuegoRepository extends ServiceEntityRepository
             ->addSelect("j.nombre as nombre")
             ->addSelect("j.jugadores as jugadores")
             ->addSelect("j.jugadoresConfirmados as jugadores_confirmados")
-            ->addSelect("j.fecha")
+            ->addSelect("j.fechaDesde as fecha_desde")
+            ->addSelect("j.fechaHasta as fecha_hasta")
             ->addSelect("j.acceso")
             ->addSelect("e.nombre as escenario_nombre")
             ->addSelect("n.nombre as negocio_nombre")
@@ -97,7 +100,7 @@ class JuegoRepository extends ServiceEntityRepository
             ->leftJoin("j.escenarioRel", "e")
             ->leftJoin("e.negocioRel", "n")
             ->leftJoin("j.jugadorRel", "ju")
-        ->where("j.fecha >= '".$fecha->format('Y-m-d H:i')."'");
+        ->where("j.fechaDesde >= '".$fecha->format('Y-m-d H:i')."'");
         $arJuegos =  $qb->getQuery()->getResult();
         return $arJuegos;
 
@@ -181,6 +184,7 @@ class JuegoRepository extends ServiceEntityRepository
         $numero = $datos['numero']?? false;
         $equipo = $datos['equipo']?? false;
         if($jugador && $juego && $posicion && $numero && $equipo) {
+            $arUsuario = $em->getRepository(Usuario::class)->find($jugador);
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arJuego = $em->getRepository(Juego::class)->find($juego);
             $arPosicion = $em->getRepository(Posicion::class)->find($posicion);
@@ -189,19 +193,25 @@ class JuegoRepository extends ServiceEntityRepository
                 $arJuegoDetalle = $em->getRepository(JuegoDetalle::class)->findOneBy(['codigoJuegoFk' => $juego, 'codigoJugadorFk' => $jugador]);
                 if(!$arJuegoDetalle) {
                     if($arJuego->getJugadoresConfirmados() < $arJuego->getJugadores()) {
-                        $arJuegoDetalle = new JuegoDetalle();
-                        $arJuegoDetalle->setJuegoRel($arJuego);
-                        $arJuegoDetalle->setJugadorRel($arJugador);
-                        $arJuegoDetalle->setPosicionRel($arPosicion);
-                        $arJuegoDetalle->setNumero($numero);
-                        $arJuegoDetalle->setJuegoEquipoRel($arEquipo);
-                        $em->persist($arJuegoDetalle);
+                        if($arUsuario->getPuntos() >= $arJuego->getVrCosto()) {
+                            $arJuegoDetalle = new JuegoDetalle();
+                            $arJuegoDetalle->setJuegoRel($arJuego);
+                            $arJuegoDetalle->setJugadorRel($arJugador);
+                            $arJuegoDetalle->setPosicionRel($arPosicion);
+                            $arJuegoDetalle->setNumero($numero);
+                            $arJuegoDetalle->setJuegoEquipoRel($arEquipo);
+                            $em->persist($arJuegoDetalle);
+                            $arJuego->setJugadoresConfirmados($arJuego->getJugadoresConfirmados() + 1);
+                            $em->persist($arJuego);
+                            $arEquipo->setJugadoresConfirmados($arEquipo->getJugadoresConfirmados() + 1);
 
-                        $arJuego->setJugadoresConfirmados($arJuego->getJugadoresConfirmados() + 1);
-                        $em->persist($arJuego);
-
-                        $em->flush();
-                        return true;
+                            $em->flush();
+                            return true;
+                        } else {
+                            return [
+                                'validacion' => Utilidades::validacion(11),
+                            ];
+                        }
                     } else {
                         return [
                             'validacion' => Utilidades::validacion(4),
@@ -271,7 +281,8 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.nombre as nombre")
                 ->addSelect("j.jugadores as jugadores")
                 ->addSelect("j.jugadoresConfirmados as jugadores_confirmados")
-                ->addSelect("j.fecha as fecha")
+                ->addSelect("j.fechaDesde as fecha_desde")
+                ->addSelect("j.fechaHasta as fecha_hasta")
                 ->addSelect("j.acceso as acceso")
                 ->addSelect("e.nombre as escenario_nombre")
                 ->addSelect("n.nombre as negocio_nombre")
@@ -324,7 +335,8 @@ class JuegoRepository extends ServiceEntityRepository
                     'nombre' => $arJuego['nombre'],
                     'jugadores' => $arJuego['jugadores'],
                     'jugadores_confirmados' => $arJuego['jugadores_confirmados'],
-                    'fecha' => $arJuego['fecha'],
+                    'fecha_desde' => $arJuego['fecha_desde'],
+                    'fecha_hasta' => $arJuego['fecha_hasta'],
                     'acceso' => $arJuego['acceso'],
                     'escenario_nombre' => $arJuego['escenario_nombre'],
                     'negocio_nombre' => $arJuego['negocio_nombre'],

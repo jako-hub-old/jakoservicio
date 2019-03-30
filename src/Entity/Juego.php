@@ -67,6 +67,11 @@ class Juego
     private $codigoEscenarioFk;
 
     /**
+     * @ORM\Column(name="vr_costo", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrCosto = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="juegosJugadorRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -282,6 +287,22 @@ class Juego
     /**
      * @return mixed
      */
+    public function getVrCosto()
+    {
+        return $this->vrCosto;
+    }
+
+    /**
+     * @param mixed $vrCosto
+     */
+    public function setVrCosto($vrCosto): void
+    {
+        $this->vrCosto = $vrCosto;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getJugadorRel()
     {
         return $this->jugadorRel;
@@ -390,7 +411,6 @@ class Juego
     {
         $this->publicacionesJuegoRel = $publicacionesJuegoRel;
     }
-
 
 
 
