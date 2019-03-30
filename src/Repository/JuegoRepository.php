@@ -94,6 +94,7 @@ class JuegoRepository extends ServiceEntityRepository
             ->addSelect("j.fechaDesde as fecha_desde")
             ->addSelect("j.fechaHasta as fecha_hasta")
             ->addSelect("j.acceso")
+            ->addSelect("j.vrCosto as vr_costo")
             ->addSelect("e.nombre as escenario_nombre")
             ->addSelect("n.nombre as negocio_nombre")
             ->addSelect("ju.seudonimo as jugador_seudonimo")
@@ -125,6 +126,7 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.fechaDesde as juego_fecha_desde")
                 ->addSelect("j.fechaHasta as juego_fecha_hasta")
                 ->addSelect("j.acceso as juego_acceso")
+                ->addSelect("j.vrCosto as juego_vr_costo")
                 ->addSelect("e.nombre as escenario_nombre")
                 ->addSelect("n.nombre as negocio_nombre")
                 ->addSelect("ju.seudonimo as jugador_seudonimo")
@@ -157,6 +159,7 @@ class JuegoRepository extends ServiceEntityRepository
                     'juego_fecha_desde' => $arJuegoJugador['juego_fecha_desde'],
                     'juego_fecha_hasta' => $arJuegoJugador['juego_fecha_hasta'],
                     'juego_acceso' => $arJuegoJugador['juego_acceso'],
+                    'juego_vr_costo' => $arJuegoJugador['juego_vr_costo'],
                     'escenario_nombre' => $arJuegoJugador['escenario_nombre'],
                     'negocio_nombre' => $arJuegoJugador['negocio_nombre'],
                     'jugador_seudonimo' => $arJuegoJugador['jugador_seudonimo'],
@@ -286,6 +289,7 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.fechaDesde as fecha_desde")
                 ->addSelect("j.fechaHasta as fecha_hasta")
                 ->addSelect("j.acceso as acceso")
+                ->addSelect("j.vrCosto as vr_costo")
                 ->addSelect("e.nombre as escenario_nombre")
                 ->addSelect("n.nombre as negocio_nombre")
                 ->addSelect("ju.seudonimo as jugador_seudonimo")
@@ -343,6 +347,7 @@ class JuegoRepository extends ServiceEntityRepository
                     'escenario_nombre' => $arJuego['escenario_nombre'],
                     'negocio_nombre' => $arJuego['negocio_nombre'],
                     'jugador_seudonimo' => $arJuego['jugador_seudonimo'],
+                    'vr_costo' => $arJuego['vr_costo'],
                     'comentarios' => $arComentarios,
                     'detalles' => $arJuegoDetalles,
                     'equipos' => $arJuegoEquipos
