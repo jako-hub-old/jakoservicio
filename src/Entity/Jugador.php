@@ -97,6 +97,16 @@ class Jugador
     protected $reservasJugadorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Publicacion", mappedBy="jugadorRel")
+     */
+    protected $publicacionesJugadorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Actividad", mappedBy="jugadorRel")
+     */
+    protected $actividadesJugadorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoJugadorPk()
@@ -366,6 +376,38 @@ class Jugador
     public function setReservasJugadorRel($reservasJugadorRel): void
     {
         $this->reservasJugadorRel = $reservasJugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicacionesJugadorRel()
+    {
+        return $this->publicacionesJugadorRel;
+    }
+
+    /**
+     * @param mixed $publicacionesJugadorRel
+     */
+    public function setPublicacionesJugadorRel($publicacionesJugadorRel): void
+    {
+        $this->publicacionesJugadorRel = $publicacionesJugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActividadesJugadorRel()
+    {
+        return $this->actividadesJugadorRel;
+    }
+
+    /**
+     * @param mixed $actividadesJugadorRel
+     */
+    public function setActividadesJugadorRel($actividadesJugadorRel): void
+    {
+        $this->actividadesJugadorRel = $actividadesJugadorRel;
     }
 
 

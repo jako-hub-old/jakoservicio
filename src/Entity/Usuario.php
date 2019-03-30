@@ -46,6 +46,11 @@ class Usuario
     private $crearJuego = false;
 
     /**
+     * @ORM\Column(name="puntos", type="float", nullable=true, options={"default" : 0})
+     */
+    private $puntos = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="usuariosJugadorRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -177,6 +182,22 @@ class Usuario
     public function setCrearJuego($crearJuego): void
     {
         $this->crearJuego = $crearJuego;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuntos()
+    {
+        return $this->puntos;
+    }
+
+    /**
+     * @param mixed $puntos
+     */
+    public function setPuntos($puntos): void
+    {
+        $this->puntos = $puntos;
     }
 
 

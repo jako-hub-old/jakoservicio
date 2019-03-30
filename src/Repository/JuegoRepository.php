@@ -12,6 +12,7 @@ use App\Entity\JuegoInvitacion;
 use App\Entity\JuegoJugador;
 use App\Entity\Jugador;
 use App\Entity\Posicion;
+use App\Entity\Publicacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -26,19 +27,21 @@ class JuegoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $jugador = $datos['jugador']?? '';
         $escenario = $datos['escenario']?? '';
-        $fecha = $datos['fecha']?? '';
+        $fechaDesde = $datos['fecha_desde']?? '';
+        $fechaHasta = $datos['fecha_hasta']?? '';
         $nombre = $datos['nombre']?? '';
         $acceso = $datos['acceso']?? '';
         $arrEquipos = $codigoJuego = $datos['equipos']?? 0;
-        if($jugador && $escenario && $fecha && $nombre && $acceso) {
+        if($jugador && $escenario && $fechaDesde && $fechaHasta && $nombre && $acceso) {
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arEscenario = $em->getRepository(Escenario::class)->find($escenario);
-            $fecha = date_create($fecha);
-
+            $fechaDesde = date_create($fechaDesde);
+            $fechaHasta = date_create($fechaHasta);
             $arJuego = new Juego();
             $arJuego->setJugadorRel($arJugador);
             $arJuego->setEscenarioRel($arEscenario);
-            $arJuego->setFecha($fecha);
+            $arJuego->setFechaDesde($fechaDesde);
+            $arJuego->setFechaHasta($fechaHasta);
             $arJuego->setNombre($nombre);
             $arJuego->setAcceso($acceso);
             $em->persist($arJuego);
@@ -55,6 +58,12 @@ class JuegoRepository extends ServiceEntityRepository
             }
             $arJuego->setJugadores($jugadores);
             $em->persist($arJuego);
+
+            $arPublicacion = new Publicacion();
+            $arPublicacion->setJugadorRel($arJugador);
+            $arPublicacion->setJuegoRel($arJuego);
+            $em->persist($arPublicacion);
+
             $em->flush();
             return [
                 'codigo_juego' => $arJuego->getCodigoJuegoPk(),

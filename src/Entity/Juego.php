@@ -17,9 +17,14 @@ class Juego
     private $codigoJuegoPk;
 
     /**
-     * @ORM\Column(name="fecha" , type="datetime")
+     * @ORM\Column(name="fecha_desde" , type="datetime")
      */
-    private $fecha;
+    private $fechaDesde;
+
+    /**
+     * @ORM\Column(name="fecha_hasta" , type="datetime")
+     */
+    private $fechaHasta;
 
     /**
      * @ORM\Column(name="nombre", type="string",length=100, nullable=true)
@@ -94,6 +99,11 @@ class Juego
     protected $comentariosJuegoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Publicacion", mappedBy="juegoRel")
+     */
+    protected $publicacionesJuegoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoJuegoPk()
@@ -112,17 +122,33 @@ class Juego
     /**
      * @return mixed
      */
-    public function getFecha()
+    public function getFechaDesde()
     {
-        return $this->fecha;
+        return $this->fechaDesde;
     }
 
     /**
-     * @param mixed $fecha
+     * @param mixed $fechaDesde
      */
-    public function setFecha($fecha): void
+    public function setFechaDesde($fechaDesde): void
     {
-        $this->fecha = $fecha;
+        $this->fechaDesde = $fechaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHasta()
+    {
+        return $this->fechaHasta;
+    }
+
+    /**
+     * @param mixed $fechaHasta
+     */
+    public function setFechaHasta($fechaHasta): void
+    {
+        $this->fechaHasta = $fechaHasta;
     }
 
     /**
@@ -320,6 +346,22 @@ class Juego
     /**
      * @return mixed
      */
+    public function getJuegosEquiposJuegoRel()
+    {
+        return $this->juegosEquiposJuegoRel;
+    }
+
+    /**
+     * @param mixed $juegosEquiposJuegoRel
+     */
+    public function setJuegosEquiposJuegoRel($juegosEquiposJuegoRel): void
+    {
+        $this->juegosEquiposJuegoRel = $juegosEquiposJuegoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentariosJuegoRel()
     {
         return $this->comentariosJuegoRel;
@@ -336,18 +378,20 @@ class Juego
     /**
      * @return mixed
      */
-    public function getJuegosEquiposJuegoRel()
+    public function getPublicacionesJuegoRel()
     {
-        return $this->juegosEquiposJuegoRel;
+        return $this->publicacionesJuegoRel;
     }
 
     /**
-     * @param mixed $juegosEquiposJuegoRel
+     * @param mixed $publicacionesJuegoRel
      */
-    public function setJuegosEquiposJuegoRel($juegosEquiposJuegoRel): void
+    public function setPublicacionesJuegoRel($publicacionesJuegoRel): void
     {
-        $this->juegosEquiposJuegoRel = $juegosEquiposJuegoRel;
+        $this->publicacionesJuegoRel = $publicacionesJuegoRel;
     }
+
+
 
 
 
