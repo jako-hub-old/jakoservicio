@@ -50,8 +50,9 @@ class UsuarioRepository extends ServiceEntityRepository
             if($arUsuario->getEstadoVerificado()) {
                 if($imei == $arUsuario->getImei()) {
                     return [
-                        "verificado" => true,
+                        "verificado"     => true,
                         "codigo_usuario" => $arUsuario->getCodigoUsuarioPk(),
+                        "crear_juego"    => $arUsuario->getCrearJuego(),
                     ];
                 } else {
                     $codigo = $this->generarCodigo(4);
