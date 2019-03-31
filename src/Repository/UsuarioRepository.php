@@ -96,6 +96,7 @@ class UsuarioRepository extends ServiceEntityRepository
             $arUsuario->setUsuario($usuario);
             $arUsuario->setJugadorRel($arJugador);
             $arUsuario->setImei($imei);
+            $arUsuario->setEstadoVerificado(true); # Todo: Remover
             $em->persist($arUsuario);
             $em->flush();
 
