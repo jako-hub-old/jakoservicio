@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Classes\Utilidades;
 use App\Entity\Jugador;
+use App\Entity\Transaccion;
 use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -97,6 +98,9 @@ class UsuarioRepository extends ServiceEntityRepository
             $arUsuario->setImei($imei);
             $em->persist($arUsuario);
             $em->flush();
+
+            $em->getRepository(Transaccion::class)->aplicar(100000, 100, $arJugador, 1, "Bono regalo inicial");
+
         }
         return $arUsuario;
     }
@@ -110,13 +114,13 @@ class UsuarioRepository extends ServiceEntityRepository
     }
 
     private function enviarCodigo($telefono, $codigo) {
-        $basic  = new \Nexmo\Client\Credentials\Basic('68f3f797', 'ZwXadzBwzVmV1mBa');
-        $client = new \Nexmo\Client($basic);
-        $message = $client->message()->send([
-            'to' => "57{$telefono}",
-            'from' => 'jakoservicio',
-            'text' => "jako-{$codigo}"
-        ]);
+            $basic  = new \Nexmo\Client\Credentials\Basic('68f3f797', 'ZwXadzBwzVmV1mBa');
+            $client = new \Nexmo\Client($basic);
+            $message = $client->message()->send([
+                'to' => "57{$telefono}",
+                'from' => 'jakoservicio',
+                'text' => "jako-{$codigo}"
+            ]);
     }
 
     public function verificar($datos) {

@@ -57,6 +57,11 @@ class Usuario
     protected $jugadorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Transaccion", mappedBy="usuarioRel")
+     */
+    protected $transaccionesUsuarioRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoUsuarioPk()
@@ -198,6 +203,22 @@ class Usuario
     public function setPuntos($puntos): void
     {
         $this->puntos = $puntos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransaccionesUsuarioRel()
+    {
+        return $this->transaccionesUsuarioRel;
+    }
+
+    /**
+     * @param mixed $transaccionesUsuarioRel
+     */
+    public function setTransaccionesUsuarioRel($transaccionesUsuarioRel): void
+    {
+        $this->transaccionesUsuarioRel = $transaccionesUsuarioRel;
     }
 
 
