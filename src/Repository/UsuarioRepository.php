@@ -97,7 +97,6 @@ class UsuarioRepository extends ServiceEntityRepository
             $arUsuario->setUsuario($usuario);
             $arUsuario->setJugadorRel($arJugador);
             $arUsuario->setImei($imei);
-            $arUsuario->setEstadoVerificado(true); # Todo: Remover
             $em->persist($arUsuario);
             $em->flush();
 
@@ -116,7 +115,7 @@ class UsuarioRepository extends ServiceEntityRepository
     }
 
     private function enviarCodigo($telefono, $codigo) {
-            $basic  = new \Nexmo\Client\Credentials\Basic('68f3f797', 'ZwXadzBwzVmV1mBa');
+            $basic  = new \Nexmo\Client\Credentials\Basic(getenv('NEXMO_KEY'), getenv('NEXMO_SECRET'));
             $client = new \Nexmo\Client($basic);
             $message = $client->message()->send([
                 'to' => "57{$telefono}",
