@@ -27,6 +27,11 @@ class JuegoDetalle
     private $codigoJugadorFk;
 
     /**
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     */
+    private $fecha;
+
+    /**
      * @ORM\Column(name="numero", type="integer", nullable=true, options={"default" : null})
      */
     private $numero;
@@ -223,6 +228,22 @@ class JuegoDetalle
     public function setJuegoEquipoRel($juegoEquipoRel): void
     {
         $this->juegoEquipoRel = $juegoEquipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
     }
 
 

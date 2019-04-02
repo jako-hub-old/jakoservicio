@@ -47,6 +47,21 @@ class Jugador
     private $seudonimo;
 
     /**
+     * @ORM\Column(name="juegos", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $juegos = 0;
+
+    /**
+     * @ORM\Column(name="asistencia", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $asistencia = 0;
+
+    /**
+     * @ORM\Column(name="inasistencia", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $inasistencia = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="JuegoInvitacion", mappedBy="jugadorRel")
      */
     protected $juegosInvitacionesJugadorRel;
@@ -410,6 +425,53 @@ class Jugador
         $this->actividadesJugadorRel = $actividadesJugadorRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getJuegos()
+    {
+        return $this->juegos;
+    }
+
+    /**
+     * @param mixed $juegos
+     */
+    public function setJuegos($juegos): void
+    {
+        $this->juegos = $juegos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsistencia()
+    {
+        return $this->asistencia;
+    }
+
+    /**
+     * @param mixed $asistencia
+     */
+    public function setAsistencia($asistencia): void
+    {
+        $this->asistencia = $asistencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInasistencia()
+    {
+        return $this->inasistencia;
+    }
+
+    /**
+     * @param mixed $inasistencia
+     */
+    public function setInasistencia($inasistencia): void
+    {
+        $this->inasistencia = $inasistencia;
+    }
 
 
 

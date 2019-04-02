@@ -213,11 +213,14 @@ class JuegoRepository extends ServiceEntityRepository
                             $arJuegoDetalle->setPosicionRel($arPosicion);
                             $arJuegoDetalle->setNumero($numero);
                             $arJuegoDetalle->setJuegoEquipoRel($arEquipo);
+                            $arJuegoDetalle->setFecha(new \DateTime('now'));
                             $em->persist($arJuegoDetalle);
                             $arJuego->setJugadoresConfirmados($arJuego->getJugadoresConfirmados() + 1);
                             $em->persist($arJuego);
                             $arEquipo->setJugadoresConfirmados($arEquipo->getJugadoresConfirmados() + 1);
-
+                            $em->persist($arEquipo);
+                            $arJugador->setJuegos($arJugador->getJuegos() + 1);
+                            $arJugador->setAsistencia($arJugador->getAsistencia() + 1);
                             $em->flush();
                             return true;
                         } else {
@@ -327,12 +330,17 @@ class JuegoRepository extends ServiceEntityRepository
                     ->addSelect("jd.codigoJugadorFk as codigo_jugador")
                     ->addSelect("jd.codigoPosicionFk as codigo_posicion")
                     ->addSelect("jd.numero")
+                    ->addSelect("jd.fecha")
                     ->addSelect("p.nombre as posicion_nombre")
                     ->addSelect("j.nombreCorto as jugador_nombre_corto")
+                    ->addSelect("j.juegos as jugador_juegos")
+                    ->addSelect("j.asistencia as jugador_asistencia")
+                    ->addSelect("j.inasistencia as jugador_inasistencia")
                     ->addSelect("jd.codigoJuegoEquipoFk as codigo_equipo")
                     ->leftJoin("jd.jugadorRel", "j")
                     ->leftJoin("jd.posicionRel", "p")
-                    ->where("jd.codigoJuegoFk ={$juego}");
+                    ->where("jd.codigoJuegoFk ={$juego}")
+                    ->orderBy("jd.fecha", "ASC");
                 $arJuegoDetalles = $qb->getQuery()->getResult();
 
                 $qb = $em->createQueryBuilder();
