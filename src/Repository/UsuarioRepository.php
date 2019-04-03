@@ -97,6 +97,7 @@ class UsuarioRepository extends ServiceEntityRepository
             $arUsuario->setUsuario($usuario);
             $arUsuario->setJugadorRel($arJugador);
             $arUsuario->setImei($imei);
+            $arUsuario->setCrearJuego(1);
             $em->persist($arUsuario);
             $em->flush();
 
