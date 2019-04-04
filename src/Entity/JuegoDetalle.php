@@ -47,6 +47,11 @@ class JuegoDetalle
     private $codigoJuegoEquipoFk;
 
     /**
+     * @ORM\Column(name="estado_inasistencia", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoInasistencia = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Juego", inversedBy="juegosDetallesJuegoRel")
      * @ORM\JoinColumn(name="codigo_juego_fk", referencedColumnName="codigo_juego_pk")
      */
@@ -244,6 +249,22 @@ class JuegoDetalle
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoInasistencia()
+    {
+        return $this->estadoInasistencia;
+    }
+
+    /**
+     * @param mixed $estadoInasistencia
+     */
+    public function setEstadoInasistencia($estadoInasistencia): void
+    {
+        $this->estadoInasistencia = $estadoInasistencia;
     }
 
 

@@ -72,6 +72,11 @@ class Juego
     private $vrCosto = 0;
 
     /**
+     * @ORM\Column(name="estado_cerrado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoCerrado = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="juegosJugadorRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -410,6 +415,22 @@ class Juego
     public function setPublicacionesJuegoRel($publicacionesJuegoRel): void
     {
         $this->publicacionesJuegoRel = $publicacionesJuegoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
+     * @param mixed $estadoCerrado
+     */
+    public function setEstadoCerrado($estadoCerrado): void
+    {
+        $this->estadoCerrado = $estadoCerrado;
     }
 
 

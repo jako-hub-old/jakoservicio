@@ -85,4 +85,30 @@ class JugadorRepository extends ServiceEntityRepository
         }
     }
 
+    public function detalle($raw)
+    {
+        $em = $this->getEntityManager();
+        $jugador = $raw['jugador']?? false;
+        if($jugador) {
+            $qb = $em->createQueryBuilder();
+            $qb->from(Jugador::class, "j")
+                ->select("j.codigoJugadorPk as codigo_jugador")
+                ->addSelect("j.nombreCorto as nombre_corto")
+                ->addSelect("j.seudonimo")
+                ->addSelect('j.correo')
+                ->addSelect('j.juegos')
+                ->addSelect('j.asistencia')
+                ->addSelect('j.inasistencia')
+            ->where("j.codigoJugadorPk = ${jugador}");
+            $arJugador =  $qb->getQuery()->getResult();
+            return $arJugador;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+
+
+    }
+
 }

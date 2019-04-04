@@ -425,4 +425,35 @@ class JuegoRepository extends ServiceEntityRepository
         }
     }
 
+    public function cerrar($raw) {
+        $em = $this->getEntityManager();
+        $juego = $raw['juego']?? '';
+        $arrJuegosDetalles = $raw['juegos_detalles']?? 0;
+        if($juego && $arrJuegosDetalles) {
+            $arJuego = $em->getRepository(Juego::class)->find($juego);
+            $arJuego->setEstadoCerrado(1);
+            $em->persist($arJuego);
+
+            if($arrJuegosDetalles) {
+                foreach ($arrJuegosDetalles as $arrJuegoDetalle) {
+                    $codigo = $arrJuegoDetalle['codigoJuegoDetalle'];
+                    $arJuegoDetalle = $em->getRepository(JuegoDetalle::class)->find($codigo);
+                    $arJuegoDetalle->setEstadoInasistencia(1);
+                    $em->persist($arJuegoDetalle);
+
+                    $arJugador = $em->getRepository(Jugador::class)->find($arJuegoDetalle->getCodigoJugadorFk());
+                    $arJugador->setAsistencia($arJugador->getAsistencia() - 1);
+                    $arJugador->setInasistencia($arJugador->getInasistencia() + 1);
+                    $em->persist($arJugador);
+                }
+            }
+            $em->flush();
+            return true;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
 }

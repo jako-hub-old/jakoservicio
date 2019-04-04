@@ -64,4 +64,20 @@ class ApiJugadorController extends FOSRestController {
         }
     }
 
+    /**
+     * @return array
+     * @Rest\Post("/v1/jugador/detalle")
+     */
+    public function detalle(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Jugador::class)->detalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 }
