@@ -65,6 +65,9 @@ class JuegoRepository extends ServiceEntityRepository
                 $em->persist($arJuego);
 
                 $arPublicacion = new Publicacion();
+                $arPublicacion->setTipo('JUE');
+                $arPublicacion->setFecha(new \DateTime('now'));
+                $arPublicacion->setTexto("He creado un nuevo juego");
                 $arPublicacion->setJugadorRel($arJugador);
                 $arPublicacion->setJuegoRel($arJuego);
                 $em->persist($arPublicacion);

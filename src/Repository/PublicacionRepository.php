@@ -13,5 +13,23 @@ class PublicacionRepository extends ServiceEntityRepository
         parent::__construct($registry, Publicacion::class);
     }
 
+    /**
+     * @param $filtros
+     * @return array
+     */
+    public function lista($raw)
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        $qb->from(Publicacion::class, "p")
+            ->select("p.codigoPublicacionPk as codigo_publicacion")
+            ->addSelect("p.tipo")
+            ->addSelect('p.codigoJuegoFk')
+            ->addSelect('p.texto')
+            ->addSelect('p.fecha');
+        $arPublicaciones =  $qb->getQuery()->getResult();
+        return $arPublicaciones;
+
+    }
 
 }

@@ -17,6 +17,16 @@ class Publicacion
     private $codigoPublicacionPk;
 
     /**
+     * @ORM\Column(name="tipo", type="string",length=3, nullable=true)
+     */
+    private $tipo;
+
+    /**
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     */
+    private $fecha;
+
+    /**
      * @ORM\Column(name="texto", type="string",length=500, nullable=true)
      */
     private $texto;
@@ -137,6 +147,38 @@ class Publicacion
     public function setJuegoRel($juegoRel): void
     {
         $this->juegoRel = $juegoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * @param mixed $tipo
+     */
+    public function setTipo($tipo): void
+    {
+        $this->tipo = $tipo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
     }
 
 
