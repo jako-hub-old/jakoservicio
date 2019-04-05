@@ -139,14 +139,15 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.fechaHasta as juego_fecha_hasta")
                 ->addSelect("j.acceso as juego_acceso")
                 ->addSelect("j.vrCosto as juego_vr_costo")
-                ->addSelect("jd.codigoJugadorFk as juego_codigo_jugador")
+                ->addSelect("j.codigoJugadorFk as juego_codigo_jugador")
                 ->addSelect("e.nombre as escenario_nombre")
                 ->addSelect("n.nombre as negocio_nombre")
-                ->addSelect("ju.seudonimo as jugador_seudonimo")
+                ->addSelect("ja.seudonimo as jugador_seudonimo")
                 ->leftJoin("jd.juegoRel", "j")
                 ->leftJoin("j.escenarioRel", "e")
                 ->leftJoin("e.negocioRel", "n")
                 ->leftJoin("jd.jugadorRel", "ju")
+                ->leftJoin("j.jugadorRel", "ja")
             ->where("jd.codigoJugadorFk ={$jugador}");
             $arJuegosJugadores =  $qb->getQuery()->getResult();
             $juegos = array();
