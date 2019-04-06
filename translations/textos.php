@@ -14,4 +14,5 @@ return [
     'validacion_12'  => 'El escenario no tiene disponibilidad para estas fechas',
     'error_1'       => 'Ocurrió un error inesperado',
     'error_2'       => 'No se suministraron los datos requeridos para la api',
+    'error_3'       => 'No esxiste el jugador',
 ];

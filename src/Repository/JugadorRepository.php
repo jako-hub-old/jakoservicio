@@ -97,6 +97,7 @@ class JugadorRepository extends ServiceEntityRepository
                 ->addSelect("j.seudonimo")
                 ->addSelect('j.correo')
                 ->addSelect('j.juegos')
+                ->addSelect('j.foto')
                 ->addSelect('j.asistencia')
                 ->addSelect('j.inasistencia')
             ->where("j.codigoJugadorPk = ${jugador}");
@@ -109,6 +110,21 @@ class JugadorRepository extends ServiceEntityRepository
         }
 
 
+    }
+
+    public function guardarFoto($codigoJugador, $urlFoto) {
+        $em = $this->getEntityManager();
+        $jugador = $em->getRepository(Jugador::class)->find($codigoJugador);
+        if($jugador) {
+            $jugador->setFoto($urlFoto);
+            $em->persist($jugador);
+            $em->flush();
+            return true;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(3),
+            ];
+        }
     }
 
 }

@@ -62,6 +62,11 @@ class Jugador
     private $inasistencia = 0;
 
     /**
+     * @ORM\Column(name="foto", type="string", nullable=true)
+     */
+    private $foto = "";
+
+    /**
      * @ORM\OneToMany(targetEntity="JuegoInvitacion", mappedBy="jugadorRel")
      */
     protected $juegosInvitacionesJugadorRel;
@@ -473,7 +478,20 @@ class Jugador
         $this->inasistencia = $inasistencia;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFoto()
+    {
+        return $this->foto;
+    }
 
-
+    /**
+     * @param mixed $foto
+     */
+    public function setFoto($foto): void
+    {
+        $this->foto = $foto;
+    }
 }
 

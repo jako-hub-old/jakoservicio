@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Classes\ManejadorDeArchivos;
 use App\Classes\Utilidades;
 use App\Entity\Juego;
 use App\Entity\Jugador;
@@ -80,4 +81,56 @@ class ApiJugadorController extends FOSRestController {
         }
     }
 
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/jugador/guardar/foto")
+     */
+    public function guardarFoto(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $directorioDestino = realpath(ManejadorDeArchivos::getDirectorioPublico()) . '/fotos_usuario';
+            if(!file_exists($directorioDestino)) {
+                mkdir($directorioDestino);
+            }
+            $imagen = ManejadorDeArchivos::get('foto');
+            $codigoJugador = $request->get("jugador");
+            # Todo: validar extensión del archivo.
+            if($imagen->esValido()) {
+                $ext = $imagen->getExtension();
+                $nombreImagen = "foto_jugador_{$codigoJugador}";
+                $guardado = $imagen->guardar($directorioDestino, $nombreImagen);
+                $urlImagen = "{$this->getUrl()}/fotos_usuario/{$nombreImagen}.{$ext}";
+                if($guardado) { # todo: Guadar en entidad.
+                    $resultado = $em->getRepository(Jugador::class)->guardarFoto($codigoJugador, $urlImagen);
+                    if($resultado !== true) { # Si la imagen no se guardó correctamente en la entidad, la borramos.
+                        unlink($directorioDestino) . "/{$nombreImagen}.{$ext}";
+                        return $resultado;
+                    } else {
+                        return $urlImagen;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * Esta función permite obtener la url base de la aplicación.
+     * @return string
+     */
+    private function getUrl() {
+        $basePath = str_replace('/var/www/html', '', dirname($_SERVER['SCRIPT_NAME']));
+        $host = $_SERVER['HTTP_HOST'];
+        $scheme = $_SERVER['REQUEST_SCHEME'];
+        return "{$scheme}://{$host}{$basePath}";
+    }
 }
