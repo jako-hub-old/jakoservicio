@@ -27,6 +27,7 @@ class JugadorRepository extends ServiceEntityRepository
                 ->select("ja.codigoJugadorAmigoPk as codigo_jugador_amigo_pk")
                 ->addSelect("ja.codigoJugadorAmigoFk as codigo_jugador_amigo")
                 ->addSelect("jar.nombreCorto as jugador_amigo_rel_nombre_corto")
+                ->addSelect("jar.foto")
                 ->leftJoin("ja.jugadorAmigoRel", "jar")
                 ->where("ja.codigoJugadorFk ={$jugador}");
             $arJugadorAmigos =  $qb->getQuery()->getResult();
