@@ -340,6 +340,7 @@ class JuegoRepository extends ServiceEntityRepository
                     ->addSelect("jd.numero")
                     ->addSelect("jd.fecha")
                     ->addSelect("j.foto")
+                    ->addSelect("j.seudonimo")
                     ->addSelect("p.nombre as posicion_nombre")
                     ->addSelect("j.nombreCorto as jugador_nombre_corto")
                     ->addSelect("j.juegos as jugador_juegos")
