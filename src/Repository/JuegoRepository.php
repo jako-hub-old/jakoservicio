@@ -328,7 +328,7 @@ class JuegoRepository extends ServiceEntityRepository
                     ->addSelect("j.foto")
                     ->leftJoin("c.jugadorRel", "j")
                     ->where("c.codigoJuegoFk ={$juego}")
-                    ->orderBy("c.fecha", "ASC");
+                    ->orderBy("c.fecha", "DESC");
                 $arComentarios = $qb->getQuery()->getResult();
 
                 $qb = $em->createQueryBuilder();
