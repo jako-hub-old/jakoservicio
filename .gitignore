@@ -8,6 +8,7 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+/public/fotos_usuario/
 
 ###> symfony/phpunit-bridge ###
 .phpunit
