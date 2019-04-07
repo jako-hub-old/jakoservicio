@@ -36,7 +36,7 @@ class ComentarioRepository extends ServiceEntityRepository
                 'guardado'          => true,
                 'fecha'             => $arComentario->getFecha(),
                 'jugador'           => $arJugador->getSeudonimo(),
-                'foto_usuario'      => "https://i0.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1",
+                'foto_usuario'      => $arJugador->getFoto(),
                 'codigo_jugador'    => $arJugador->getCodigoJugadorPk(),
             ];
         } else {
