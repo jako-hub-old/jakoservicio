@@ -98,7 +98,8 @@ class ApiJugadorController extends FOSRestController {
             # Todo: validar extensión del archivo.
             if($imagen->esValido()) {
                 $ext = $imagen->getExtension();
-                $nombreImagen = "foto_jugador_{$codigoJugador}";
+                $tiempo = time();
+                $nombreImagen = "foto_jugador_{$codigoJugador}_$tiempo";
                 $guardado = $imagen->guardar($directorioDestino, $nombreImagen);
                 $urlImagen = "{$this->getUrl()}/fotos_usuario/{$nombreImagen}.{$ext}";
                 if($guardado) { # todo: Guadar en entidad.
