@@ -36,7 +36,7 @@ class ComentarioRepository extends ServiceEntityRepository
                 'guardado'          => true,
                 'fecha'             => $arComentario->getFecha(),
                 'jugador'           => $arJugador->getSeudonimo(),
-                'foto_usuario'      => $arJugador->getFoto(),
+                'foto'              => $arJugador->getFoto(),
                 'codigo_jugador'    => $arJugador->getCodigoJugadorPk(),
             ];
         } else {
