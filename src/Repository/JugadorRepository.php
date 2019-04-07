@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Classes\ManejadorDeArchivos;
 use App\Classes\Utilidades;
 use App\Entity\Jugador;
 use App\Entity\JugadorAmigo;
@@ -118,6 +119,11 @@ class JugadorRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $jugador = $em->getRepository(Jugador::class)->find($codigoJugador);
         if($jugador) {
+            $fotoAnterior = $jugador->getFoto();
+            if($fotoAnterior) { # Borramos del sistema de archivos la foto anterior.
+                $dirPublico = ManejadorDeArchivos::getDirectorioPublico();
+                unlink($dirPublico . "/{$fotoAnterior}");
+            }
             $jugador->setFoto($urlFoto);
             $em->persist($jugador);
             $em->flush();

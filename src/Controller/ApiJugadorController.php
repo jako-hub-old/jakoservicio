@@ -101,7 +101,7 @@ class ApiJugadorController extends FOSRestController {
                 $tiempo = time();
                 $nombreImagen = "foto_jugador_{$codigoJugador}_$tiempo";
                 $guardado = $imagen->guardar($directorioDestino, $nombreImagen);
-                $urlImagen = "{$this->getUrl()}/fotos_usuario/{$nombreImagen}.{$ext}";
+                $urlImagen = "/fotos_usuario/{$nombreImagen}.{$ext}";
                 if($guardado) { # todo: Guadar en entidad.
                     $resultado = $em->getRepository(Jugador::class)->guardarFoto($codigoJugador, $urlImagen);
                     if($resultado !== true) { # Si la imagen no se guardó correctamente en la entidad, la borramos.
