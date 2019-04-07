@@ -138,6 +138,7 @@ class ApiJuegoController extends FOSRestController {
             return $em->getRepository(Juego::class)->cerrar($raw);
         } catch (\Exception $e) {
             return [
+                'message' => $e->getMessage(),
                 'error' => true,
             ];
         }

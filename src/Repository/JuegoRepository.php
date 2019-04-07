@@ -441,7 +441,7 @@ class JuegoRepository extends ServiceEntityRepository
 
             if($arrJuegosDetalles) {
                 foreach ($arrJuegosDetalles as $arrJuegoDetalle) {
-                    $codigo = $arrJuegoDetalle['codigo_juego_detalle'];
+                    $codigo = $arrJuegoDetalle;
                     $arJuegoDetalle = $em->getRepository(JuegoDetalle::class)->find($codigo);
                     $arJuegoDetalle->setEstadoInasistencia(1);
                     $em->persist($arJuegoDetalle);
