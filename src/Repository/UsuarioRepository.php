@@ -164,6 +164,7 @@ class UsuarioRepository extends ServiceEntityRepository
                     'nombre_corto'      => $arJugador->getNombreCorto(),
                     'apellido'          => $arJugador->getApellido(),
                     'correo'            => $arJugador->getCorreo(),
+                    'foto'              => $arJugador->getFoto(),
                     'seudonimo'         => $arJugador->getSeudonimo(),
                 ];
             } else {
