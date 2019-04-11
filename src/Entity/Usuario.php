@@ -51,6 +51,11 @@ class Usuario
     private $puntos = 0;
 
     /**
+     * @ORM\Column(name="fcm_token", type="string", nullable=true)
+     */
+    private $fcmToken;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="usuariosJugadorRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -221,7 +226,20 @@ class Usuario
         $this->transaccionesUsuarioRel = $transaccionesUsuarioRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFcmToken()
+    {
+        return $this->fcmToken;
+    }
 
-
+    /**
+     * @param mixed $fcmToken
+     */
+    public function setFcmToken($fcmToken): void
+    {
+        $this->fcmToken = $fcmToken;
+    }
 }
 

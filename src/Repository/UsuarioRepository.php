@@ -181,4 +181,27 @@ class UsuarioRepository extends ServiceEntityRepository
 
     }
 
+    public function guardarFCMToken($raw) {
+        $usuario = $raw['usuario']?? '0';
+        $token = $raw['token'];
+        if($usuario && $token) {
+            $em = $this->getEntityManager();
+            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
+            if($arUsuario) {
+                $arUsuario->setFcmToken($token);
+                $em->persist($arUsuario);
+                $em->flush($arUsuario);
+                return true;
+            } else {
+                return [
+                    'validacion' => Utilidades::validacion(10)
+                ];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
 }

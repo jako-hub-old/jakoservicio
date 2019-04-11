@@ -79,5 +79,20 @@ class ApiUsuarioController extends FOSRestController {
         }
     }
 
+    /**
+     * Esta función permite guardar el token generado por firebase para un usuario.
+     * @Rest\Post("/v1/usuario/guardar/fcm-token")
+     */
+    public function guardarTokenFCM(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Usuario::class)->guardarFCMToken($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
 
 }
