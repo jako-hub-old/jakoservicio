@@ -65,7 +65,10 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
                 $arJugadorSolicitud->setJugadorSolicitudRel($arJugadorDestino);
                 $em->persist($arJugadorSolicitud);
                 $em->flush();
-                return true;
+                return [
+                    'codigo_jugador' => $arJugadorDestino->getCodigoJugadorPk(),
+                    'jugador_seudonimo' => $arJugador->getSeudonimo(),
+                ];
             } else {
                 return [
                     'validacion' => Utilidades::validacion(7),
