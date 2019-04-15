@@ -100,7 +100,7 @@ class ApiJuegoController extends FOSRestController {
             $em = $this->getDoctrine()->getManager();
             $respuesta = $em->getRepository(Juego::class)->unir($raw);
             if($respuesta['codigo_juego']) {
-                $titulo = "Nuevo juego";
+                $titulo = "¡Tu juego se está armando!";
                 $mensaje = $respuesta['jugador_seudonimo'] . " se ha unido a tu juego";
                 $this->get('notificacion')->notificarAmigos($raw['jugador'], $titulo, $mensaje, [
                     'type'      => 'new-game',
