@@ -3,6 +3,7 @@
 namespace App\Controller;
 use App\Classes\Utilidades;
 use App\Entity\Juego;
+use App\Entity\Jugador;
 use App\Entity\Usuario;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -160,6 +161,32 @@ class ApiJuegoController extends FOSRestController {
         } catch (\Exception $e) {
             return [
                 'message' => $e->getMessage(),
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/compartir/amigos")
+     */
+    public function compartir(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
+            if($raw['juego'] && $raw['jugador']) {
+                $titulo = "¿Quieres jugar?";
+                $arJugador = $em->getRepository(Jugador::class)->find($raw['jugador']);
+                $mensaje = $arJugador->getSeudonimo()  . " te invita a su juego";
+                $this->get('notificacion')->notificarAmigos($raw['jugador'], $titulo, $mensaje, [
+                    'type'      => 'new-game',
+                    'path_data' => $raw['juego'],
+                    'action'    => 'yes',
+                ]);
+            }
+            return true;
+        } catch (\Exception $e) {
+            return [
                 'error' => true,
             ];
         }
