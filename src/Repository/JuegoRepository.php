@@ -75,6 +75,7 @@ class JuegoRepository extends ServiceEntityRepository
                 $em->flush();
                 return [
                     'codigo_juego' => $arJuego->getCodigoJuegoPk(),
+                    'jugador_seudonimo' => $arJugador->getSeudonimo(),
                 ];
             /*} else {
                 return [

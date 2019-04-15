@@ -103,7 +103,7 @@ class JugadorAmigo
     }
 
     /**
-     * @return mixed
+     * @return Jugador
      */
     public function getJugadorAmigoRel()
     {
