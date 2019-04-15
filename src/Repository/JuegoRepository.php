@@ -230,7 +230,11 @@ class JuegoRepository extends ServiceEntityRepository
                             $arJugador->setJuegos($arJugador->getJuegos() + 1);
                             $arJugador->setAsistencia($arJugador->getAsistencia() + 1);
                             $em->flush();
-                            return true;
+                            return [
+                                'jugador_seudonimo' => $arJugador->getSeudonimo(),
+                                'codigo_juego'      => $arJuego->getCodigoJuegoPk(),
+                                'codigo_jugador'    => $arJuego->getCodigoJugadorFk(),
+                            ];
                         } else {
                             return [
                                 'validacion' => Utilidades::validacion(11),

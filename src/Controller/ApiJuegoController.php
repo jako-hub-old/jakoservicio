@@ -98,7 +98,17 @@ class ApiJuegoController extends FOSRestController {
         try {
             $raw = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Juego::class)->unir($raw);
+            $respuesta = $em->getRepository(Juego::class)->unir($raw);
+            if($respuesta['codigo_juego']) {
+                $titulo = "Nuevo juego";
+                $mensaje = $respuesta['jugador_seudonimo'] . " se ha unido a tu juego";
+                $this->get('notificacion')->notificarAmigos($raw['jugador'], $titulo, $mensaje, [
+                    'type'      => 'new-game',
+                    'path_data' => $respuesta['codigo_juego'],
+                    'action'    => 'yes',
+                ]);
+            }
+            return $respuesta;
         } catch (\Exception $e) {
             return [
                 'error' => true,
