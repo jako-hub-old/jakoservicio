@@ -28,6 +28,8 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
                     ->select("js.codigoJugadorSolicitudPk as codigo_jugador_solicitud")
                     ->addSelect("j.nombreCorto as jugador_nombre_corto")
                     ->addSelect("j.seudonimo as jugador_seudonimo")
+                    ->addSelect("j.foto")
+                    ->addSelect("j.codigoJugadorPk as codigo_jugador")
                     ->leftJoin("js.jugadorRel", "j")
                     ->where("js.codigoJugadorSolicitudFk = {$jugador}")
                     ->andWhere("js.estadoRespuesta = 0");
