@@ -26,7 +26,8 @@ class PublicacionRepository extends ServiceEntityRepository
             ->addSelect("p.tipo")
             ->addSelect('p.codigoJuegoFk')
             ->addSelect('p.texto')
-            ->addSelect('p.fecha');
+            ->addSelect('p.fecha')
+            ->orderBy("p.codigoPublicacionPk", "DESC");
         $arPublicaciones =  $qb->getQuery()->getResult();
         return $arPublicaciones;
 
