@@ -58,7 +58,7 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
         $jugador = $datos['jugador']?? false;
         $jugadorDestino = $datos['jugador_destino']?? false;
         if($jugador && $jugadorDestino) {
-            $arJugadorSolicitud = $em->getRepository(JugadorSolicitud::class)->findOneBy(["codigoJugadorFk" => $jugador, "codigoJugadorSolicitudFk" => $jugadorDestino]);
+            $arJugadorSolicitud = $em->getRepository(JugadorSolicitud::class)->findOneBy(["codigoJugadorFk" => $jugador, "codigoJugadorSolicitudFk" => $jugadorDestino, "estadoRespuesta" => 0]);
             if(!$arJugadorSolicitud) {
                 $arJugador = $em->getRepository(Jugador::class)->find($jugador);
                 $arJugadorDestino = $em->getRepository(Jugador::class)->find($jugadorDestino);
