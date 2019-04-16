@@ -69,7 +69,17 @@ class ApiJugadorSolicitudController extends FOSRestController {
         try {
             $raw = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(JugadorSolicitud::class)->respuesta($raw);
+            $respuesta = $em->getRepository(JugadorSolicitud::class)->respuesta($raw);
+            if(is_array($respuesta) && isset($respuesta['notificar'])) {
+                $titulo = "Nuevo amigo";
+                $mensaje = "Tu y " . $respuesta['jugador_seudonimo'] . " ahora son amigos";
+                $this->get('notificacion')->notificarA($respuesta['codigo_jugador'], $titulo, $mensaje, [
+                    'type'      => 'friend-request',
+                    'path_data' => $respuesta['codigo_jugador'],
+                    'action'    => 'yes',
+                ]);
+            }
+            return $respuesta;
         } catch (\Exception $e) {
             return [
                 'error' => true,

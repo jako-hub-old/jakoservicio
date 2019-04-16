@@ -102,6 +102,12 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
                     $arJugadorAmigo->setJugadorRel($arJugadorSolicitud->getJugadorSolicitudRel());
                     $arJugadorAmigo->setJugadorAmigoRel($arJugadorSolicitud->getJugadorRel());
                     $em->persist($arJugadorAmigo);
+                    $em->flush();
+                    return [
+                        'notificar' => true,
+                        'codigo_jugador' => $arJugadorSolicitud->getJugadorRel()->getCodigoJugadorPk(),
+                        'jugador_seudonimo' => $arJugadorSolicitud->getJugadorSolicitudRel()->getSeudonimo(),
+                    ];
                 } else {
                     $arJugadorSolicitud->setEstadoAceptado(0);
                 }
