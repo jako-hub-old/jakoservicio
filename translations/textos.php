@@ -12,6 +12,7 @@ return [
     'validacion_10'  => 'No esxiste el usuario',
     'validacion_11'  => 'No tiene puntos suficientes para unirse a este juego',
     'validacion_12'  => 'El escenario no tiene disponibilidad para estas fechas',
+    'validacion_13'  => 'No existe la solicitud',
     'error_1'       => 'Ocurrió un error inesperado',
     'error_2'       => 'No se suministraron los datos requeridos para la api',
     'error_3'       => 'No esxiste el jugador',

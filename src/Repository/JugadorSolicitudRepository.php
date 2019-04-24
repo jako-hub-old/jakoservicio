@@ -108,6 +108,27 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
         }
     }
 
+    public function cancelar($datos) {
+        $em = $this->getEntityManager();
+        $solicitud = $datos['solicitud']?? false;
+        if($solicitud) {
+            $arJugadorSolicitud = $em->getRepository(JugadorSolicitud::class)->find($solicitud);
+            if($arJugadorSolicitud) {
+                $em->remove($arJugadorSolicitud);
+                $em->flush();
+                return true;
+            } else {
+                return [
+                    'validacion' => Utilidades::validacion(13),
+                ];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
     public function respuesta($datos)
     {
         $em = $this->getEntityManager();
