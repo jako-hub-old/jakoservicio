@@ -35,6 +35,22 @@ class ApiJugadorSolicitudController extends FOSRestController {
 
     /**
      * @return array
+     * @Rest\Post("/v1/jugador/solicitud/enviadas")
+     */
+    public function solicitudesEnviadas(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
+            return $em->getRepository(JugadorSolicitud::class)->enviadas($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return array
      * @Rest\Post("/v1/jugador/solicitud/nuevo")
      */
     public function nuevo(Request $request) {

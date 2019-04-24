@@ -52,6 +52,31 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
         }
     }
 
+    public function enviadas($datos)
+    {
+        $em = $this->getEntityManager();
+        $jugador = $datos['jugador'] ?? false;
+        if ($jugador) {
+            $qb = $em->createQueryBuilder();
+            $qb->from(JugadorSolicitud::class, "js")
+                ->select("js.codigoJugadorSolicitudPk as codigo_jugador_solicitud")
+                ->addSelect("j.nombreCorto as jugador_nombre_corto")
+                ->addSelect("j.seudonimo as jugador_seudonimo")
+                ->addSelect("j.foto")
+                ->addSelect("j.codigoJugadorPk as codigo_jugador")
+                ->leftJoin("js.jugadorSolicitudRel", "j")
+                ->where("js.codigoJugadorFk = {$jugador}")
+                ->andWhere("js.estadoRespuesta = 0")
+                ->andWhere("js.estadoAceptado = 0");
+            $arJugadores =  $qb->getQuery()->getResult();
+            return $arJugadores;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
     public function nuevo($datos)
     {
         $em = $this->getEntityManager();
