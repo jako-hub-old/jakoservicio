@@ -3,6 +3,8 @@
 namespace App\Classes;
 
 
+use App\Entity\Juego;
+use App\Entity\JuegoDetalle;
 use App\Entity\Jugador;
 use App\Entity\JugadorAmigo;
 use App\Entity\Usuario;
@@ -23,9 +25,13 @@ class Notificacion
         if(!$arJugador) return false;
         $arrAmigos = $em->getRepository(JugadorAmigo::class)->getAmigosJugador($jugador);
         $log = [];
+        $tokens = [];
+
         foreach ($arrAmigos as $amigo) {
-            if(!$token = $amigo['fcmToken']) continue;
+            $token = $amigo['fcmToken'];
+            if(empty($token) || in_array($token, $tokens)) continue;
             $log[$jugador] = $this->enviarNotificacion($token, $titulo, $mensaje, $datos);
+            $tokens[] = $amigo['fcmToken'];
         }
         return $log;
     }
@@ -36,6 +42,37 @@ class Notificacion
         if(!$arUsuario) return false;
         $token = $arUsuario->getFcmToken();
         return $this->enviarNotificacion($token, $titulo, $mensaje, $datos);
+    }
+
+    public function notificarAJugadores($jugadores=[], $titulo, $mensaje, $datos) {
+        $qb = $this->em->createQueryBuilder();
+        $ids = implode(',', $jugadores);
+        $qb->from(Jugador::class, "j")
+            ->select("j")
+            ->where("j.codigoJugadorPk IN ({$ids})");
+        $arrJugadores = $qb->getQuery()->getResult();
+        foreach ($arrJugadores as $arJugador) {
+            $arUsuario = $arJugador->getUsuariosJugadorRel()[0];
+            $token = $arUsuario->getFcmToken();
+            $this->enviarNotificacion($token, $titulo, $mensaje, $datos);
+        }
+    }
+
+    public function notificarAMiembrosJuego($juego, $titulo, $mensaje, $datos) {
+        $em = $this->em;
+        $arJuego = $em->getRepository(Juego::class)->find($juego);
+        if(!$arJuego) return false;
+        /**
+         * @var $detalles JuegoDetalle[]
+         */
+        $detalles= $arJuego->getJuegosDetallesJuegoRel();
+        foreach ($detalles as $detalle) {
+            $arJugador = $detalle->getJugadorRel();
+            $arUsuario = $arJugador->getUsuariosJugadorRel()[0];
+            $token = $arUsuario->getFcmToken();
+            $this->enviarNotificacion($token, $titulo, $mensaje, $datos);
+        }
+        return true;
     }
 
     public function enviarNotificacion($token, $titulo, $mensaje, $datos) {

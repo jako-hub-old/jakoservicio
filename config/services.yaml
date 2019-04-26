@@ -27,5 +27,9 @@ services:
         class: App\Classes\Notificacion
         arguments: ['@doctrine.orm.entity_manager']
         public : true
+    msgTxt:
+        class: App\Classes\MensajeTexto
+        arguments: ['@doctrine.orm.entity_manager']
+        public: true
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

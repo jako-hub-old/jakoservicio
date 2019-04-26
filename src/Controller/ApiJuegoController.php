@@ -28,11 +28,13 @@ class ApiJuegoController extends FOSRestController {
             if($respuesta['codigo_juego']) {
                 $titulo = "Nuevo juego";
                 $mensaje = $respuesta['jugador_seudonimo'] . " ha creado un juego";
-                $this->get('notificacion')->notificarAmigos($raw['jugador'], $titulo, $mensaje, [
-                    'type'      => 'new-game',
-                    'path_data' => $respuesta['codigo_juego'],
-                    'action'    => 'yes',
-                ]);
+                if(isset($raw['invitar_amigos'])) {
+                    $this->get('notificacion')->notificarAmigos($raw['jugador'], $titulo, $mensaje, [
+                        'type'      => 'new-game',
+                        'path_data' => $respuesta['codigo_juego'],
+                        'action'    => 'yes',
+                    ]);
+                }
             }
             return $respuesta;
         } catch (\Exception $e) {
@@ -50,9 +52,11 @@ class ApiJuegoController extends FOSRestController {
     public function buscar(Request $request) {
         try {
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Juego::class)->buscar();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Juego::class)->buscar($raw);
         } catch (\Exception $e) {
             return [
+                'message' => $e->getMessage(),
                 'error' => true,
             ];
         }
@@ -100,10 +104,23 @@ class ApiJuegoController extends FOSRestController {
             $raw = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();
             $respuesta = $em->getRepository(Juego::class)->unir($raw);
-            if($respuesta['codigo_juego']) {
+            if($respuesta['codigo_juego'] && !isset($respuesta['completo'])) {
                 $titulo = "¡Tu juego se está armando!";
                 $mensaje = $respuesta['jugador_seudonimo'] . " se ha unido a tu juego";
-                $this->get('notificacion')->notificarAmigos($raw['jugador'], $titulo, $mensaje, [
+                $this->get('notificacion')->notificarA($respuesta['codigo_jugador'], $titulo, $mensaje, [
+                    'type'      => 'new-game',
+                    'path_data' => $respuesta['codigo_juego'],
+                    'action'    => 'yes',
+                ]);
+            } else if($respuesta['codigo_juego'] && isset($respuesta['completo'])){
+                $titulo = "¡Tu juego está completo!";
+                $mensaje = $respuesta['jugador_seudonimo'] . " ya se han unido todos los jugadores";
+                $this->get('notificacion')->notificarA($respuesta['codigo_jugador'], $titulo, $mensaje, [
+                    'type'      => 'new-game',
+                    'path_data' => $respuesta['codigo_juego'],
+                    'action'    => 'yes',
+                ]);
+                $this->get('notificacion')->notificarAMiembrosJuego($respuesta['codigo_juego'], "Juego completo", "Está atento al inicio del juego.", [
                     'type'      => 'new-game',
                     'path_data' => $respuesta['codigo_juego'],
                     'action'    => 'yes',
@@ -141,7 +158,18 @@ class ApiJuegoController extends FOSRestController {
         try {
             $raw = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Juego::class)->invitar($raw);
+            $respuesta = $em->getRepository(Juego::class)->invitar($raw);
+            if(is_array($respuesta) && $respuesta['codigo_juego'] && $respuesta['jugador_seudonimo']) {
+                $jugador = $respuesta['jugador_seudonimo'];
+                $titulo = "¿Quieres jugar?";
+                $mensaje = "{$jugador} Te invita a hacer parte de un juego";
+                $this->get('notificacion')->notificarAJugadores($raw['jugadores']?? [], $titulo, $mensaje, [
+                    'type'      => 'new-game',
+                    'path_data' => $respuesta['codigo_juego'],
+                    'action'    => 'yes',
+                ]);
+            }
+            return $respuesta;
         } catch (\Exception $e) {
             return [
                 'error' => true,

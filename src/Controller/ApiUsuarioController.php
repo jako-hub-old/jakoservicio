@@ -95,4 +95,26 @@ class ApiUsuarioController extends FOSRestController {
         }
     }
 
+    /**
+     * @Rest\Post("/v1/usuario/invitar")
+     */
+    public function invitarAJako(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $telefonos = $raw['telefonos']?? false;
+            $jugador = $raw['jugador']?? 0;
+            if(!$telefonos && !$jugador) {
+                return [
+                    'error_controlado' => 'No se proporcionaron los datos',
+                ];
+            }
+            $this->get("msgTxt")->invitarAInstalar($jugador, $telefonos);
+            return true;
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 }

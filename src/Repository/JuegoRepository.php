@@ -11,6 +11,7 @@ use App\Entity\JuegoEquipo;
 use App\Entity\JuegoInvitacion;
 use App\Entity\JuegoJugador;
 use App\Entity\Jugador;
+use App\Entity\JugadorAmigo;
 use App\Entity\Posicion;
 use App\Entity\Publicacion;
 use App\Entity\Reserva;
@@ -93,10 +94,16 @@ class JuegoRepository extends ServiceEntityRepository
      * @param $filtros
      * @return array
      */
-    public function buscar()
+    public function buscar($raw)
     {
         $em = $this->getEntityManager();
         $fecha = new \DateTime('now');
+        $jugador = $raw['jugador']?? 0;
+        $qbAmigos = $em->createQueryBuilder()
+            ->from(JugadorAmigo::class, "a")
+            ->select("a.codigoJugadorAmigoFk")
+            ->where("a.codigoJugadorFk = {$jugador}");
+        $qb = $em->createQueryBuilder();
         $qb = $em->createQueryBuilder();
         $qb->from(Juego::class, "j")
             ->select("j.codigoJuegoPk as codigo_juego")
@@ -114,7 +121,8 @@ class JuegoRepository extends ServiceEntityRepository
             ->leftJoin("j.escenarioRel", "e")
             ->leftJoin("e.negocioRel", "n")
             ->leftJoin("j.jugadorRel", "ju")
-        ->where("j.fechaDesde >= '".$fecha->format('Y-m-d H:i')."'");
+        ->where("j.fechaDesde >= '".$fecha->format('Y-m-d H:i')."'")
+        ->AndWhere("j.codigoJugadorFk IN ({$qbAmigos}) OR j.codigoJugadorFk = '{$jugador}'");
         $arJuegos =  $qb->getQuery()->getResult();
         return $arJuegos;
 
@@ -230,11 +238,13 @@ class JuegoRepository extends ServiceEntityRepository
                             $arJugador->setJuegos($arJugador->getJuegos() + 1);
                             $arJugador->setAsistencia($arJugador->getAsistencia() + 1);
                             $em->flush();
-                            return [
+                            $respuesta = [
                                 'jugador_seudonimo' => $arJugador->getSeudonimo(),
                                 'codigo_juego'      => $arJuego->getCodigoJuegoPk(),
                                 'codigo_jugador'    => $arJuego->getCodigoJugadorFk(),
                             ];
+                            if($arJuego->getJugadoresConfirmados() === $arJuego->getJugadores()) $respuesta['completo'] = true;
+                            return $respuesta;
                         } else {
                             return [
                                 'validacion' => Utilidades::validacion(11),
@@ -407,6 +417,7 @@ class JuegoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $juego = $datos['juego']?? false;
         $jugadores = $datos['jugadores']?? false;
+        $notificar = false;
         if($juego && $jugadores) {
             $arJuego = $em->getRepository(Juego::class)->find($juego);
             if($arJuego) {
@@ -421,12 +432,20 @@ class JuegoRepository extends ServiceEntityRepository
                                 $arJuegoInvitacion->setJuegoRel($arJuego);
                                 $arJuegoInvitacion->setJugadorRel($arJugador);
                                 $em->persist($arJuegoInvitacion);
+                                $notificar = true;
                             }
                         }
                     }
                 }
                 $em->flush();
-                return true;
+                if($notificar) {
+                    return [
+                        'codigo_juego' => $juego,
+                        'jugador_seudonimo' => $arJuego->getJugadorRel()->getSeudonimo(),
+                    ];
+                } else {
+                    return true;
+                }
             }
         } else {
             return [

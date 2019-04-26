@@ -306,7 +306,7 @@ class Juego
     }
 
     /**
-     * @return mixed
+     * @return Jugador
      */
     public function getJugadorRel()
     {
@@ -354,7 +354,7 @@ class Juego
     }
 
     /**
-     * @return mixed
+     * @return JuegoDetalle[]
      */
     public function getJuegosDetallesJuegoRel()
     {

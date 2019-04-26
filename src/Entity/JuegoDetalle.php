@@ -172,7 +172,7 @@ class JuegoDetalle
     }
 
     /**
-     * @return mixed
+     * @return Jugador
      */
     public function getJugadorRel()
     {

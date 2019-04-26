@@ -32,4 +32,20 @@ class ApiPublicacionController extends FOSRestController {
         }
     }
 
+    /**
+     * @return array
+     * @Rest\Post("/v1/publicacion/jugador")
+     */
+    public function jugador(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Publicacion::class)->jugador($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
 }

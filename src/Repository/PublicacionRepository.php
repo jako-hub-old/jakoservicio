@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\JugadorAmigo;
 use App\Entity\Publicacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -20,6 +21,11 @@ class PublicacionRepository extends ServiceEntityRepository
     public function lista($raw)
     {
         $em = $this->getEntityManager();
+        $jugador = $raw['jugador']?? 0;
+        $qbAmigos = $em->createQueryBuilder()
+            ->from(JugadorAmigo::class, "a")
+            ->select("a.codigoJugadorAmigoFk")
+            ->where("a.codigoJugadorFk = {$jugador}");
         $qb = $em->createQueryBuilder();
         $qb->from(Publicacion::class, "p")
             ->select("p.codigoPublicacionPk as codigo_publicacion")
@@ -27,10 +33,33 @@ class PublicacionRepository extends ServiceEntityRepository
             ->addSelect('p.codigoJuegoFk')
             ->addSelect('p.texto')
             ->addSelect('p.fecha')
-            ->orderBy("p.codigoPublicacionPk", "DESC");
+            ->orderBy("p.codigoPublicacionPk", "DESC")
+            ->where("p.codigoJugadorFk IN ({$qbAmigos})")
+            ->orWhere("p.codigoJugadorFk = '{$jugador}'");
         $arPublicaciones =  $qb->getQuery()->getResult();
         return $arPublicaciones;
 
     }
 
+    /**
+     * @param $filtros
+     * @return array
+     */
+    public function jugador($raw)
+    {
+        $em = $this->getEntityManager();
+        $jugador = $raw['jugador']?? 0;
+        $qb = $em->createQueryBuilder();
+        $qb->from(Publicacion::class, "p")
+            ->select("p.codigoPublicacionPk as codigo_publicacion")
+            ->addSelect("p.tipo")
+            ->addSelect('p.codigoJuegoFk')
+            ->addSelect('p.texto')
+            ->addSelect('p.fecha')
+            ->orderBy("p.codigoPublicacionPk", "DESC")
+            ->where("p.codigoJugadorFk = '{$jugador}'");
+        $arPublicaciones =  $qb->getQuery()->getResult();
+        return $arPublicaciones;
+
+    }
 }

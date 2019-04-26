@@ -319,7 +319,7 @@ class Jugador
     }
 
     /**
-     * @return mixed
+     * @return Usuario[]
      */
     public function getUsuariosJugadorRel()
     {
