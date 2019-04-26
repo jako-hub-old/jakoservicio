@@ -220,4 +220,21 @@ class ApiJuegoController extends FOSRestController {
         }
     }
 
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/invitaciones")
+     */
+    public function invitaciones(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Juego::class)->invitaciones($raw);
+        } catch (\Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error' => true,
+            ];
+        }
+    }
+
 }

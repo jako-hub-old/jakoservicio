@@ -485,4 +485,24 @@ class JuegoRepository extends ServiceEntityRepository
         }
     }
 
+    public function invitaciones($raw) {
+        $em = $this->getEntityManager();
+        $jugador = $raw['jugador']?? 0;
+        $arJugador = $em->getRepository(Jugador::class)->find($jugador);
+        if($arJugador) {
+            $qb = $em->createQueryBuilder()
+                ->from(JuegoInvitacion::class, "ji")
+                ->select("ji.codigoJuegoInvitacionPk as codigo_juego_invitacion")
+                ->addSelect("j.nombre as nombre_juego")
+                ->addSelect("ji.codigoJuegoFk as codigo_juego")
+                ->join("ji.juegoRel", "j")
+                ->where("ji.codigoJugadorFk = '{$jugador}'");
+            return $qb->getQuery()->getResult();
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
 }
