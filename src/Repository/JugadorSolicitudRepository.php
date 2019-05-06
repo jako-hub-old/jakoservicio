@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Classes\Utilidades;
+use App\Entity\Invitado;
 use App\Entity\Jugador;
 use App\Entity\JugadorAmigo;
 use App\Entity\JugadorSolicitud;
@@ -135,6 +136,9 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
         $solicitud = $datos['solicitud']?? false;
         $respuesta = $datos['respuesta']?? false;
         if($solicitud && $respuesta) {
+            /**
+             * @var JugadorSolicitud $arJugadorSolicitud
+             */
             $arJugadorSolicitud = $em->getRepository(JugadorSolicitud::class)->find($solicitud);
             if(!$arJugadorSolicitud->getEstadoRespuesta()) {
                 $arJugadorSolicitud->setEstadoRespuesta(1);
@@ -149,6 +153,7 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
                     $arJugadorAmigo->setJugadorAmigoRel($arJugadorSolicitud->getJugadorRel());
                     $em->persist($arJugadorAmigo);
                     $em->flush();
+                    $this->validarInvitacion($arJugadorSolicitud->getCodigoJugadorFk(), $arJugadorSolicitud->getJugadorSolicitudRel()->getUsuariosJugadorRel()[0]->getUsuario());
                     return [
                         'notificar' => true,
                         'codigo_jugador' => $arJugadorSolicitud->getJugadorRel()->getCodigoJugadorPk(),
@@ -169,6 +174,19 @@ class JugadorSolicitudRepository extends ServiceEntityRepository
             return [
                 'error_controlado' => Utilidades::error(2),
             ];
+        }
+    }
+
+    private function validarInvitacion($codigoJugador, $telefonoInvitado) {
+        $em = $this->getEntityManager();
+        /**
+         * @var Invitado $arInvitacion
+         */
+        $arInvitacion = $em->getRepository(Invitado::class)->findOneBy(['codigoJugadorFk' => $codigoJugador, 'telefonoInvitado' => $telefonoInvitado]);
+        if($arInvitacion) {
+            $arInvitacion->setAmigo(true);
+            $em->persist($arInvitacion);
+            $em->flush($arInvitacion);
         }
     }
 

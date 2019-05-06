@@ -125,6 +125,10 @@ class Jugador
      * @ORM\OneToMany(targetEntity="Actividad", mappedBy="jugadorRel")
      */
     protected $actividadesJugadorRel;
+    /**
+     * @ORM\OneToMany(targetEntity="Invitado", mappedBy="jugadorRel")
+     */
+    protected  $invitadosJugador;
 
     /**
      * @return mixed

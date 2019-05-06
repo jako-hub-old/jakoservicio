@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 use App\Classes\Utilidades;
+use App\Entity\Invitado;
 use App\Entity\Juego;
 use App\Entity\Jugador;
 use App\Entity\JugadorSolicitud;
@@ -119,4 +120,21 @@ class ApiJugadorSolicitudController extends FOSRestController {
         }
     }
 
+    /**
+     * @param Request $request
+     * @Rest\Post("/v1/jugador/solicitud/sugerencia")
+     * @return mixed
+     */
+    public function sugerenciasDeAmistad(Request $request) {
+        try {
+            $raw = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
+            return $em->getRepository(Invitado::class)->getSugerenciasDeAmistad($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
 }

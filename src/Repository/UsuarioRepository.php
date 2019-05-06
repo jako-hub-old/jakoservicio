@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Classes\Utilidades;
+use App\Entity\Invitado;
 use App\Entity\Jugador;
 use App\Entity\Transaccion;
 use App\Entity\Usuario;
@@ -100,11 +101,32 @@ class UsuarioRepository extends ServiceEntityRepository
             $arUsuario->setCrearJuego(1);
             $em->persist($arUsuario);
             $em->flush();
-
+            $this->revisarInvitacion($usuario);
             $em->getRepository(Transaccion::class)->aplicar(100000, 100, $arJugador, 1, "Bono regalo inicial");
 
         }
         return $arUsuario;
+    }
+
+    private function revisarInvitacion($telefono) {
+        if(strlen($telefono) > 10) {
+            $telefono = strrev(substr(strrev($telefono), 0, 10));
+        }
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        $qb->from(Invitado::class, "i")
+            ->select("i")
+            ->where("i.telefonoInvitado = '{$telefono}'")
+            ->setMaxResults(1);
+        /**
+         * @var Invitado $arInvitado
+         */
+        $arInvitado = $em->getRepository(Invitado::class)->findOneBy(["telefonoInvitado" => $telefono]);
+        if($arInvitado) {
+            $arInvitado->setRegistrado(true);
+            $em->persist($arInvitado);
+            $em->flush();
+        }
     }
 
     private function generarCodigo($longitud) {

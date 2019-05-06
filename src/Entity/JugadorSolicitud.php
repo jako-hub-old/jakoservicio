@@ -129,7 +129,7 @@ class JugadorSolicitud
     }
 
     /**
-     * @return mixed
+     * @return Jugador
      */
     public function getJugadorRel()
     {
@@ -145,7 +145,7 @@ class JugadorSolicitud
     }
 
     /**
-     * @return mixed
+     * @return Jugador
      */
     public function getJugadorSolicitudRel()
     {
