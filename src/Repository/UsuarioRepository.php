@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Classes\Utilidades;
 use App\Entity\Invitado;
 use App\Entity\Jugador;
+use App\Entity\JugadorSolicitud;
 use App\Entity\Transaccion;
 use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -101,14 +102,20 @@ class UsuarioRepository extends ServiceEntityRepository
             $arUsuario->setCrearJuego(1);
             $em->persist($arUsuario);
             $em->flush();
-            $this->revisarInvitacion($usuario);
+            $this->revisarInvitacion($usuario, $arJugador);
             $em->getRepository(Transaccion::class)->aplicar(100000, 100, $arJugador, 1, "Bono regalo inicial");
 
         }
         return $arUsuario;
     }
 
-    private function revisarInvitacion($telefono) {
+    /**
+     * @param $telefono
+     * @param $arJugador Jugador
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function revisarInvitacion($telefono, $arJugadorInvitado) {
         if(strlen($telefono) > 10) {
             $telefono = strrev(substr(strrev($telefono), 0, 10));
         }
@@ -124,6 +131,13 @@ class UsuarioRepository extends ServiceEntityRepository
         $arInvitado = $em->getRepository(Invitado::class)->findOneBy(["telefonoInvitado" => $telefono]);
         if($arInvitado) {
             $arInvitado->setRegistrado(true);
+            $arJugadorInvita = $arInvitado->getJugadorRel();
+            $arSolicitud = new JugadorSolicitud();
+            $arSolicitud->setJugadorRel($arJugadorInvita);
+            $arSolicitud->setJugadorSolicitudRel($arJugadorInvitado);
+            $arSolicitud->setEstadoAceptado(false);
+            $arSolicitud->setEstadoRespuesta(false);
+            $em->persist($arSolicitud);
             $em->persist($arInvitado);
             $em->flush();
         }
