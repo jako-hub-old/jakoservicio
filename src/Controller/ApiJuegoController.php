@@ -104,15 +104,7 @@ class ApiJuegoController extends FOSRestController {
             $raw = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();
             $respuesta = $em->getRepository(Juego::class)->unir($raw);
-            if($respuesta['codigo_juego'] && !isset($respuesta['completo'])) {
-                $titulo = "¡Tu juego se está armando!";
-                $mensaje = $respuesta['jugador_seudonimo'] . " se ha unido a tu juego";
-                $this->get('notificacion')->notificarA($respuesta['codigo_jugador'], $titulo, $mensaje, [
-                    'type'      => 'new-game',
-                    'path_data' => $respuesta['codigo_juego'],
-                    'action'    => 'yes',
-                ]);
-            } else if($respuesta['codigo_juego'] && isset($respuesta['completo'])){
+            if($respuesta['codigo_juego'] && isset($respuesta['completo'])){
                 $titulo = "¡Tu juego está completo!";
                 $mensaje = $respuesta['jugador_seudonimo'] . " ya se han unido todos los jugadores";
                 $this->get('notificacion')->notificarA($respuesta['codigo_jugador'], $titulo, $mensaje, [
@@ -120,7 +112,9 @@ class ApiJuegoController extends FOSRestController {
                     'path_data' => $respuesta['codigo_juego'],
                     'action'    => 'yes',
                 ]);
-                $this->get('notificacion')->notificarAMiembrosJuego($respuesta['codigo_juego'], "Juego completo", "Está atento al inicio del juego.", [
+                $fecha = $respuesta['fecha']?? '';
+                $mensaje2 = "Prepárate para tu juego el {$fecha}";
+                $this->get('notificacion')->notificarAMiembrosJuego($respuesta['codigo_juego'], "!Juego completo!", $mensaje2, [
                     'type'      => 'new-game',
                     'path_data' => $respuesta['codigo_juego'],
                     'action'    => 'yes',
@@ -130,6 +124,7 @@ class ApiJuegoController extends FOSRestController {
         } catch (\Exception $e) {
             return [
                 'error' => true,
+                'message' => $e->getMessage(),
             ];
         }
     }
@@ -229,6 +224,23 @@ class ApiJuegoController extends FOSRestController {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(Juego::class)->invitaciones($raw);
+        } catch (\Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/invitaciones/rechazar")
+     */
+    public function rechazarInvitacion(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Juego::class)->rechazarInvitacion($raw);
         } catch (\Exception $e) {
             return [
                 'message' => $e->getMessage(),

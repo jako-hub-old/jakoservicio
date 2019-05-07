@@ -215,6 +215,9 @@ class JuegoRepository extends ServiceEntityRepository
         if($jugador && $juego && $posicion && $numero && $equipo) {
             $arUsuario = $em->getRepository(Usuario::class)->find($jugador);
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
+            /**
+             * @var $arJuego Juego
+             */
             $arJuego = $em->getRepository(Juego::class)->find($juego);
             $arPosicion = $em->getRepository(Posicion::class)->find($posicion);
             $arEquipo = $em->getRepository(JuegoEquipo::class)->find($equipo);
@@ -237,11 +240,21 @@ class JuegoRepository extends ServiceEntityRepository
                             $em->persist($arEquipo);
                             $arJugador->setJuegos($arJugador->getJuegos() + 1);
                             $arJugador->setAsistencia($arJugador->getAsistencia() + 1);
+                            $arInvitacion = $em->getRepository(JuegoInvitacion::class)
+                                                ->findOneBy([
+                                                    'codigoJugadorFk' => $arJugador->getCodigoJugadorPk(),
+                                                    'codigoJuegoFk' => $arJuego->getCodigoJuegoPk()
+                                                ]);
+                            if($arInvitacion) {
+                                $arInvitacion->setEstadoAceptada(true);
+                                $em->persist($arInvitacion);
+                            }
                             $em->flush();
                             $respuesta = [
                                 'jugador_seudonimo' => $arJugador->getSeudonimo(),
                                 'codigo_juego'      => $arJuego->getCodigoJuegoPk(),
                                 'codigo_jugador'    => $arJuego->getCodigoJugadorFk(),
+                                'fecha'             => $arJuego->getFechaDesde()->format("Y-m-d H:i")
                             ];
                             if($arJuego->getJugadoresConfirmados() === $arJuego->getJugadores()) $respuesta['completo'] = true;
                             return $respuesta;
@@ -496,7 +509,9 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.nombre as nombre_juego")
                 ->addSelect("ji.codigoJuegoFk as codigo_juego")
                 ->join("ji.juegoRel", "j")
-                ->where("ji.codigoJugadorFk = '{$jugador}'");
+                ->where("ji.codigoJugadorFk = '{$jugador}'")
+                ->andWhere("ji.estadoAceptada = 0 OR ji.estadoAceptada IS NULL")
+                ->andWhere("ji.estadoRechazada = 0 OR ji.estadoRechazada IS NULL");
             return $qb->getQuery()->getResult();
         } else {
             return [
@@ -505,4 +520,21 @@ class JuegoRepository extends ServiceEntityRepository
         }
     }
 
+    public function rechazarInvitacion($raw)
+    {
+        $em = $this->getEntityManager();
+        $invitacion = $raw['invitacion'] ?? 0;
+        $arInvitacion = $em->getRepository(JuegoInvitacion::class)->find($invitacion);
+        if ($arInvitacion) {
+            $arInvitacion->setEstadoRechazada(true);
+            $em->persist($arInvitacion);
+            $em->flush();
+            return true;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+
+        }
+    }
 }
