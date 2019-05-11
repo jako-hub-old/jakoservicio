@@ -103,7 +103,11 @@ class JuegoRepository extends ServiceEntityRepository
             ->from(JugadorAmigo::class, "a")
             ->select("a.codigoJugadorAmigoFk")
             ->where("a.codigoJugadorFk = {$jugador}");
-        $qb = $em->createQueryBuilder();
+        $qbMisJuegos = $em->createQueryBuilder()
+            ->from(JuegoDetalle::class, "juegoDetalle")
+            ->select("juegoDetalle.codigoJuegoFk")
+            ->where("juegoDetalle.codigoJugadorFk = '{$jugador}'")
+            ->groupBy("juegoDetalle.codigoJuegoFk");
         $qb = $em->createQueryBuilder();
         $qb->from(Juego::class, "j")
             ->select("j.codigoJuegoPk as codigo_juego")
@@ -122,7 +126,9 @@ class JuegoRepository extends ServiceEntityRepository
             ->leftJoin("e.negocioRel", "n")
             ->leftJoin("j.jugadorRel", "ju")
         ->where("j.fechaDesde >= '".$fecha->format('Y-m-d H:i')."'")
-        ->AndWhere("j.codigoJugadorFk IN ({$qbAmigos}) OR j.codigoJugadorFk = '{$jugador}'");
+        ->AndWhere("j.codigoJugadorFk IN ({$qbAmigos}) OR j.codigoJugadorFk = '{$jugador}'")
+        ->andWhere("j.codigoJuegoPk NOT IN ({$qbMisJuegos})");
+
         $arJuegos =  $qb->getQuery()->getResult();
         return $arJuegos;
 
