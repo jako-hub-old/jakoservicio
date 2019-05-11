@@ -33,8 +33,12 @@ class PublicacionRepository extends ServiceEntityRepository
             ->addSelect('p.codigoJuegoFk')
             ->addSelect('p.texto')
             ->addSelect('p.fecha')
+            ->addSelect("p.plataforma")
+            ->addSelect("j.foto")
+            ->leftJoin("p.jugadorRel", "j")
             ->orderBy("p.codigoPublicacionPk", "DESC")
             ->where("p.codigoJugadorFk IN ({$qbAmigos})")
+            ->andWhere("p.personal IS NULL or p.personal = 0")
             ->orWhere("p.codigoJugadorFk = '{$jugador}'");
         $arPublicaciones =  $qb->getQuery()->getResult();
         return $arPublicaciones;

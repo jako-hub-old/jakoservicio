@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Classes\Publicador;
 use App\Classes\Utilidades;
 use App\Entity\Invitado;
 use App\Entity\Jugador;
@@ -42,12 +43,19 @@ class UsuarioRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function validar($datos) {
+    /**
+     * @param $datos
+     * @param $publicador Publicador
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function validar($datos, $publicador) {
         $em = $this->getEntityManager();
         $usuario = $datos['usuario']?? '';
         $imei = $datos['imei']?? '';
         if($usuario && $imei) {
-            $arUsuario = $this->usuarioIngreso($usuario, $imei);
+            $arUsuario = $this->usuarioIngreso($usuario, $imei, $publicador);
             if($arUsuario->getEstadoVerificado()) {
                 if($imei == $arUsuario->getImei()) {
                     return [
@@ -85,7 +93,15 @@ class UsuarioRepository extends ServiceEntityRepository
         }
     }
 
-    private function usuarioIngreso($usuario, $imei) {
+    /**
+     * @param $usuario
+     * @param $imei
+     * @param $publicador Publicador
+     * @return Usuario|object|null
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function usuarioIngreso($usuario, $imei, $publicador) {
         $em = $this->getEntityManager();
         $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['usuario' => $usuario]);
         if(!$arUsuario) {
@@ -102,8 +118,12 @@ class UsuarioRepository extends ServiceEntityRepository
             $em->persist($arUsuario);
             $em->flush();
             $this->revisarInvitacion($usuario);
-            $em->getRepository(Transaccion::class)->aplicar(100000, 100, $arJugador, 1, "Bono regalo inicial");
-
+            $puntos = 100;
+            $em->getRepository(Transaccion::class)->aplicar(100000, $puntos, $arJugador, 1, "Bono regalo inicial");
+            $mensajeBono = "Disfruta de tu bono inicial por {$puntos}pts para que puedas crear y unirte a Juegos en Jako";
+            $publicador->publicarNoticia($mensajeBono, Publicador::TIPO_NOTICIA, $arJugador, null, true, true);
+            $mensajeBienvenida = "¡Te damos la bienvenida a Jako! Contacta amigos, Organiza tus propios juegos, Invita a tus amigos y ¡disfruta!";
+            $publicador->publicarNoticia($mensajeBienvenida, Publicador::TIPO_NOTICIA, $arJugador, null, true, true);
         }
         return $arUsuario;
     }
@@ -187,6 +207,7 @@ class UsuarioRepository extends ServiceEntityRepository
                     'apellido'          => $arJugador->getApellido(),
                     'correo'            => $arJugador->getCorreo(),
                     'foto'              => $arJugador->getFoto(),
+                    'puntos'            => $arUsuario->getPuntos(),
                     'seudonimo'         => $arJugador->getSeudonimo(),
                 ];
             } else {

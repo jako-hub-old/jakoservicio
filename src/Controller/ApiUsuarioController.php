@@ -38,7 +38,7 @@ class ApiUsuarioController extends FOSRestController {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            return $em->getRepository(Usuario::class)->validar($raw);
+            return $em->getRepository(Usuario::class)->validar($raw, $this->get("publicador"));
         } catch (\Exception $e) {
             return [
                 'error' => true,

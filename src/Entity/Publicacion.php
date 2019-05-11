@@ -32,6 +32,15 @@ class Publicacion
     private $texto;
 
     /**
+     * @ORM\Column(name="plataforma", type="boolean", nullable=true)
+     */
+    private $plataforma=false;
+    /**
+     * @ORM\Column(name="personal", type="boolean", nullable=true)
+     */
+    private $personal=false;
+
+    /**
      * @ORM\Column(name="codigo_jugador_fk", type="integer", nullable=true)
      */
     private $codigoJugadorFk;
@@ -181,6 +190,35 @@ class Publicacion
         $this->fecha = $fecha;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPlataforma()
+    {
+        return $this->plataforma;
+    }
 
+    /**
+     * @param mixed $plataforma
+     */
+    public function setPlataforma($plataforma): void
+    {
+        $this->plataforma = $plataforma;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getPersonal()
+    {
+        return $this->personal;
+    }
+
+    /**
+     * @param mixed $personal
+     */
+    public function setPersonal($personal): void
+    {
+        $this->personal = $personal;
+    }
 }
