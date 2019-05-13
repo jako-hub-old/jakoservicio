@@ -159,7 +159,7 @@ class ApiJuegoController extends FOSRestController {
                 $titulo = "¿Quieres jugar?";
                 $mensaje = "{$jugador} Te invita a hacer parte de un juego";
                 $this->get('notificacion')->notificarAJugadores($raw['jugadores']?? [], $titulo, $mensaje, [
-                    'type'      => 'new-game',
+                    'type'      => 'game-invitation',
                     'path_data' => $respuesta['codigo_juego'],
                     'action'    => 'yes',
                 ]);
