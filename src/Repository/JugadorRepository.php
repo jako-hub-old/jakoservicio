@@ -51,7 +51,8 @@ class JugadorRepository extends ServiceEntityRepository
             ->addSelect("j.seudonimo")
             ->addSelect("j.fotoMiniatura as foto")
             ->addSelect("u.usuario")
-            ->leftJoin("j.usuariosJugadorRel", "u");
+            ->leftJoin("j.usuariosJugadorRel", "u")
+            ->where("j.seudonimo IS NOT NULL");
         $arJugadores =  $qb->getQuery()->getResult();
         return $arJugadores;
 
