@@ -56,6 +56,11 @@ class Usuario
     private $fcmToken;
 
     /**
+     * @ORM\Column(name="fecha_registro", type="datetime", nullable=true)
+     */
+    private $fechaRegistro;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="usuariosJugadorRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -240,6 +245,22 @@ class Usuario
     public function setFcmToken($fcmToken): void
     {
         $this->fcmToken = $fcmToken;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * @param mixed $fechaRegistro
+     */
+    public function setFechaRegistro($fechaRegistro): void
+    {
+        $this->fechaRegistro = $fechaRegistro;
     }
 }
 

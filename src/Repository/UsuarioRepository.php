@@ -116,6 +116,7 @@ class UsuarioRepository extends ServiceEntityRepository
             $arUsuario->setJugadorRel($arJugador);
             $arUsuario->setImei($imei);
             $arUsuario->setCrearJuego(1);
+            $arUsuario->setFechaRegistro(new \DateTime("now"));
             $em->persist($arUsuario);
             $em->flush();
             $this->revisarInvitacion($usuario, $arJugador);
