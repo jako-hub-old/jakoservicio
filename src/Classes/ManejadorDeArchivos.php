@@ -62,7 +62,7 @@ class ManejadorDeArchivos
         return $nuevoArchivo;
     }
 
-    public function guardar($destination, $name = false) {
+    public function guardar($destination, $name = false, $pareja=false) {
         if(!file_exists($destination)) {
             return false;
         }
@@ -71,6 +71,28 @@ class ManejadorDeArchivos
         else $this->nombreArchivo = $name;
         $ubicacionFinal = "{$destination}{$ds}{$name}.{$this->extensionArchivo}";
         $this->ubicacionAlmacenamiento = $ubicacionFinal;
+        $info = pathinfo($this->ubicacionAlmacenamiento);
+        $extension = $info['extension'];
+        if($extension === 'jpg' || $extension === 'jpeg') $image = imagecreatefromjpeg($this->ubicacionArchivo);
+        $ancho = imagesx($image);
+        $alto = imagesy($image);
+        if($ancho > $alto) {
+            $tamanio = $alto;
+            $difX = ceil(($ancho / 2) - ($tamanio / 2));
+            $difY = 0;
+        } else if($alto > $ancho) {
+            $tamanio = $ancho;
+            $difY = ceil(($alto / 2) - ($tamanio / 2));
+            $difX = 0;
+        } else {
+            $tamanio = $ancho;
+            $difX = $difY = 0;
+        }
+        $nuevaImagen = imagecreatetruecolor($tamanio, $tamanio);
+        imagecopy($nuevaImagen, $image, 0, 0, $difX, $difY, $tamanio, $tamanio);
+        if($extension === 'jpg' || $extension === 'jpeg')
+            return imagejpeg($nuevaImagen, $ubicacionFinal);
+
         return move_uploaded_file($this->ubicacionArchivo, $ubicacionFinal);
     }
 

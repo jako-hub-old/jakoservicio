@@ -212,7 +212,7 @@ class UsuarioRepository extends ServiceEntityRepository
         if($codigoUsuario) {
             $em = $this->getEntityManager();
             $arUsuario = $em->getRepository(Usuario::class)->find($codigoUsuario);
-            if($arUsuario) {
+            if($arUsuario && $arUsuario instanceof Usuario) {
                 $arJugador = $arUsuario->getJugadorRel();
                 return [
                     'identificacion'    => $arJugador->getIdentificacion(),
@@ -221,6 +221,7 @@ class UsuarioRepository extends ServiceEntityRepository
                     'apellido'          => $arJugador->getApellido(),
                     'correo'            => $arJugador->getCorreo(),
                     'foto'              => $arJugador->getFoto(),
+                    'thumb'             => $arJugador->getFotoMiniatura(),
                     'puntos'            => $arUsuario->getPuntos(),
                     'seudonimo'         => $arJugador->getSeudonimo(),
                 ];

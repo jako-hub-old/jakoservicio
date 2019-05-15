@@ -100,7 +100,7 @@ class ApiJugadorController extends FOSRestController {
                 $ext = $imagen->getExtension();
                 $tiempo = time();
                 $nombreImagen = "foto_jugador_{$codigoJugador}_$tiempo";
-                $guardado = $imagen->guardar($directorioDestino, $nombreImagen);
+                $guardado = $imagen->guardar($directorioDestino, $nombreImagen, true);
                 $urlImagen = "/fotos_usuario/{$nombreImagen}.{$ext}";
                 if($guardado) {
                     $origenImagen = "{$directorioDestino}/{$nombreImagen}.{$ext}";

@@ -121,6 +121,7 @@ final class Utilidades {
             $diffY = ceil(($alto / 2) - ($tamanioCentrado / 2));
             $diffX = 0;
         } else {
+            $tamanioCentrado = $ancho;
             $diffX = $diffY = 0;
         }
         $imagenCentrada = imagecreatetruecolor($tamanioCentrado, $tamanioCentrado);
