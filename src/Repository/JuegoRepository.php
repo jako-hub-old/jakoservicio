@@ -244,8 +244,6 @@ class JuegoRepository extends ServiceEntityRepository
                             $em->persist($arJuego);
                             $arEquipo->setJugadoresConfirmados($arEquipo->getJugadoresConfirmados() + 1);
                             $em->persist($arEquipo);
-                            $arJugador->setJuegos($arJugador->getJuegos() + 1);
-                            $arJugador->setAsistencia($arJugador->getAsistencia() + 1);
                             $arInvitacion = $em->getRepository(JuegoInvitacion::class)
                                                 ->findOneBy([
                                                     'codigoJugadorFk' => $arJugador->getCodigoJugadorPk(),
@@ -445,13 +443,19 @@ class JuegoRepository extends ServiceEntityRepository
                     if($arJugador) {
                         $arJuegoDetalle = $em->getRepository(JuegoDetalle::class)->findOneBy(["codigoJuegoFk" => $juego, "codigoJugadorFk" => $jugador]);
                         if(!$arJuegoDetalle) {
-                            $arJuegoInvitacion = $em->getRepository(JuegoInvitacion::class)->findOneBy(["codigoJuegoFk" => $juego, "codigoJugadorFk" => $jugador]);
+                            $arJuegoInvitacion = $em->getRepository(JuegoInvitacion::class)->findOneBy([
+                                "codigoJuegoFk" => $juego, "codigoJugadorFk" => $jugador
+                            ]);
                             if(!$arJuegoInvitacion) {
                                 $arJuegoInvitacion = new JuegoInvitacion();
                                 $arJuegoInvitacion->setJuegoRel($arJuego);
                                 $arJuegoInvitacion->setJugadorRel($arJugador);
                                 $em->persist($arJuegoInvitacion);
                                 $notificar = true;
+                            } else if($arJuegoInvitacion && $arJuegoInvitacion->getEstadoRechazada()) {
+                                $notificar = true;
+                                $arJuegoInvitacion->setEstadoRechazada(false);
+                                $em->persist($arJuegoInvitacion);
                             }
                         }
                     }
@@ -514,7 +518,14 @@ class JuegoRepository extends ServiceEntityRepository
                 ->select("ji.codigoJuegoInvitacionPk as codigo_juego_invitacion")
                 ->addSelect("j.nombre as nombre_juego")
                 ->addSelect("ji.codigoJuegoFk as codigo_juego")
+                ->addSelect("ju.seudonimo as jugador_seudonimo")
+                ->addSelect("ju.foto as jugador_foto")
+                ->addSelect("j.fechaDesde as juego_fecha")
+                ->addSelect("n.nombre as juego_negocio")
                 ->join("ji.juegoRel", "j")
+                ->join("j.jugadorRel", "ju")
+                ->join("j.escenarioRel", "e")
+                ->join("e.negocioRel", "n")
                 ->where("ji.codigoJugadorFk = '{$jugador}'")
                 ->andWhere("ji.estadoAceptada = 0 OR ji.estadoAceptada IS NULL")
                 ->andWhere("ji.estadoRechazada = 0 OR ji.estadoRechazada IS NULL");
