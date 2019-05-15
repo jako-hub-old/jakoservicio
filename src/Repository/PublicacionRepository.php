@@ -34,7 +34,7 @@ class PublicacionRepository extends ServiceEntityRepository
             ->addSelect('p.texto')
             ->addSelect('p.fecha')
             ->addSelect("p.plataforma")
-            ->addSelect("j.foto")
+            ->addSelect("j.fotoMiniatura as foto")
             ->leftJoin("p.jugadorRel", "j")
             ->orderBy("p.codigoPublicacionPk", "DESC")
             ->where("p.codigoJugadorFk IN ({$qbAmigos})")

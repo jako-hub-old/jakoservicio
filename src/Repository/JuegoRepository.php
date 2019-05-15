@@ -357,7 +357,7 @@ class JuegoRepository extends ServiceEntityRepository
                     ->addSelect("c.fecha")
                     ->addSelect("c.comentario")
                     ->addSelect("j.seudonimo as jugador_seudonimo")
-                    ->addSelect("j.foto")
+                    ->addSelect("j.fotoMiniatura as foto")
                     ->leftJoin("c.jugadorRel", "j")
                     ->where("c.codigoJuegoFk ={$juego}")
                     ->orderBy("c.fecha", "DESC");
@@ -519,7 +519,7 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.nombre as nombre_juego")
                 ->addSelect("ji.codigoJuegoFk as codigo_juego")
                 ->addSelect("ju.seudonimo as jugador_seudonimo")
-                ->addSelect("ju.foto as jugador_foto")
+                ->addSelect("ju.fotoMiniatura as jugador_foto")
                 ->addSelect("j.fechaDesde as juego_fecha")
                 ->addSelect("n.nombre as juego_negocio")
                 ->join("ji.juegoRel", "j")

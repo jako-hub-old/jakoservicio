@@ -49,7 +49,7 @@ class JugadorRepository extends ServiceEntityRepository
             ->select("j.codigoJugadorPk as codigo_jugador")
             ->addSelect("j.nombreCorto as nombre_corto")
             ->addSelect("j.seudonimo")
-            ->addSelect("j.foto")
+            ->addSelect("j.fotoMiniatura as foto")
             ->addSelect("u.usuario")
             ->leftJoin("j.usuariosJugadorRel", "u");
         $arJugadores =  $qb->getQuery()->getResult();
@@ -103,7 +103,8 @@ class JugadorRepository extends ServiceEntityRepository
                 ->addSelect("j.seudonimo")
                 ->addSelect('j.correo')
                 ->addSelect('j.juegos')
-                ->addSelect('j.foto')
+                ->addSelect('j.foto as foto_original')
+                ->addSelect('j.fotoMiniatura as foto')
                 ->addSelect('j.asistencia')
                 ->addSelect('j.inasistencia')
             ->where("j.codigoJugadorPk = ${jugador}");

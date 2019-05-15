@@ -57,7 +57,7 @@ class InvitadoRepository extends ServiceEntityRepository
         $qbSugerencias = $em->createQueryBuilder()
             ->from(Jugador::class, "j")
             ->select("j.codigoJugadorPk codigo_jugador")
-            ->addSelect("j.foto")
+            ->addSelect("j.fotoMiniatura as foto")
             ->addSelect("j.nombreCorto as jugador_nombre_corto")
             ->addSelect("j.seudonimo as jugador_seudonimo")
             ->leftJoin("j.usuariosJugadorRel", "u")
