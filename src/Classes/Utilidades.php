@@ -92,4 +92,42 @@ final class Utilidades {
     private function traduccionSimple($clave) {
         return $this->diccionario[$clave]?? $clave;
     }
+
+    /**
+     *  Esta función permite generar thumbnails centrados para las imagendes de los usuarios.
+     * @param $fuente
+     * @param $nombre
+     * @param $destino
+     * @param $tamanio
+     * @return bool|string
+     */
+    public function generarImagenMiniatura($fuente, $nombre, $destino, $tamanio) {
+        $info = pathinfo($fuente);
+        $extension = $info['extension'];
+        if(!file_exists($fuente)) return false;
+        if($extension === 'jpg' || $extension === 'jpeg') $img = imagecreatefromjpeg($fuente);
+        $ancho = imagesx($img);
+        $alto = imagesy($img);
+        $calidad = 100;
+        $miniatura = imagecreatetruecolor($tamanio, $tamanio);
+
+        if($ancho > $alto) {
+            # Dimensiones para centrar la imagen
+            $tamanioCentrado = $alto;
+            $diffX = ceil(($ancho / 2) - ($tamanioCentrado / 2));
+            $diffY = 0;
+        } else if ($alto > $ancho) {
+            $tamanioCentrado = $ancho;
+            $diffY = ceil(($alto / 2) - ($tamanioCentrado / 2));
+            $diffX = 0;
+        } else {
+            $diffX = $diffY = 0;
+        }
+        $imagenCentrada = imagecreatetruecolor($tamanioCentrado, $tamanioCentrado);
+        imagecopy($imagenCentrada, $img, 0, 0, $diffX, $diffY, $tamanioCentrado, $tamanioCentrado);
+        imagecopyresampled($miniatura, $imagenCentrada, 0, 0, 0, 0, $tamanio, $tamanio, $tamanioCentrado, $tamanioCentrado);
+        $nombreImagen = "{$nombre}_thumb.{$extension}";
+        if($extension === 'jpg' || $extension === 'jpeg') imagejpeg($miniatura, "{$destino}/{$nombreImagen}");
+        return "/fotos_usuario/{$nombreImagen}";
+    }
 }

@@ -118,16 +118,25 @@ class JugadorRepository extends ServiceEntityRepository
 
     }
 
-    public function guardarFoto($codigoJugador, $urlFoto) {
+    public function guardarFoto($codigoJugador, $urlFoto, $urlMiniatura) {
         $em = $this->getEntityManager();
         $jugador = $em->getRepository(Jugador::class)->find($codigoJugador);
         if($jugador) {
             $fotoAnterior = $jugador->getFoto();
+            $thumb = $jugador->getFotoMiniatura();
             if($fotoAnterior) { # Borramos del sistema de archivos la foto anterior.
                 $dirPublico = ManejadorDeArchivos::getDirectorioPublico();
-                unlink($dirPublico . "/{$fotoAnterior}");
+                $rutaFoto = $dirPublico . "/{$fotoAnterior}";
+                $rutaThumb = $dirPublico . "/{$thumb}";
+                if(file_exists($rutaFoto)) {
+                    unlink($rutaFoto);
+                    unlink($rutaThumb);
+                }
             }
             $jugador->setFoto($urlFoto);
+            if($urlMiniatura) {
+                $jugador->setFotoMiniatura($urlMiniatura);
+            }
             $em->persist($jugador);
             $em->flush();
             return true;

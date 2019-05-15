@@ -102,13 +102,19 @@ class ApiJugadorController extends FOSRestController {
                 $nombreImagen = "foto_jugador_{$codigoJugador}_$tiempo";
                 $guardado = $imagen->guardar($directorioDestino, $nombreImagen);
                 $urlImagen = "/fotos_usuario/{$nombreImagen}.{$ext}";
-                if($guardado) { # todo: Guadar en entidad.
-                    $resultado = $em->getRepository(Jugador::class)->guardarFoto($codigoJugador, $urlImagen);
+                if($guardado) {
+                    $origenImagen = "{$directorioDestino}/{$nombreImagen}.{$ext}";
+                    $urlMiniatura = Utilidades::get()->generarImagenMiniatura($origenImagen, $nombreImagen, $directorioDestino, 100, "jpg");
+                    $resultado = $em->getRepository(Jugador::class)->guardarFoto($codigoJugador, $urlImagen, $urlMiniatura);
                     if($resultado !== true) { # Si la imagen no se guardó correctamente en la entidad, la borramos.
                         unlink($directorioDestino) . "/{$nombreImagen}.{$ext}";
+                        unlink($directorioDestino) . "/{$nombreImagen}_thumb.{$ext}";
                         return $resultado;
                     } else {
-                        return $urlImagen;
+                        return [
+                            'foto' => $urlImagen,
+                            'thumb' => $urlMiniatura,
+                        ];
                     }
                 } else {
                     return false;

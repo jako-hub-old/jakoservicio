@@ -65,6 +65,10 @@ class Jugador
      * @ORM\Column(name="foto", type="string", nullable=true)
      */
     private $foto = "";
+    /**
+     * @ORM\Column(name="foto_miniatura", type="string", nullable=true)
+     */
+    private $fotoMiniatura = "";
 
     /**
      * @ORM\OneToMany(targetEntity="JuegoInvitacion", mappedBy="jugadorRel")
@@ -496,6 +500,22 @@ class Jugador
     public function setFoto($foto): void
     {
         $this->foto = $foto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFotoMiniatura()
+    {
+        return $this->fotoMiniatura;
+    }
+
+    /**
+     * @param mixed $fotoMiniatura
+     */
+    public function setFotoMiniatura($fotoMiniatura)
+    {
+        $this->fotoMiniatura = $fotoMiniatura;
     }
 }
 
