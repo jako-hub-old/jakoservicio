@@ -25,7 +25,7 @@ class ApiJuegoController extends FOSRestController {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             $respuesta = $em->getRepository(Juego::class)->nuevo($raw);
-            if($respuesta['codigo_juego']) {
+            if(isset($respuesta['codigo_juego'])) {
                 $titulo = "Nuevo juego";
                 $mensaje = $respuesta['jugador_seudonimo'] . " ha creado un juego";
                 if(isset($raw['invitar_amigos'])) {

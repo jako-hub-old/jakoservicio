@@ -38,6 +38,12 @@ class JuegoRepository extends ServiceEntityRepository
         if($jugador && $escenario && $fechaDesde && $fechaHasta && $nombre && $acceso) {
             $fechaDesde = date_create($fechaDesde);
             $fechaHasta = date_create($fechaHasta);
+            $fechaActual = new \DateTime("now");
+            if($fechaDesde > $fechaHasta) {
+                return [ 'error_controlado' => 'La hora fin no puede ser menor a la hora inicial'];
+            } else if($fechaDesde < $fechaActual) {
+                return [ 'error_controlado' => 'La hora de inicio del juego no puede ser menor a la hora y día actual'];
+            }
             //if($em->getRepository(Reserva::class)->validarDisponibilidad($fechaDesde->format('Y-m-d H:i:s'), $fechaHasta->format('Y-m-d H:i:s'), $escenario)) {
                 $arJugador = $em->getRepository(Jugador::class)->find($jugador);
                 $arEscenario = $em->getRepository(Escenario::class)->find($escenario);
