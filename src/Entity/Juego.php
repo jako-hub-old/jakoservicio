@@ -57,6 +57,11 @@ class Juego
     private $codigoJugadorFk;
 
     /**
+     * @ORM\Column(name="codigo_tipo_juego_fk", type="integer", nullable=true)
+     */
+    private $codigoTipoJuegoFk;
+
+    /**
      * @ORM\Column(name="acceso", type="string",length=10, nullable=true)
      */
     private $acceso;
@@ -81,6 +86,12 @@ class Juego
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
     protected $jugadorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TipoJuego", inversedBy="tipoJuegoJuegoRel")
+     * @ORM\JoinColumn(name="codigo_tipo_juego_fk", referencedColumnName="codigo_tipo_juego_pk")
+     */
+    protected $tipoJuegoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="Escenario", inversedBy="juegosEscenarioRel")
@@ -433,7 +444,35 @@ class Juego
         $this->estadoCerrado = $estadoCerrado;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoJuegoFk()
+    {
+        return $this->codigoTipoJuegoFk;
+    }
 
+    /**
+     * @param mixed $codigoTipoJuegoFk
+     */
+    public function setCodigoTipoJuegoFk($codigoTipoJuegoFk): void
+    {
+        $this->codigoTipoJuegoFk = $codigoTipoJuegoFk;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getTipoJuegoRel()
+    {
+        return $this->tipoJuegoRel;
+    }
 
+    /**
+     * @param TipoJuego $tipoJuegoRel
+     */
+    public function setTipoJuegoRel($tipoJuegoRel): void
+    {
+        $this->tipoJuegoRel = $tipoJuegoRel;
+    }
 }

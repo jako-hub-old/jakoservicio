@@ -133,6 +133,10 @@ class Jugador
      * @ORM\OneToMany(targetEntity="Invitado", mappedBy="jugadorRel")
      */
     protected  $invitadosJugador;
+    /**
+     * @ORM\OneToMany(targetEntity="InteresPorJugador", mappedBy="jugadorRel")
+     */
+    protected $interesesPorJugadorRel;
 
     /**
      * @return mixed
@@ -516,6 +520,38 @@ class Jugador
     public function setFotoMiniatura($fotoMiniatura)
     {
         $this->fotoMiniatura = $fotoMiniatura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvitadosJugador()
+    {
+        return $this->invitadosJugador;
+    }
+
+    /**
+     * @param mixed $invitadosJugador
+     */
+    public function setInvitadosJugador($invitadosJugador): void
+    {
+        $this->invitadosJugador = $invitadosJugador;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInteresesPorJugadorRel()
+    {
+        return $this->interesesPorJugadorRel;
+    }
+
+    /**
+     * @param mixed $interesesPorJugadorRel
+     */
+    public function setInteresesPorJugadorRel($interesesPorJugadorRel): void
+    {
+        $this->interesesPorJugadorRel = $interesesPorJugadorRel;
     }
 }
 

@@ -560,4 +560,28 @@ class JuegoRepository extends ServiceEntityRepository
 
         }
     }
+
+    /**
+     *
+     */
+    public function juegosPendientesPorCerrar($raw) {
+        $em = $this->getEntityManager();
+        $jugador = $raw['jugador'] ?? 0;
+        if ($jugador) {
+            $qb = $em->createQueryBuilder();
+            $strFechaActual = (new \DateTime("now"))->format("Y-m-d H:i:s");
+            $qb->from(Juego::class, "j")
+                ->select("j.codigoJuegoPk as codigo_juego")
+                ->addSelect("j.nombre as juego_nombre")
+                ->addSelect("j.fechaDesde as juego_fecha_desde")
+                ->addSelect("j.fechaHasta as juego_fecha_hasta")
+                ->where("j.codigoJugadorFk = '{$jugador}'")
+                ->andWhere("j.fechaHasta < '{$strFechaActual}'");
+            return $qb->getQuery()->getResult();
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(3),
+            ];
+        }
+    }
 }

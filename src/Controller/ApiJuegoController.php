@@ -249,4 +249,22 @@ class ApiJuegoController extends FOSRestController {
         }
     }
 
+    /**
+     * @return array
+     * @Rest\Post("/v1/juego/pendientes/cerrar")
+     * @param $request Request
+     */
+    public function juegosPendientesPorCerrar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Juego::class)->juegosPendientesPorCerrar($raw);
+        } catch (\Exception $e) {
+            return [
+                'message' => $e->getMessage(),
+                'error' => true,
+            ];
+        }
+    }
+
 }
