@@ -178,7 +178,7 @@ class UsuarioRepository extends ServiceEntityRepository
             $message = $client->message()->send([
                 'to' => "57{$telefono}",
                 'from' => 'jakoservicio',
-                'text' => "[Jako] Tu codigo es: {$codigo}"
+                'text' => "[Wojoo] Tu codigo es: {$codigo}"
             ]);
     }
 

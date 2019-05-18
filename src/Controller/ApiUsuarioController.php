@@ -42,6 +42,7 @@ class ApiUsuarioController extends FOSRestController {
         } catch (\Exception $e) {
             return [
                 'error' => true,
+                'message' => $e->getMessage(),
             ];
         }
     }
