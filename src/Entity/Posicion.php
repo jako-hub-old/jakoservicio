@@ -21,9 +21,21 @@ class Posicion
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_tipo_juego_fk", type="integer", nullable=true)
+     */
+    private $codigoTipoJuegoFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="JuegoDetalle", mappedBy="posicionRel")
      */
     protected $juegosDetallesPosicionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TipoJuego", inversedBy="posicionesTipoRel")
+     * @ORM\JoinColumn(name="codigo_tipo_juego_fk", referencedColumnName="codigo_tipo_juego_pk")
+     */
+    protected $tipoJuegoRel;
+
 
     /**
      * @return mixed
@@ -73,6 +85,35 @@ class Posicion
         $this->juegosDetallesPosicionRel = $juegosDetallesPosicionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoJuegoFk()
+    {
+        return $this->codigoTipoJuegoFk;
+    }
 
+    /**
+     * @param mixed $codigoTipoJuegoFk
+     */
+    public function setCodigoTipoJuegoFk($codigoTipoJuegoFk): void
+    {
+        $this->codigoTipoJuegoFk = $codigoTipoJuegoFk;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getTipoJuegoRel()
+    {
+        return $this->tipoJuegoRel;
+    }
+
+    /**
+     * @param mixed $tipoJuegoRel
+     */
+    public function setTipoJuegoRel($tipoJuegoRel): void
+    {
+        $this->tipoJuegoRel = $tipoJuegoRel;
+    }
 }

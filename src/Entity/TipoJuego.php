@@ -36,6 +36,11 @@ class TipoJuego
      */
     protected $tipoJuegoJuegoRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Posicion", mappedBy="tipoJuegoRel")
+     */
+    protected  $posicionesTipoRel;
+
     public function getCodigoTipoJuegoPk(): ?int
     {
         return $this->codigoTipoJuegoPk;
@@ -91,5 +96,21 @@ class TipoJuego
     public function setTipoJuegoJuegoRel($tipoJuegoJuegoRel): void
     {
         $this->tipoJuegoJuegoRel = $tipoJuegoJuegoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosicionesTipoRel()
+    {
+        return $this->posicionesTipoRel;
+    }
+
+    /**
+     * @param mixed $posicionesTipoRel
+     */
+    public function setPosicionesTipoRel($posicionesTipoRel): void
+    {
+        $this->posicionesTipoRel = $posicionesTipoRel;
     }
 }
