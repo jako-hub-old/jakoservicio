@@ -172,7 +172,8 @@ class JuegoRepository extends ServiceEntityRepository
                 ->leftJoin("jd.jugadorRel", "ju")
                 ->leftJoin("j.jugadorRel", "ja")
             ->where("jd.codigoJugadorFk ={$jugador}")
-            ->andWhere("j.fechaHasta > '{$fechaActual}'");
+            ->andWhere("j.fechaHasta > '{$fechaActual}'")
+            ->andWhere("j.estadoCerrado IS NULL OR j.estadoCerrado = 0");
             $arJuegosJugadores =  $qb->getQuery()->getResult();
             $juegos = array();
             foreach ($arJuegosJugadores as $arJuegoJugador) {
