@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\TipoJuego;
+use App\Entity\JuegoTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method TipoJuego|null find($id, $lockMode = null, $lockVersion = null)
- * @method TipoJuego|null findOneBy(array $criteria, array $orderBy = null)
- * @method TipoJuego[]    findAll()
- * @method TipoJuego[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method JuegoTipo|null find($id, $lockMode = null, $lockVersion = null)
+ * @method JuegoTipo|null findOneBy(array $criteria, array $orderBy = null)
+ * @method JuegoTipo[]    findAll()
+ * @method JuegoTipo[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TipoJuegoRepository extends ServiceEntityRepository
+class JuegoTipoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, TipoJuego::class);
+        parent::__construct($registry, JuegoTipo::class);
     }
 
     // /**
-    //  * @return TipoJuego[] Returns an array of TipoJuego objects
+    //  * @return JuegoTipo[] Returns an array of JuegoTipo objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class TipoJuegoRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?TipoJuego
+    public function findOneBySomeField($value): ?JuegoTipo
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.exampleField = :val')

@@ -31,8 +31,8 @@ class Posicion
     protected $juegosDetallesPosicionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TipoJuego", inversedBy="posicionesTipoRel")
-     * @ORM\JoinColumn(name="codigo_tipo_juego_fk", referencedColumnName="codigo_tipo_juego_pk")
+     * @ORM\ManyToOne(targetEntity="JuegoTipo", inversedBy="posicionesTipoRel")
+     * @ORM\JoinColumn(name="codigo_tipo_juego_fk", referencedColumnName="codigo_juego_tipo_pk")
      */
     protected $tipoJuegoRel;
 

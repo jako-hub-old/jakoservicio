@@ -88,8 +88,8 @@ class Juego
     protected $jugadorRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TipoJuego", inversedBy="tipoJuegoJuegoRel")
-     * @ORM\JoinColumn(name="codigo_tipo_juego_fk", referencedColumnName="codigo_tipo_juego_pk")
+     * @ORM\ManyToOne(targetEntity="JuegoTipo", inversedBy="tipoJuegoJuegoRel")
+     * @ORM\JoinColumn(name="codigo_tipo_juego_fk", referencedColumnName="codigo_juego_tipo_pk")
      */
     protected $tipoJuegoRel;
 
@@ -469,7 +469,7 @@ class Juego
     }
 
     /**
-     * @param TipoJuego $tipoJuegoRel
+     * @param JuegoTipo $tipoJuegoRel
      */
     public function setTipoJuegoRel($tipoJuegoRel): void
     {

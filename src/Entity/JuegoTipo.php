@@ -5,16 +5,16 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\TipoJuegoRepository")
+ * @ORM\Entity(repositoryClass="JuegoTipoRepository")
  */
-class TipoJuego
+class JuegoTipo
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer", name ="codigo_tipo_juego_pk")
+     * @ORM\Column(type="integer", name ="codigo_juego_tipo_pk")
      */
-    private $codigoTipoJuegoPk;
+    private $codigoJuegoTipoPk;
 
     /**
      * @ORM\Column(type="string", length=255, name="nombre")
@@ -27,11 +27,6 @@ class TipoJuego
     private $descripcion;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $no;
-
-    /**
      * @ORM\OneToMany(targetEntity="Juego", mappedBy="tipoJuegoRel")
      */
     protected $tipoJuegoJuegoRel;
@@ -41,9 +36,9 @@ class TipoJuego
      */
     protected  $posicionesTipoRel;
 
-    public function getCodigoTipoJuegoPk(): ?int
+    public function getCodigoJuegoTipoPk(): ?int
     {
-        return $this->codigoTipoJuegoPk;
+        return $this->codigoJuegoTipoPk;
     }
 
     public function getNombre(): ?string
@@ -66,18 +61,6 @@ class TipoJuego
     public function setDescripcion(?string $descripcion): self
     {
         $this->descripcion = $descripcion;
-
-        return $this;
-    }
-
-    public function getNo(): ?string
-    {
-        return $this->no;
-    }
-
-    public function setNo(string $no): self
-    {
-        $this->no = $no;
 
         return $this;
     }

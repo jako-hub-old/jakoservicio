@@ -15,6 +15,7 @@ use App\Entity\JugadorAmigo;
 use App\Entity\Posicion;
 use App\Entity\Publicacion;
 use App\Entity\Reserva;
+use App\Entity\JuegoTipo;
 use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -148,6 +149,7 @@ class JuegoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $jugador = $filtros['jugador']?? false;
+        $fechaActual = (new \DateTime('now'))->format("Y-m-d H:i:s");
         if($jugador) {
             $qb = $em->createQueryBuilder();
             $qb->from(JuegoDetalle::class, "jd")
@@ -169,7 +171,8 @@ class JuegoRepository extends ServiceEntityRepository
                 ->leftJoin("e.negocioRel", "n")
                 ->leftJoin("jd.jugadorRel", "ju")
                 ->leftJoin("j.jugadorRel", "ja")
-            ->where("jd.codigoJugadorFk ={$jugador}");
+            ->where("jd.codigoJugadorFk ={$jugador}")
+            ->andWhere("j.fechaHasta > '{$fechaActual}'");
             $arJuegosJugadores =  $qb->getQuery()->getResult();
             $juegos = array();
             foreach ($arJuegosJugadores as $arJuegoJugador) {
@@ -344,6 +347,7 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.jugadoresConfirmados as jugadores_confirmados")
                 ->addSelect("j.fechaDesde as fecha_desde")
                 ->addSelect("j.fechaHasta as fecha_hasta")
+                ->addSelect("j.estadoCerrado as juego_cerrado")
                 ->addSelect("j.acceso as acceso")
                 ->addSelect("j.vrCosto as vr_costo")
                 ->addSelect("j.codigoJugadorFk as codigo_jugador")
@@ -402,6 +406,7 @@ class JuegoRepository extends ServiceEntityRepository
                 $juego = [
                     'codigo_juego' => $arJuego['codigo_juego'],
                     'nombre' => $arJuego['nombre'],
+                    'juego_cerrado' => $arJuego['juego_cerrado'],
                     'jugadores' => $arJuego['jugadores'],
                     'jugadores_confirmados' => $arJuego['jugadores_confirmados'],
                     'fecha_desde' => $arJuego['fecha_desde'],
@@ -486,22 +491,23 @@ class JuegoRepository extends ServiceEntityRepository
     public function cerrar($raw) {
         $em = $this->getEntityManager();
         $juego = $raw['juego']?? '';
-        $arrJuegosDetalles = $raw['juegos_detalles']?? 0;
-        if($juego && $arrJuegosDetalles) {
+        $arrJuegosDetalles = $raw['juegos_detalles']?? [];
+        if($juego) {
+            /**
+             * @var $arJuego Juego
+             */
             $arJuego = $em->getRepository(Juego::class)->find($juego);
             $arJuego->setEstadoCerrado(1);
             $em->persist($arJuego);
-
-            if($arrJuegosDetalles) {
-                foreach ($arrJuegosDetalles as $arrJuegoDetalle) {
-                    $codigo = $arrJuegoDetalle;
-                    $arJuegoDetalle = $em->getRepository(JuegoDetalle::class)->find($codigo);
-                    $arJuegoDetalle->setEstadoInasistencia(1);
-                    $em->persist($arJuegoDetalle);
-
-                    $arJugador = $em->getRepository(Jugador::class)->find($arJuegoDetalle->getCodigoJugadorFk());
-                    $arJugador->setAsistencia($arJugador->getAsistencia() - 1);
-                    $arJugador->setInasistencia($arJugador->getInasistencia() + 1);
+            $arJuegosDetalles = $arJuego->getJuegosDetallesJuegoRel();
+            if($arJuegosDetalles) {
+                foreach ($arJuegosDetalles as $arDetalle) {
+                    $arJugador = $arDetalle->getJugadorRel();
+                    if(in_array($arDetalle->getCodigoJuegoDetallePk(), $arrJuegosDetalles)) { # No asistió.
+                        $arJugador->setInasistencia($arJugador->getInasistencia() + 1);
+                    } else {
+                        $arJugador->setAsistencia($arJugador->getAsistencia() + 1);
+                    }
                     $em->persist($arJugador);
                 }
             }
@@ -576,12 +582,25 @@ class JuegoRepository extends ServiceEntityRepository
                 ->addSelect("j.fechaDesde as juego_fecha_desde")
                 ->addSelect("j.fechaHasta as juego_fecha_hasta")
                 ->where("j.codigoJugadorFk = '{$jugador}'")
-                ->andWhere("j.fechaHasta < '{$strFechaActual}'");
+                ->andWhere("j.fechaHasta < '{$strFechaActual}'")
+                ->andWhere("j.estadoCerrado IS NULL OR j.estadoCerrado = 0")
+                ->orderBy("j.fechaHasta", "asc");
             return $qb->getQuery()->getResult();
         } else {
             return [
                 'error_controlado' => Utilidades::error(3),
             ];
         }
+    }
+
+    public function getTiposJuego() {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+
+        $qb->from(JuegoTipo::class, "jt")
+            ->select("jt.codigoJuegoTipoPk as codigo_juego_tipo")
+            ->addSelect("jt.nombre as juego_tipo_nombre")
+            ->addSelect("jt.descripcion as juego_tipo_description");
+        return $qb->getQuery()->getResult();
     }
 }
