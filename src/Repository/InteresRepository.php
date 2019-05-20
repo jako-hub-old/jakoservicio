@@ -19,32 +19,14 @@ class InteresRepository extends ServiceEntityRepository
         parent::__construct($registry, Interes::class);
     }
 
-    // /**
-    //  * @return Interes[] Returns an array of Interes objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function lista() {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()
+                ->from(Interes::class, "i")
+                ->select("i.codigoInteresPk as codigo_interes")
+                ->addSelect("i.nombre")
+                ->addSelect("i.descripcion")
+                ->addSelect("i.icono");
+        return $qb->getQuery()->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Interes
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

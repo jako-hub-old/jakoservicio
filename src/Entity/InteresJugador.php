@@ -68,4 +68,36 @@ class InteresJugador
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getJugadorRel()
+    {
+        return $this->jugadorRel;
+    }
+
+    /**
+     * @param mixed $jugadorRel
+     */
+    public function setJugadorRel($jugadorRel): void
+    {
+        $this->jugadorRel = $jugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInteresRel()
+    {
+        return $this->interesRel;
+    }
+
+    /**
+     * @param mixed $interesRel
+     */
+    public function setInteresRel($interesRel): void
+    {
+        $this->interesRel = $interesRel;
+    }
 }

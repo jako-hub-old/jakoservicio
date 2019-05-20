@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Classes\ManejadorDeArchivos;
 use App\Classes\Utilidades;
+use App\Entity\Interes;
+use App\Entity\InteresJugador;
 use App\Entity\Jugador;
 use App\Entity\JugadorAmigo;
 use App\Entity\JugadorSolicitud;
@@ -63,6 +65,7 @@ class JugadorRepository extends ServiceEntityRepository
         $usuario = $raw['usuario']?? 0;
         $seudonimo = $raw['seudonimo']?? '';
         $nombreCorto = $raw['nombre_corto']?? '';
+        $intereses = $raw['intereses']?? [];
         $correo = $raw['correo']?? '';
         if($usuario && $seudonimo && $nombreCorto && $correo) {
             $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
@@ -81,8 +84,18 @@ class JugadorRepository extends ServiceEntityRepository
                 $arJugador->setSeudonimo($seudonimo);
                 $arJugador->setCorreo($correo);
                 $arJugador->setNombreCorto($nombreCorto);
+                # Guardamos los intereses
+                foreach ($intereses as $interes) {
+                    $arInteres = $em->getRepository(Interes::class)->find($interes);
+                    if($arInteres && $arInteres instanceof  Interes) {
+                        $arInteresJugador = new InteresJugador();
+                        $arInteresJugador->setJugadorRel($arJugador);
+                        $arInteresJugador->setInteresRel($arInteres);
+                        $em->persist($arInteresJugador);
+                    }
+                }
                 $em->persist($arJugador);
-                $em->flush($arJugador);
+                $em->flush();
                 return true;
             }
         } else {
