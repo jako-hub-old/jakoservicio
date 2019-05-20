@@ -72,7 +72,8 @@ class InteresRepository extends ServiceEntityRepository
             # Borramos los intereses que no vienen en el array
             foreach ($arInteresesJugador as $key => $arInteresJugador) {
                 if(in_array($arInteresJugador->getCodigoInteresFk(), $intereses)) { # Si se encuentra en el array de intereses enviado no lo procesamos.
-                    $intereses[$key] = false;
+                    $indice = array_search($arInteresJugador->getCodigoInteresFk(), $intereses);
+                    $intereses[$indice] = false;
                     continue;
                 }
                 $em->remove($arInteresJugador);
