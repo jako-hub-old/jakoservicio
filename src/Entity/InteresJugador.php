@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\InteresJugadorRepository")
+ * @ORM\Entity(repositoryClass="InteresJugadorRepository")
  */
 class InteresJugador
 {
@@ -17,62 +17,55 @@ class InteresJugador
     private $codigoInteresJugadorPk;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", name="codigo_jugador_fk")
      */
-    private $nombre;
+    private $codigoJugadorFk;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="integer", name="codigo_interes_fk")
      */
-    private $descripcion;
+    private $codigoInteresFk;
 
     /**
-     * @ORM\OneToMany(targetEntity="InteresPorJugador", mappedBy="interesRel")
+     * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="interesesPorJugadorRel")
+     * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
-    protected $jugadoresPorInteresRel;
+    protected $jugadorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Interes", inversedBy="jugadoresPorInteresRel")
+     * @ORM\JoinColumn(name="codigo_interes_fk", referencedColumnName="codigo_interes_pk")
+     */
+    protected $interesRel;
+
+
 
     public function getCodigoInteresJugadorPk(): ?int
     {
         return $this->codigoInteresJugadorPk;
     }
 
-    public function getNombre(): ?string
+    public function getCodigoJugadorFk(): ?int
     {
-        return $this->nombre;
+        return $this->codigoJugadorFk;
     }
 
-    public function setNombre(string $nombre): self
+    public function setCodigoJugadorFk(int $codigoJugadorFk): self
     {
-        $this->nombre = $nombre;
+        $this->codigoJugadorFk = $codigoJugadorFk;
 
         return $this;
     }
 
-    public function getDescripcion(): ?string
+    public function getCodigoInteresFk(): ?int
     {
-        return $this->descripcion;
+        return $this->codigoInteresFk;
     }
 
-    public function setDescripcion(?string $descripcion): self
+    public function setCodigoInteresFk(int $codigoInteresFk): self
     {
-        $this->descripcion = $descripcion;
+        $this->codigoInteresFk = $codigoInteresFk;
 
         return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getJugadoresPorInteresRel()
-    {
-        return $this->jugadoresPorInteresRel;
-    }
-
-    /**
-     * @param mixed $jugadoresPorInteresRel
-     */
-    public function setJugadoresPorInteresRel($jugadoresPorInteresRel): void
-    {
-        $this->jugadoresPorInteresRel = $jugadoresPorInteresRel;
     }
 }

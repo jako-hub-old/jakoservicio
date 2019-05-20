@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\InteresPorJugador;
+use App\Entity\Interes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method InteresPorJugador|null find($id, $lockMode = null, $lockVersion = null)
- * @method InteresPorJugador|null findOneBy(array $criteria, array $orderBy = null)
- * @method InteresPorJugador[]    findAll()
- * @method InteresPorJugador[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Interes|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Interes|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Interes[]    findAll()
+ * @method Interes[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class InteresPorJugadorRepository extends ServiceEntityRepository
+class InteresRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, InteresPorJugador::class);
+        parent::__construct($registry, Interes::class);
     }
 
     // /**
-    //  * @return InteresPorJugador[] Returns an array of InteresPorJugador objects
+    //  * @return Interes[] Returns an array of Interes objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class InteresPorJugadorRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?InteresPorJugador
+    public function findOneBySomeField($value): ?Interes
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.exampleField = :val')

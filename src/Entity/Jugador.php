@@ -134,7 +134,7 @@ class Jugador
      */
     protected  $invitadosJugador;
     /**
-     * @ORM\OneToMany(targetEntity="InteresPorJugador", mappedBy="jugadorRel")
+     * @ORM\OneToMany(targetEntity="InteresJugador", mappedBy="jugadorRel")
      */
     protected $interesesPorJugadorRel;
 
