@@ -8,13 +8,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ApiEscenarioController
- * @package App\Controller}
+ * @package App\Controller
+ * @author Jorge Alejandro Quiroz Serna <jakop.box@gmail.com>
  */
 class ApiClanController extends FOSRestController {
 
     /**
      * @return array
-     * @Rest\Post("/v1/interes/lista")
+     * @Rest\Post("/v1/clan/lista")
      */
     public function lista() {
         try {
@@ -23,13 +24,32 @@ class ApiClanController extends FOSRestController {
         } catch (\Exception $e) {
             return [
                 'error' => true,
+                'message' => $e->getMessage(),
             ];
         }
     }
 
     /**
      * @return array
-     * @Rest\Post("/v1/interes/jugador")
+     * @Rest\Post("/v1/clan/admin")
+     * @param Request $request
+     */
+    public function admin(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->admin($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+            ];
+        }
+    }
+
+
+    /**
+     * @return array
+     * @Rest\Post("/v1/clan/jugador")
      * @param Request $request
      */
     public function jugador(Request $request) {
@@ -43,23 +63,4 @@ class ApiClanController extends FOSRestController {
             ];
         }
     }
-
-    /**
-     * @return array
-     * @Rest\Post("/v1/interes/jugador/actualizar")
-     * @param Request $request
-     */
-    public function jugadorActualizar(Request $request) {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $raw = json_decode($request->getContent(), true);
-            return $em->getRepository(Interes::class)->jugadorActualizar($raw);
-        } catch (\Exception $e) {
-            return [
-                'error' => true,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
 }

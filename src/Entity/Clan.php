@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ClanRepository")
+ * @author Jorge Alejandro Quiroz Serna <jakop.box@gmail.com>
  */
 class Clan
 {
@@ -140,7 +141,7 @@ class Clan
     }
 
     /**
-     * @return mixed
+     * @return Jugador
      */
     public function getJugadorRel()
     {
