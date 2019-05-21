@@ -139,6 +139,16 @@ class Jugador
     protected $interesesPorJugadorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="JugadorClan", mappedBy="jugadorRel")
+     */
+    protected $clanJugadorClanRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Clan", mappedBy="jugadorRel")
+     */
+    protected $jugadorClanRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoJugadorPk()
@@ -552,6 +562,38 @@ class Jugador
     public function setInteresesPorJugadorRel($interesesPorJugadorRel): void
     {
         $this->interesesPorJugadorRel = $interesesPorJugadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClanJugadorClanRel()
+    {
+        return $this->clanJugadorClanRel;
+    }
+
+    /**
+     * @param mixed $clanJugadorClanRel
+     */
+    public function setClanJugadorClanRel($clanJugadorClanRel): void
+    {
+        $this->clanJugadorClanRel = $clanJugadorClanRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJugadorClanRel()
+    {
+        return $this->jugadorClanRel;
+    }
+
+    /**
+     * @param mixed $jugadorClanRel
+     */
+    public function setJugadorClanRel($jugadorClanRel): void
+    {
+        $this->jugadorClanRel = $jugadorClanRel;
     }
 }
 

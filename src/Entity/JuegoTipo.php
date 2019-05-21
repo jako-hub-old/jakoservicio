@@ -36,6 +36,11 @@ class JuegoTipo
      */
     protected  $posicionesTipoRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Clan", mappedBy="tipoJuegoRel")
+     */
+    protected $tipoJuegoClanRel;
+
     public function getCodigoJuegoTipoPk(): ?int
     {
         return $this->codigoJuegoTipoPk;
@@ -95,5 +100,21 @@ class JuegoTipo
     public function setPosicionesTipoRel($posicionesTipoRel): void
     {
         $this->posicionesTipoRel = $posicionesTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoJuegoClanRel()
+    {
+        return $this->tipoJuegoClanRel;
+    }
+
+    /**
+     * @param mixed $tipoJuegoClanRel
+     */
+    public function setTipoJuegoClanRel($tipoJuegoClanRel): void
+    {
+        $this->tipoJuegoClanRel = $tipoJuegoClanRel;
     }
 }
