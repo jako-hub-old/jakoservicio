@@ -154,4 +154,43 @@ class ClanRepository extends ServiceEntityRepository
             ];
         }
     }
+
+    public function detalle($raw) {
+        $em = $this->getEntityManager();
+        $clan = $raw['clan']?? 0;
+        if($clan) {
+            $arClan = $em->getRepository(Clan::class)->find($clan);
+            if(!$arClan) return ['error_controlado' => Utilidades::error(5)];
+            $miembros = $this->getMiembrosClan($clan);
+            $infoClan = [
+                'codigo_clan' => $arClan->getCodigoClanPk(),
+                'nombre' => $arClan->getNombre(),
+                'foto' => $arClan->getFoto(),
+                'rating' => $arClan->getRating(),
+                'juego_tipo' => $arClan->getTipoJuegoRel()->getNombre(),
+                'miembros' => $miembros,
+            ];
+            return $infoClan;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    private function getMiembrosClan($clan) {
+        $em = $this->getEntityManager();
+        $qbMiembros = $em->createQueryBuilder();
+        $qbMiembros->from(JugadorClan::class, "jc")
+            ->select("jc.codigoJugadorFk")
+            ->where("jc.codigoClanFk = '{$clan}'");
+        $qbJugadores = $em->createQueryBuilder()
+                    ->from(Jugador::class, "j")
+                    ->select("j.codigoJugadorPk as codigo_jugador")
+                    ->addSelect("j.nombreCorto as jugador_nombre_corto")
+                    ->addSelect("j.fotoMiniatura as jugador_foto")
+                    ->addSelect("j.seudonimo as jugador_seudonimo")
+                    ->where("j.codigoJugadorPk IN ({$qbMiembros})");
+        return $qbJugadores->getQuery()->getResult();
+    }
 }

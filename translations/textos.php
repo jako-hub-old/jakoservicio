@@ -17,4 +17,5 @@ return [
     'error_2'       => 'No se suministraron los datos requeridos para la api',
     'error_3'       => 'No existe el jugador',
     'error_4'       => 'No existe el tipo de juego',
+    'error_5'       => 'No existe el registro',
 ];

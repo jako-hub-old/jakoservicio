@@ -81,4 +81,22 @@ class ApiClanController extends FOSRestController {
             ];
         }
     }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/detalle")
+     */
+    public function detalle(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->detalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
 }
