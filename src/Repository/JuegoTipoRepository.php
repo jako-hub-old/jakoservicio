@@ -19,32 +19,13 @@ class JuegoTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, JuegoTipo::class);
     }
 
-    // /**
-    //  * @return JuegoTipo[] Returns an array of JuegoTipo objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function lista() {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        $qb->from(JuegoTipo::class, "jt")
+            ->select("jt.codigoJuegoTipoPk as codigo_juego_tipo")
+            ->addSelect("jt.nombre")
+            ->addSelect("jt.descripcion");
+        return $qb->getQuery()->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?JuegoTipo
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

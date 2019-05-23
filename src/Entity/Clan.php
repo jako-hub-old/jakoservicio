@@ -38,6 +38,11 @@ class Clan
     private $foto;
 
     /**
+     * @ORM\Column(name="rating", type="integer",nullable=true)
+     */
+    private $rating=0;
+
+    /**
      * @ORM\Column(name="fecha_creacion", type="datetime", nullable=true)
      */
     private $fechaCreacion;
@@ -157,7 +162,7 @@ class Clan
     }
 
     /**
-     * @return mixed
+     * @return JuegoTipo
      */
     public function getTipoJuegoRel()
     {
@@ -170,5 +175,21 @@ class Clan
     public function setTipoJuegoRel($tipoJuegoRel): void
     {
         $this->tipoJuegoRel = $tipoJuegoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param mixed $rating
+     */
+    public function setRating($rating): void
+    {
+        $this->rating = $rating;
     }
 }
