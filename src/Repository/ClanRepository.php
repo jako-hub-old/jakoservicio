@@ -118,13 +118,21 @@ class ClanRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $data
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function nuevo($data) {
         $em = $this->getEntityManager();
         $tipoJuego = $data['tipo_juego']?? 0;
         $nombre = $data['nombre']?? null;
-        # Todo: upload the image.
+        $urlImagen = $data['url_imagen']?? null;
+        $urlMiniatura = $data['url_miniatura']?? null;
         $jugador = $data['jugador']?? 0;
-        if(!$jugador || !$nombre || !$tipoJuego) {
+        # Todo: upload the image.
+        if($jugador && $nombre && $tipoJuego) {
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arTipoJuego = $em->getRepository(JuegoTipo::class)->find($tipoJuego);
             if(!$arJugador) {
@@ -138,15 +146,19 @@ class ClanRepository extends ServiceEntityRepository
             $arClan->setJugadorRel($arJugador);
             $arClan->setRating(1);
             $arClan->setTipoJuegoRel($arTipoJuego);
+            $arClan->setFoto($urlImagen);
+            $arClan->setFotoMiniatura($urlMiniatura);
+            $arClan->setFechaCreacion(new \DateTime('now'));
             $em->persist($arClan);
             $em->flush();
             return [
-                'codigo_clan' => $arClan->getCodigoClanPk(),
-                'nombre' => $arClan->getNombre(),
+                'codigo_clan'   => $arClan->getCodigoClanPk(),
+                'nombre'        => $arClan->getNombre(),
                 'nombre_tipo_juego' => $arClan->getTipoJuegoRel()->getNombre(),
                 'codigo_tipo_juego' => $arClan->getTipoJuegoRel()->getCodigoJuegoTipoPk(),
-                'foto' => $arClan->getFoto(),
-                'rating' => $arClan->getRating(),
+                'foto'              => $arClan->getFotoMiniatura(),
+                'rating'            => $arClan->getRating(),
+                'members'           => 0,
             ];
         } else {
             return [

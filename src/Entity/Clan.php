@@ -43,6 +43,11 @@ class Clan
     private $rating=0;
 
     /**
+     * @ORM\Column(name="foto_miniatura", type="string", nullable=true)
+     */
+    private $fotoMiniatura;
+
+    /**
      * @ORM\Column(name="fecha_creacion", type="datetime", nullable=true)
      */
     private $fechaCreacion;
@@ -191,5 +196,21 @@ class Clan
     public function setRating($rating): void
     {
         $this->rating = $rating;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFotoMiniatura()
+    {
+        return $this->fotoMiniatura;
+    }
+
+    /**
+     * @param mixed $fotoMiniatura
+     */
+    public function setFotoMiniatura($fotoMiniatura): void
+    {
+        $this->fotoMiniatura = $fotoMiniatura;
     }
 }

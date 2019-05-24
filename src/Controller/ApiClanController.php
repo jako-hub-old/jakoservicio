@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Controller;
+use App\Classes\ManejadorDeArchivos;
+use App\Classes\Utilidades;
 use App\Entity\Clan;
+use App\Entity\Jugador;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,13 +75,68 @@ class ApiClanController extends FOSRestController {
     public function nuevo(Request $request) {
         try {
             $em = $this->getDoctrine()->getManager();
-            $raw = json_decode($request->getContent(), true);
+            // $raw = json_decode($request->getContent(), true);
+            $raw = [
+                'jugador'       => $request->request->get('jugador'),
+                'tipo_juego'    => $request->request->get('tipo_juego'),
+                'nombre'        => $request->request->get('nombre'),
+                'jugador'       => $request->request->get('jugador'),
+            ];
+            $datosImagen = $this->guardarImagenClan($raw['nombre']);
+            if($datosImagen === false) {
+               return [
+                   'error_controlado' => Utilidades::error(6),
+               ];
+            } else {
+                $raw['url_imagen'] = $datosImagen['url']?? null;
+                $raw['url_miniatura'] = $datosImagen['url_miniatura']?? null;
+            }
             return $em->getRepository(Clan::class)->nuevo($raw);
         } catch (\Exception $e) {
             return [
                 'error' => true,
                 'mensaje' => $e->getMessage(),
             ];
+        }
+    }
+
+    /**
+     * Esta función permite guardar la imagen de los clanes y generar una imagen miniatura de la misma.
+     * @author Jorge Alejandro Quiroz Serna <jakop.box@gmail.com>
+     * @param $codigoJugador
+     * @return array|bool
+     */
+    private function guardarImagenClan($nombreClan) {
+        $dirFotos = '/fotos_clanes';
+        $directorioDestino = realpath(ManejadorDeArchivos::getDirectorioPublico()) . $dirFotos;
+        if(!file_exists($directorioDestino)) {
+            mkdir($directorioDestino);
+        }
+        $imagen = ManejadorDeArchivos::get('foto');
+        if($imagen !== false && $imagen->esValido()) {
+            $ext = $imagen->getExtension();
+            $tiempo = time();
+            $nombreImagen = "foto_jugador_{$nombreClan}_$tiempo";
+            $guardado = $imagen->guardar($directorioDestino, $nombreImagen, true);
+            $urlImagen = "{$dirFotos}/{$nombreImagen}.{$ext}";
+
+            if($guardado) {
+                $origenImagen = "{$directorioDestino}/{$nombreImagen}.{$ext}";
+                $urlMiniatura = Utilidades::get()
+                                        ->generarImagenMiniatura(
+                                            $origenImagen,
+                                            $nombreImagen,
+                                            $directorioDestino,
+                                            100,
+                                            "jpg"
+                                        );
+                return [
+                    'url'           => $urlImagen,
+                    'url_miniatura' => $urlMiniatura,
+                ];
+            } else {
+                return false;
+            }
         }
     }
 

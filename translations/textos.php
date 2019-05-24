@@ -18,4 +18,5 @@ return [
     'error_3'       => 'No existe el jugador',
     'error_4'       => 'No existe el tipo de juego',
     'error_5'       => 'No existe el registro',
+    'error_6'       => 'Ocurrió un error al cargar el archivo',
 ];
