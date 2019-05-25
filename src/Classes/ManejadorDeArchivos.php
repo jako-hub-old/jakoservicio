@@ -74,6 +74,8 @@ class ManejadorDeArchivos
         $info = pathinfo($this->ubicacionAlmacenamiento);
         $extension = $info['extension'];
         if($extension === 'jpg' || $extension === 'jpeg') $image = imagecreatefromjpeg($this->ubicacionArchivo);
+        else if($extension === 'png') $image = imagecreatefrompng($this->ubicacionArchivo);
+        else return null;
         $ancho = imagesx($image);
         $alto = imagesy($image);
         if($ancho > $alto) {

@@ -152,13 +152,16 @@ class ClanRepository extends ServiceEntityRepository
             $em->persist($arClan);
             $em->flush();
             return [
-                'codigo_clan'   => $arClan->getCodigoClanPk(),
-                'nombre'        => $arClan->getNombre(),
-                'nombre_tipo_juego' => $arClan->getTipoJuegoRel()->getNombre(),
-                'codigo_tipo_juego' => $arClan->getTipoJuegoRel()->getCodigoJuegoTipoPk(),
-                'foto'              => $arClan->getFotoMiniatura(),
-                'rating'            => $arClan->getRating(),
-                'members'           => 0,
+                'codigo_clan'           => $arClan->getCodigoClanPk(),
+                'clan_fecha'            => $arClan->getFechaCreacion(),
+                'clan_foto'             => $arClan->getFotoMiniatura(),
+                'clan_nombre'           => $arClan->getNombre(),
+                'clan_rating'           => $arClan->getRating(),
+                'jugador_foto'          => $arClan->getJugadorRel()->getFotoMiniatura(),
+                'jugador_nombre_corto'  => $arClan->getJugadorRel()->getNombreCorto(),
+                'jugador_seudonimo'     => $arClan->getJugadorRel()->getSeudonimo(),
+                'nombre_tipo_juego'     => $arClan->getTipoJuegoRel()->getNombre(),
+                'miembros'              => 0,
             ];
         } else {
             return [

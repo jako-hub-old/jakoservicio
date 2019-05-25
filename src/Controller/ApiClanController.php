@@ -77,10 +77,10 @@ class ApiClanController extends FOSRestController {
             $em = $this->getDoctrine()->getManager();
             // $raw = json_decode($request->getContent(), true);
             $raw = [
-                'jugador'       => $request->request->get('jugador'),
-                'tipo_juego'    => $request->request->get('tipo_juego'),
-                'nombre'        => $request->request->get('nombre'),
-                'jugador'       => $request->request->get('jugador'),
+                'jugador'       => $request->get('jugador'),
+                'tipo_juego'    => $request->get('tipo_juego'),
+                'nombre'        => $request->get('nombre'),
+                'jugador'       => $request->get('jugador'),
             ];
             $datosImagen = $this->guardarImagenClan($raw['nombre']);
             if($datosImagen === false) {
@@ -96,6 +96,8 @@ class ApiClanController extends FOSRestController {
             return [
                 'error' => true,
                 'mensaje' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
             ];
         }
     }
