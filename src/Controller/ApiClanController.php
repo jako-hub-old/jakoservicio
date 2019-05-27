@@ -206,4 +206,40 @@ class ApiClanController extends FOSRestController {
             ];
         }
     }
+
+    /**
+     * @Rest\Post("/v1/clan/invitacion/aceptar")
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function aceptarInvitacion(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->aceptarInvitacion($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/clan/invitacion/rechazar")
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function cancelarInvitacion(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->rechazarInvitacion($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
 }

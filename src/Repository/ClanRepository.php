@@ -265,6 +265,8 @@ class ClanRepository extends ServiceEntityRepository
                     ->select("jc.codigoJugadorClanPk as codigo_jugador_clan")
                     ->addSelect("c.nombre as clan_nombre")
                     ->addSelect("j.seudonimo as jugador_seudonimo")
+                    ->addSelect("c.fotoMiniatura as foto")
+                    ->addSelect("jc.codigoClanFk as codigo_clan")
                     ->join("jc.clanRel", "c")
                     ->join("c.jugadorRel", "j")
                     ->where("jc.codigoJugadorFk = '{$jugador}'")
@@ -273,6 +275,46 @@ class ClanRepository extends ServiceEntityRepository
                 return $qb->getQuery()->getResult();
             } else {
                 return ['error_controlado' => Utilidades::validacion(15)];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function aceptarInvitacion($raw) {
+        $em = $this->getEntityManager();
+        $invitacion = $raw['invitacion']?? 0;
+        if($invitacion) {
+            $arJugadorClan = $em->getRepository(JugadorClan::class)->find($invitacion);
+            if($arJugadorClan) {
+                $arJugadorClan->setConfirmado(1);
+                $em->persist($arJugadorClan);
+                $em->flush();
+                return true;
+            } else {
+                return ['error_controlado' => Utilidades::validacion(16)];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function rechazarInvitacion($raw) {
+        $em = $this->getEntityManager();
+        $invitacion = $raw['invitacion']?? 0;
+        if($invitacion) {
+            $arJugadorClan = $em->getRepository(JugadorClan::class)->find($invitacion);
+            if($arJugadorClan) {
+                $arJugadorClan->setConfirmado(1);
+                $em->remove($arJugadorClan);
+                $em->flush();
+                return true;
+            } else {
+                return ['error_controlado' => Utilidades::validacion(16)];
             }
         } else {
             return [

@@ -15,6 +15,7 @@ return [
     'validacion_13'  => 'No existe la solicitud',
     'validacion_14'  => 'No existe el clan',
     'validacion_15'  => 'No existe el Jugador',
+    'validacion_16'  => 'No existe la invitación',
     'error_1'       => 'Ocurrió un error inesperado',
     'error_2'       => 'No se suministraron los datos requeridos para la api',
     'error_3'       => 'No existe el jugador',
