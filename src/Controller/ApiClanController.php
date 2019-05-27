@@ -190,4 +190,20 @@ class ApiClanController extends FOSRestController {
             ];
         }
     }
+
+    /**
+     * @Rest\Post("/v1/clan/invitaciones")
+     */
+    public function listarInvitaciones(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->listarInvitacionesJugador($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
 }

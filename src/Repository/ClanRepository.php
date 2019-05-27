@@ -253,4 +253,31 @@ class ClanRepository extends ServiceEntityRepository
             ];
         }
     }
+
+    public function listarInvitacionesJugador($raw) {
+        $jugador = $raw['jugador']?? 0;
+        $em = $this->getEntityManager();
+        if($jugador) {
+            $arJugador = $em->getRepository(Jugador::class)->find($jugador);
+            if($arJugador && $arJugador instanceof Jugador) {
+                $qb = $em->createQueryBuilder();
+                $qb->from(JugadorClan::class, "jc")
+                    ->select("jc.codigoJugadorClanPk as codigo_jugador_clan")
+                    ->addSelect("c.nombre as clan_nombre")
+                    ->addSelect("j.seudonimo as jugador_seudonimo")
+                    ->join("jc.clanRel", "c")
+                    ->join("c.jugadorRel", "j")
+                    ->where("jc.codigoJugadorFk = '{$jugador}'")
+                    ->andWhere("jc.confirmado = 0")
+                    ->andWhere("jc.invitacion = 1");
+                return $qb->getQuery()->getResult();
+            } else {
+                return ['error_controlado' => Utilidades::validacion(15)];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
 }
