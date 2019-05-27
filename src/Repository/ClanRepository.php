@@ -201,7 +201,9 @@ class ClanRepository extends ServiceEntityRepository
         $qbMiembros = $em->createQueryBuilder();
         $qbMiembros->from(JugadorClan::class, "jc")
             ->select("jc.codigoJugadorFk")
-            ->where("jc.codigoClanFk = '{$clan}'");
+            ->where("jc.codigoClanFk = '{$clan}'")
+            ->andWhere("jc.confirmado = 1")
+            ->andWhere("jc.invitacion = 0 OR jc.invitacion IS NULL");
         $qbJugadores = $em->createQueryBuilder()
                     ->from(Jugador::class, "j")
                     ->select("j.codigoJugadorPk as codigo_jugador")

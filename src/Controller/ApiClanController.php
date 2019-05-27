@@ -161,7 +161,6 @@ class ApiClanController extends FOSRestController {
     }
 
     /**
-     * /v1/clan/invitar/amigos
      * @Rest\Post("/v1/clan/invitar/amigos")
      */
     public function invitarAmigos(Request $request) {
