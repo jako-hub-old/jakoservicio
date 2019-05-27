@@ -9,6 +9,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 /public/fotos_usuario/
+/public/fotos_clanes/
 
 ###> symfony/phpunit-bridge ###
 .phpunit
