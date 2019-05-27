@@ -118,7 +118,7 @@ class ApiClanController extends FOSRestController {
         if($imagen !== false && $imagen->esValido()) {
             $ext = $imagen->getExtension();
             $tiempo = time();
-            $nombreImagen = "foto_jugador_{$nombreClan}_$tiempo";
+            $nombreImagen = "foto_clan_{$nombreClan}_$tiempo";
             $guardado = $imagen->guardar($directorioDestino, $nombreImagen, true);
             $urlImagen = "{$dirFotos}/{$nombreImagen}.{$ext}";
 
@@ -156,6 +156,38 @@ class ApiClanController extends FOSRestController {
             return [
                 'error' => true,
                 'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * /v1/clan/invitar/amigos
+     * @Rest\Post("/v1/clan/invitar/amigos")
+     */
+    public function invitarAmigos(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $respuesta = $em->getRepository(Clan::class)->invitarJugadores($raw);
+            if (isset($respuesta['notificar_jugadores'])) {
+                $jugador = $respuesta['jugador_seudonimo'];
+                $titulo = "Invitación a clan";
+                $mensaje = "{$jugador} Te invita a hacer parte de su clan";
+                $this->get('notificacion')->notificarAJugadores($respuesta['notificar_jugadores'] ?? [], $titulo, $mensaje, [
+                    'type'      => 'clan-invitation',
+                    'path_data' => $respuesta['codigo_clan'],
+                    'action'    => 'yes',
+                ]);
+                return true;
+            } else {
+                return $respuesta;
+            }
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ];
         }
     }

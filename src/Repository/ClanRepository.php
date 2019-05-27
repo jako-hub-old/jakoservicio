@@ -69,7 +69,8 @@ class ClanRepository extends ServiceEntityRepository
                 ->leftJoin("c.jugadorRel", "j")
                 ->leftJoin("c.clanJugadorClanRel", "jp")
                 ->where("c.codigoJugadorFk = '{$jugador}'")
-                ->groupBy("c.codigoClanPk");
+                ->groupBy("c.codigoClanPk")
+                ->orderBy("c.codigoClanPk", "DESC");
             return $qb->getQuery()->getResult();
         } else {
             return [
@@ -108,7 +109,8 @@ class ClanRepository extends ServiceEntityRepository
                 ->leftJoin("c.jugadorRel", "j")
                 ->leftJoin("c.clanJugadorClanRel", "jp")
                 ->where("c.codigoClanPk IN ({$qbJugadorClan})")
-                ->groupBy("c.codigoClanPk");
+                ->groupBy("c.codigoClanPk")
+                ->orderBy("c.codigoClanPk" ,"DESC");
 
             return $qb->getQuery()->getResult();
         } else {
@@ -181,6 +183,7 @@ class ClanRepository extends ServiceEntityRepository
                 'codigo_clan' => $arClan->getCodigoClanPk(),
                 'nombre' => $arClan->getNombre(),
                 'foto' => $arClan->getFoto(),
+                'foto_miniatura' => $arClan->getFoto(),
                 'rating' => $arClan->getRating(),
                 'juego_tipo' => $arClan->getTipoJuegoRel()->getNombre(),
                 'miembros' => $miembros,
@@ -207,5 +210,45 @@ class ClanRepository extends ServiceEntityRepository
                     ->addSelect("j.seudonimo as jugador_seudonimo")
                     ->where("j.codigoJugadorPk IN ({$qbMiembros})");
         return $qbJugadores->getQuery()->getResult();
+    }
+
+    public function invitarJugadores($raw) {
+        $jugadores = $raw['jugadores']?? false;
+        $clan = $raw['clan']?? false;
+        $em = $this->getEntityManager();
+        if($jugadores && $clan) {
+            $arClan = $em->getRepository(Clan::class)->find($clan);
+            if(!$arClan) {
+                return ['error_controlado' => Utilidades::validacion(14)];
+            }
+            $notificarJugadores = [];
+            foreach ($jugadores as $jugador) {
+                $arJugador = $em->getRepository(Jugador::class)->find($jugador);
+                $arJugadorClanExistente = $em->getRepository(JugadorClan::class)->findOneBy(['codigoClanFk' => $clan, 'codigoJugadorFk' => $jugador]);
+                if(!$arJugador || !$arJugador instanceof Jugador || $arJugadorClanExistente) {
+                    continue;
+                }
+                $arJugadorClan = new JugadorClan();
+                $arJugadorClan->setJugadorRel($arJugador);
+                $arJugadorClan->setClanRel($arClan);
+                $arJugadorClan->setInvitacion(true);
+                $em->persist($arJugadorClan);
+                $notificarJugadores[] = $jugador;
+            }
+            $em->flush();
+            if(count($notificarJugadores)){
+                return [
+                    'notificar_jugadores'   => $notificarJugadores,
+                    'jugador_seudonimo'     => $arClan->getJugadorRel()->getSeudonimo(),
+                    'codigo_clan'           => $arClan->getCodigoClanPk(),
+                ];
+            } else {
+                return true;
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
     }
 }
