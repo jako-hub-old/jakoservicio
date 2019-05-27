@@ -242,4 +242,95 @@ class ApiClanController extends FOSRestController {
             ];
         }
     }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/unirse")
+     */
+    public function unirse(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->unirse($raw, $this->get('notificacion'));
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/solicitudes/enviadas")
+     */
+    public function solicitudesAClan(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->solicitudesEnviadas($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/solicitudes/recibidas")
+     */
+    public function solicitudesRecibidas(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->solicitudesRecibidas($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/solicitudes/rechazar")
+     * @Rest\Post("/v1/clan/solicitudes/cancelar")
+     */
+    public function rechazarSolicitud(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->cancelarSolicitud($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/abandonar")
+     */
+    public function abandonar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->abandonar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
 }

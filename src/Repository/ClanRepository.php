@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Classes\Notificacion;
 use App\Classes\Utilidades;
 use App\Entity\Clan;
 use App\Entity\JuegoTipo;
@@ -93,14 +94,16 @@ class ClanRepository extends ServiceEntityRepository
 
             $qbJugadorClan->from(JugadorClan::class, "jc")
                 ->select("jc.codigoClanFk")
-                ->where("jc.codigoJugadorFk = '{$jugador}'");
+                ->where("jc.codigoJugadorFk = '{$jugador}'")
+                ->andWhere("jc.confirmado = 1");
 
             $qb = $em->createQueryBuilder();
 
             $qb->from(Clan::class, "c")
                 ->select("c.codigoClanPk as codigo_clan")
-                ->addSelect("c.foto as clan_foto")
+                ->addSelect("c.fotoMiniatura as clan_foto")
                 ->addSelect("c.nombre as clan_nombre")
+                ->addSelect("c.rating as clan_rating")
                 ->addSelect("c.fechaCreacion as clan_fecha")
                 ->addSelect("j.nombreCorto as jugador_nombre_corto")
                 ->addSelect("j.fotoMiniatura as jugador_foto")
@@ -316,6 +319,143 @@ class ClanRepository extends ServiceEntityRepository
             } else {
                 return ['error_controlado' => Utilidades::validacion(16)];
             }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    /**
+     * @param $raw
+     * @param $notificacion Notificacion
+     */
+    public function unirse($raw, $notificacion) {
+        $jugador = $raw['jugador']?? 0;
+        $clan = $raw['clan']?? 0;
+        if($clan && $jugador) {
+            $em = $this->getEntityManager();
+            $arJugador = $em->getRepository(Jugador::class)->find($jugador);
+            $arClan = $em->getRepository(Clan::class)->find($clan);
+            $esAdmin = $arClan->getCodigoJugadorFk() === $jugador;
+            if($arJugador && $arClan) {
+                $arJugadorClan = $em->getRepository(JugadorClan::class)->findOneBy(['codigoJugadorFk' => $jugador, 'codigoClanFk' => $clan]);
+                if(!$arJugadorClan) {
+                    $arJugadorClan = new JugadorClan();
+                    $arJugadorClan->setJugadorRel($arJugador);
+                    $arJugadorClan->setClanRel($arClan);
+                    if($arClan->getCodigoJugadorFk() === $jugador) {
+                        $arJugadorClan->setConfirmado(true);
+                    } else {
+                        $arJugadorClan->setSolicitud(true);
+                    }
+                    $em->persist($arJugadorClan);
+                    $em->flush();
+                    $titulo = "Solicitud a clan";
+                    $mensaje = "{$arJugador->getSeudonimo()} solicita unirse a tu clan";
+                    $notificacion->notificarAJugadores([$arJugador->getCodigoJugadorPk()] ?? [], $titulo, $mensaje, [
+                        'type'      => 'clan-request',
+                        'path_data' => $arClan->getCodigoClanPk(),
+                        'action'    => 'yes',
+                    ]);
+                }
+                if($esAdmin) {
+                    return "Ahora haces parte de {$arClan->getNombre()}";
+                } else {
+                    return "Se ha enviado tu solicitud";
+                }
+            } else {
+                return ['error_controlado' => Utilidades::validacion(17)];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function solicitudesEnviadas($raw) {
+        $jugador = $raw['jugador']?? 0;
+        if($jugador) {
+            $em = $this->getEntityManager();
+            $arJugador = $em->getRepository(Jugador::class)->find($jugador);
+            if($arJugador) {
+                $qb = $em->createQueryBuilder();
+                $qb->from(JugadorClan::class, "jc")
+                    ->select("jc.codigoClanFk as codigo_clan")
+                    ->addSelect("jc.codigoJugadorClanPk as codigo_jugador_clan")
+                    ->addSelect("c.nombre as clan_nombre")
+                    ->join("jc.clanRel", "c")
+                    ->where("jc.codigoJugadorFk = '{$jugador}'")
+                    ->andWhere("jc.confirmado IS NULL OR jc.confirmado = 0")
+                    ->andWhere("jc.solicitud = 1");
+                return $qb->getQuery()->getResult();
+            } else {
+                return ['error_controlado' => Utilidades::validacion(17)];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function solicitudesRecibidas($raw) {
+        $jugador = $raw['jugador']?? 0;
+        if($jugador) {
+            $em = $this->getEntityManager();
+            $arJugador = $em->getRepository(Jugador::class)->find($jugador);
+            if($arJugador) {
+                $qb = $em->createQueryBuilder();
+                $qb->from(JugadorClan::class, "jc")
+                    ->select("jc.codigoClanFk as codigo_clan")
+                    ->addSelect("c.nombre as clan_nombre")
+                    ->addSelect("j.seudonimo as jugador_seudonimo")
+                    ->addSelect("j.fotoMiniatura as foto")
+                    ->join("jc.clanRel", "c")
+                    ->join("jc.jugadorRel", "j")
+                    ->where("c.codigoJugadorFk = '{$jugador}'")
+                    ->andWhere("jc.confirmado IS NULL OR jc.confirmado = 0")
+                    ->andWhere("jc.solicitud = 1");
+                return $qb->getQuery()->getResult();
+            } else {
+                return ['error_controlado' => Utilidades::validacion(17)];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function cancelarSolicitud($raw) {
+        $solicitud = $raw['solicitud']?? 0;
+        if($solicitud) {
+            $em = $this->getEntityManager();
+            $arJugadorClan = $em->getRepository(JugadorClan::class)->find($solicitud);
+            if($arJugadorClan) {
+                $em->remove($arJugadorClan);
+                $em->flush();
+            }
+            return true;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function abandonar($raw) {
+        $jugador = $raw['jugador']?? 0;
+        $clan = $raw['clan']?? 0;
+        if($jugador && $clan) {
+            $em = $this->getEntityManager();
+            $arJugadorClan = $em->getRepository(JugadorClan::class)->findOneBy(['codigoClanFk' => $clan, 'codigoJugadorFk' => $jugador]);
+            if($arJugadorClan) {
+                $em->remove($arJugadorClan);
+                $em->flush();
+            }
+            return true;
         } else {
             return [
                 'error_controlado' => Utilidades::error(2),

@@ -37,6 +37,11 @@ class JugadorClan
     private $invitacion=false;
 
     /**
+     * @ORM\Column(name="solicitud", type="boolean", nullable=true)
+     */
+    private $solicitud=false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="clanJugadorClanRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -138,5 +143,21 @@ class JugadorClan
     public function setInvitacion($invitacion): void
     {
         $this->invitacion = $invitacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitud()
+    {
+        return $this->solicitud;
+    }
+
+    /**
+     * @param mixed $solicitud
+     */
+    public function setSolicitud($solicitud): void
+    {
+        $this->solicitud = $solicitud;
     }
 }
