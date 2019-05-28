@@ -50,7 +50,7 @@ class ApiJugadorController extends FOSRestController {
 
     /**
      * @param Request $request
-     * @Rest\Post("/v1/jugador/informacion/complementaria")
+     * @Rest\Post("/v1/jugador/informacion/complementaria/guardar")
      * @return array|mixed
      */
     public function guardarPseudonimo(Request $request) {
@@ -140,4 +140,42 @@ class ApiJugadorController extends FOSRestController {
         $scheme = $_SERVER['REQUEST_SCHEME'];
         return "{$scheme}://{$host}{$basePath}";
     }
+
+    /**
+     * @Rest\Post("/v1/jugador/informacion/complementaria")
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function obtenerInformacionComplementaria(Request $request){
+        try{
+            $em  = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Jugador::class)->obtenerInformacionComplementaria($raw);
+
+        } catch (\Exception $e){
+            return [
+                'message' => $e->getMessage(),
+                'error' => true,
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/jugador/informacion/complementaria/actualizar")
+     * @param Request $request
+     * @return array|bool
+     */
+    public function actualizarInformacionComplementaria(Request $request){
+        try{
+            $em  = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Jugador::class)->actualizarInformacionComplementaria($raw);
+        } catch (\Exception $e){
+            return [
+                'message' => $e->getMessage(),
+                'error' => true,
+            ];
+        }
+    }
+
 }
