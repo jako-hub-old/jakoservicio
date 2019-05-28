@@ -124,7 +124,7 @@ class ApiClanController extends FOSRestController {
 
             if($guardado) {
                 $origenImagen = "{$directorioDestino}/{$nombreImagen}.{$ext}";
-                $urlMiniatura = Utilidades::get()
+                $urlMiniatura = "{$dirFotos}/" . Utilidades::get()
                                         ->generarImagenMiniatura(
                                             $origenImagen,
                                             $nombreImagen,
@@ -235,6 +235,24 @@ class ApiClanController extends FOSRestController {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(Clan::class)->rechazarInvitacion($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/clan/invitacion/aprobar")
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function aprobarSolicitud(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->aprobarSolicitud($raw);
         } catch (\Exception $e) {
             return [
                 'error' => true,

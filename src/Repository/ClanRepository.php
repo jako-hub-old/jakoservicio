@@ -328,8 +328,26 @@ class ClanRepository extends ServiceEntityRepository
         if($invitacion) {
             $arJugadorClan = $em->getRepository(JugadorClan::class)->find($invitacion);
             if($arJugadorClan) {
-                $arJugadorClan->setConfirmado(1);
                 $em->remove($arJugadorClan);
+                $em->flush();
+                return true;
+            } else {
+                return ['error_controlado' => Utilidades::validacion(16)];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    public function aprobarSolicitud($raw) {
+        $em = $this->getEntityManager();
+        $invitacion = $raw['solicitud']?? 0;
+        if($invitacion) {
+            $arJugadorClan = $em->getRepository(JugadorClan::class)->find($invitacion);
+            if($arJugadorClan) {
+                $arJugadorClan->setConfirmado(1);
                 $em->flush();
                 return true;
             } else {
@@ -423,20 +441,23 @@ class ClanRepository extends ServiceEntityRepository
     }
 
     public function solicitudesRecibidas($raw) {
-        $jugador = $raw['jugador']?? 0;
-        if($jugador) {
+        $clan = $raw['clan']?? 0;
+        if($clan) {
             $em = $this->getEntityManager();
-            $arJugador = $em->getRepository(Jugador::class)->find($jugador);
-            if($arJugador) {
+            $arClan = $em->getRepository(Clan::class)->find($clan);
+            if($arClan) {
                 $qb = $em->createQueryBuilder();
                 $qb->from(JugadorClan::class, "jc")
                     ->select("jc.codigoClanFk as codigo_clan")
                     ->addSelect("c.nombre as clan_nombre")
+                    ->addSelect("jc.codigoJugadorClanPk as codigo_solicitud")
                     ->addSelect("j.seudonimo as jugador_seudonimo")
+                    ->addSelect("j.nombreCorto as jugador_nombre_corto")
+                    ->addSelect("j.codigoJugadorPk as jugador_codigo")
                     ->addSelect("j.fotoMiniatura as foto")
                     ->join("jc.clanRel", "c")
                     ->join("jc.jugadorRel", "j")
-                    ->where("c.codigoJugadorFk = '{$jugador}'")
+                    ->where("jc.codigoClanFk= '{$clan}'")
                     ->andWhere("jc.confirmado IS NULL OR jc.confirmado = 0")
                     ->andWhere("jc.solicitud = 1");
                 return $qb->getQuery()->getResult();

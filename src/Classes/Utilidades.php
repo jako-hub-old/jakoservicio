@@ -129,6 +129,6 @@ final class Utilidades {
         imagecopyresampled($miniatura, $imagenCentrada, 0, 0, 0, 0, $tamanio, $tamanio, $tamanioCentrado, $tamanioCentrado);
         $nombreImagen = "{$nombre}_thumb.{$extension}";
         if($extension === 'jpg' || $extension === 'jpeg') imagejpeg($miniatura, "{$destino}/{$nombreImagen}");
-        return "/{$destino}/{$nombreImagen}";
+        return "{$nombreImagen}";
     }
 }
