@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="JuegoTipoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\JuegoTipoRepository")
  */
 class JuegoTipo
 {
@@ -27,6 +27,11 @@ class JuegoTipo
     private $descripcion;
 
     /**
+     * @ORM\Column(type="text", nullable=true, name="icono")
+     */
+    private $icono;
+
+    /**
      * @ORM\OneToMany(targetEntity="Juego", mappedBy="tipoJuegoRel")
      */
     protected $tipoJuegoJuegoRel;
@@ -35,6 +40,11 @@ class JuegoTipo
      * @ORM\OneToMany(targetEntity="Posicion", mappedBy="tipoJuegoRel")
      */
     protected  $posicionesTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Clan", mappedBy="tipoJuegoRel")
+     */
+    protected $tipoJuegoClanRel;
 
     public function getCodigoJuegoTipoPk(): ?int
     {
@@ -95,5 +105,37 @@ class JuegoTipo
     public function setPosicionesTipoRel($posicionesTipoRel): void
     {
         $this->posicionesTipoRel = $posicionesTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoJuegoClanRel()
+    {
+        return $this->tipoJuegoClanRel;
+    }
+
+    /**
+     * @param mixed $tipoJuegoClanRel
+     */
+    public function setTipoJuegoClanRel($tipoJuegoClanRel): void
+    {
+        $this->tipoJuegoClanRel = $tipoJuegoClanRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIcono()
+    {
+        return $this->icono;
+    }
+
+    /**
+     * @param mixed $icono
+     */
+    public function setIcono($icono): void
+    {
+        $this->icono = $icono;
     }
 }
