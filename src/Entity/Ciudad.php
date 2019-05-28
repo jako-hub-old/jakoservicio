@@ -44,6 +44,11 @@ class Ciudad
     protected $negociosCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="Clan", mappedBy="ciudadRel")
+     */
+    protected $ciudadClanRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -139,7 +144,20 @@ class Ciudad
         $this->negociosCiudadRel = $negociosCiudadRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCiudadClanRel()
+    {
+        return $this->ciudadClanRel;
+    }
 
-
+    /**
+     * @param mixed $ciudadClanRel
+     */
+    public function setCiudadClanRel($ciudadClanRel): void
+    {
+        $this->ciudadClanRel = $ciudadClanRel;
+    }
 }
 

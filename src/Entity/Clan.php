@@ -53,9 +53,20 @@ class Clan
     private $fechaCreacion;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
+     */
+    private $codigoCiudadFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="JugadorClan", mappedBy="clanRel")
      */
     protected $clanJugadorClanRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Ciudad", inversedBy="ciudadClanRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="jugadorClanRel")
@@ -212,5 +223,37 @@ class Clan
     public function setFotoMiniatura($fotoMiniatura): void
     {
         $this->fotoMiniatura = $fotoMiniatura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
     }
 }

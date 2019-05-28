@@ -18,12 +18,12 @@ class ApiClanController extends FOSRestController {
 
     /**
      * @return array
-     * @Rest\Post("/v1/clan/lista")
+     * @Rest\Post("/v1/clan/buscar")
      */
-    public function lista() {
+    public function buscar() {
         try {
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Clan::class)->lista();
+            return $em->getRepository(Clan::class)->buscar();
         } catch (\Exception $e) {
             return [
                 'error' => true,

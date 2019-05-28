@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Classes\Notificacion;
 use App\Classes\Utilidades;
+use App\Entity\Ciudad;
 use App\Entity\Clan;
 use App\Entity\JuegoTipo;
 use App\Entity\Jugador;
@@ -30,19 +31,31 @@ class ClanRepository extends ServiceEntityRepository
      * @author Jorge Alejandro Quiroz Serna <jakop.box@gmail.com>
      * @return mixed
      */
-    public function lista() {
+    public function buscar() {
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
+        $qbCount = $em->createQueryBuilder()
+            ->from(JugadorClan::class, "jc")
+            ->select("COUNT(jc.codigoJugadorClanPk)")
+            ->where("jc.codigoClanFk = c.codigoClanPk");
+
         $qb->from(Clan::class, "c")
             ->select("c.codigoClanPk as codigo_clan")
-            ->addSelect("c.foto as clan_foto")
+            ->addSelect("c.fotoMiniatura as clan_foto")
             ->addSelect("c.nombre as clan_nombre")
             ->addSelect("c.fechaCreacion as clan_fecha")
+            ->addSelect("({$qbCount}) as miembros")
             ->addSelect("c.rating as clan_rating")
+            ->addSelect("ciudadRel.nombre as clan_ciudad")
+            ->addSelect("tj.icono as tipo_juego_icono")
+            ->addSelect("tj.nombre as tipo_juego_nombre")
             ->addSelect("j.nombreCorto as jugador_nombre_corto")
             ->addSelect("j.fotoMiniatura as jugador_foto")
             ->addSelect("j.seudonimo as jugador_seudonimo")
-            ->leftJoin("c.jugadorRel", "j");
+            ->leftJoin("c.jugadorRel", "j")
+            ->leftJoin("c.tipoJuegoRel", "tj")
+            ->leftJoin("c.ciudadRel", "ciudadRel")
+            ->groupBy("c.codigoClanPk");
         return $qb->getQuery()->getResult();
     }
 
@@ -140,6 +153,7 @@ class ClanRepository extends ServiceEntityRepository
         if($jugador && $nombre && $tipoJuego) {
             $arJugador = $em->getRepository(Jugador::class)->find($jugador);
             $arTipoJuego = $em->getRepository(JuegoTipo::class)->find($tipoJuego);
+            $arCiudad = $em->getRepository(Ciudad::class)->find(1);
             if(!$arJugador) {
                 return ['error_controlado' => Utilidades::error(3)];
             }
@@ -152,6 +166,7 @@ class ClanRepository extends ServiceEntityRepository
             $arClan->setRating(1);
             $arClan->setTipoJuegoRel($arTipoJuego);
             $arClan->setFoto($urlImagen);
+            $arClan->setCiudadRel($arCiudad);
             $arClan->setFotoMiniatura($urlMiniatura);
             $arClan->setFechaCreacion(new \DateTime('now'));
             $em->persist($arClan);
@@ -292,7 +307,8 @@ class ClanRepository extends ServiceEntityRepository
         if($invitacion) {
             $arJugadorClan = $em->getRepository(JugadorClan::class)->find($invitacion);
             if($arJugadorClan) {
-                $arJugadorClan->setConfirmado(1);
+                $arJugadorClan->setConfirmado(true);
+                $arJugadorClan->setInvitacion(false);
                 $em->persist($arJugadorClan);
                 $em->flush();
                 return true;
@@ -358,6 +374,12 @@ class ClanRepository extends ServiceEntityRepository
                         'path_data' => $arClan->getCodigoClanPk(),
                         'action'    => 'yes',
                     ]);
+                } else if($arJugadorClan && $arJugadorClan->getInvitacion()) {
+                    $arJugadorClan->setInvitacion(false);
+                    $arJugadorClan->setConfirmado(true);
+                    $em->persist($arJugadorClan);
+                    $em->flush();
+                    return "Ahora haces parte de {$arClan->getNombre()}";
                 }
                 if($esAdmin) {
                     return "Ahora haces parte de {$arClan->getNombre()}";
