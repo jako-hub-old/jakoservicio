@@ -146,11 +146,11 @@ class ApiJugadorController extends FOSRestController {
      * @param Request $request
      * @return array|mixed
      */
-    public function listarInformacionComplementaria(Request $request){
+    public function obtenerInformacionComplementaria(Request $request){
         try{
             $em  = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            return $em->getRepository(Jugador::class)->listarInformacionComplementaria($raw);
+            return $em->getRepository(Jugador::class)->obtenerInformacionComplementaria($raw);
 
         } catch (\Exception $e){
             return [

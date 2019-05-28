@@ -167,7 +167,7 @@ class JugadorRepository extends ServiceEntityRepository
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function listarInformacionComplementaria($raw){
+    public function obtenerInformacionComplementaria($raw){
         $em            = $this->getEntityManager();
         $codigoJugador = $raw['jugador']??null;
         $jugador       = $em->getRepository(Jugador::class)->find($codigoJugador);
