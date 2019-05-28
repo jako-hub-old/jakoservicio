@@ -162,4 +162,73 @@ class JugadorRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $raw
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function obtenerInformacionComplementaria($raw){
+        $em            = $this->getEntityManager();
+        $codigoJugador = $raw['jugador']??null;
+        $jugador       = $em->getRepository(Jugador::class)->find($codigoJugador);
+
+        if($jugador){
+            $qb = $em->createQueryBuilder();
+            $qb->from(Jugador::class, "j")
+                ->select("j.codigoJugadorPk as codigo_jugador")
+                ->addSelect("j.nombreCorto as nombre_corto")
+                ->addSelect("j.seudonimo")
+                ->addSelect('j.correo')
+                ->where("j.codigoJugadorPk = {$codigoJugador}");
+            $icJugador =  $qb->getQuery()->getOneOrNullResult();
+
+            return $icJugador;
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(3)
+            ];
+        }
+    }
+
+    /**
+     * @param $raw
+     * @return array|bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function actualizarInformacionComplementaria($raw){
+        $em          = $this->getEntityManager();
+        $usuario     = $raw['usuario']?? 0;
+        $seudonimo   = $raw['seudonimo']?? '';
+        $nombreCorto = $raw['nombre_corto']?? '';
+        $correo      = $raw['correo']?? '';
+
+        if($usuario && $seudonimo && $nombreCorto && $correo) {
+            $arUsuario = $em->getRepository(Usuario::class)->find($usuario);
+            $arJugador = $arUsuario->getJugadorRel();
+            $qb = $em->createQueryBuilder()->from(Jugador::class, "j")
+                ->select("j")
+                ->where("j.seudonimo = '{$seudonimo}'")
+                ->andWhere("j.codigoJugadorPk  = '{$arJugador->getCodigoJugadorPk()}'")
+                ->setMaxResults(1);
+            $arrExistente = $qb->getQuery()->getResult();
+            if($arrExistente) {
+                return [
+                    'validacion' => Utilidades::validacion(9),
+                ];
+            } else {
+                $arJugador->setSeudonimo($seudonimo);
+                $arJugador->setCorreo($correo);
+                $arJugador->setNombreCorto($nombreCorto);
+                $em->persist($arJugador);
+                $em->flush();
+                return true;
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
 }
