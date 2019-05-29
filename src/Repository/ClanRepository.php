@@ -521,15 +521,12 @@ class ClanRepository extends ServiceEntityRepository
             $existeJuego   = $em->getRepository(JuegoTipo::class)->find($juego);
             if($existeJugador) {
                 if($existeJuego){
-                    $qb = $em->createQueryBuilder()->from(JugadorClan::class, 'jugador_clan')
+                    $qb = $em->createQueryBuilder()->from(Clan::class, 'clan')
                         ->select('clan.codigoClanPk as codigo_clan')
                         ->addSelect('clan.nombre')
                         ->addSelect('clan.rating')
-                        ->leftJoin('jugador_clan.clanRel', 'clan')
-                        ->leftJoin('jugador_clan.jugadorRel', 'jugador')
-                        ->where("jugador_clan.codigoJugadorFk = {$jugador}")
-                        ->andWhere("clan.codigoTipoJuegoFk = {$juego}")
-                        ->andWhere("jugador_clan.confirmado = 1");
+                        ->where("clan.codigoJugadorFk = {$jugador}")
+                        ->andWhere("clan.codigoTipoJuegoFk = {$juego}");
                     return $qb->getQuery()->getResult();
                 } else {
                     return [
@@ -563,13 +560,11 @@ class ClanRepository extends ServiceEntityRepository
             $existeJuego   = $em->getRepository(JuegoTipo::class)->find($juego);
             if($existeJugador) {
                 if($existeJuego){
-                    $qb = $em->createQueryBuilder()->from(JugadorClan::class, 'jugador_clan')
+                    $qb = $em->createQueryBuilder()->from(Clan::class, 'clan')
                         ->select('clan.codigoClanPk as codigo_clan')
                         ->addSelect('clan.nombre')
                         ->addSelect('clan.rating')
-                        ->leftJoin('jugador_clan.clanRel', 'clan')
-                        ->leftJoin('jugador_clan.jugadorRel', 'jugador')
-                        ->where("jugador_clan.codigoJugadorFk <> {$jugador}")
+                        ->where("clan.codigoJugadorFk <> {$jugador}")
                         ->andWhere("clan.codigoTipoJuegoFk = {$juego}");
                     return $qb->getQuery()->getResult();
                 } else {
