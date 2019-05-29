@@ -371,15 +371,15 @@ class ApiClanController extends FOSRestController {
     }
 
     /**
-     * @Rest\Post("/v1/clanes/rivales")
+     * @Rest\Post("/v1/clanes/otros")
      * @param Request $request
      * @return array|bool
      */
-    public function clanesRivales(Request $request){
+    public function otrosClanes(Request $request){
         try{
             $em  = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            return $em->getRepository(Clan::class)->clanesRivales($raw);
+            return $em->getRepository(Clan::class)->otrosClanes($raw);
         } catch (\Exception $e){
             return [
                 'error' => true,

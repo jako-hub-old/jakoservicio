@@ -550,7 +550,7 @@ class ClanRepository extends ServiceEntityRepository
      * @param $raw
      * @return array|bool
      */
-    public function clanesRivales($raw){
+    public function otrosClanes($raw){
         $jugador = $raw['jugador']??null;
         $juego   = $raw['juego']??null;
 
