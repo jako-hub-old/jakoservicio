@@ -505,4 +505,87 @@ class ClanRepository extends ServiceEntityRepository
             ];
         }
     }
+
+    /**
+     * Obtener los clanes del jugador
+     * @param $raw
+     * @return array|bool
+     */
+    public function clanesJugador($raw){
+        $jugador = $raw['jugador']??null;
+        $juego   = $raw['juego']??null;
+
+        if($jugador && $juego) {
+            $em            = $this->getEntityManager();
+            $existeJugador = $em->getRepository(Jugador::class)->find($jugador);
+            $existeJuego   = $em->getRepository(JuegoTipo::class)->find($juego);
+            if($existeJugador) {
+                if($existeJuego){
+                    $qb = $em->createQueryBuilder()->from(JugadorClan::class, 'jugador_clan')
+                        ->select('clan.codigoClanPk as codigo_clan')
+                        ->addSelect('clan.nombre')
+                        ->addSelect('clan.rating')
+                        ->leftJoin('jugador_clan.clanRel', 'clan')
+                        ->leftJoin('jugador_clan.jugadorRel', 'jugador')
+                        ->where("jugador_clan.codigoJugadorFk = {$jugador}")
+                        ->andWhere("clan.codigoTipoJuegoFk = {$juego}")
+                        ->andWhere("jugador_clan.confirmado = 1");
+                    return $qb->getQuery()->getResult();
+                } else {
+                    return [
+                        'error_controlado' => Utilidades::validacion(6),
+                    ];
+                }
+            } else {
+                return [
+                    'error_controlado' => Utilidades::error(3),
+                ];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
+
+    /**
+     * Obtener clanes excepto los del jugador
+     * @param $raw
+     * @return array|bool
+     */
+    public function clanesRivales($raw){
+        $jugador = $raw['jugador']??null;
+        $juego   = $raw['juego']??null;
+
+        if($jugador && $juego) {
+            $em            = $this->getEntityManager();
+            $existeJugador = $em->getRepository(Jugador::class)->find($jugador);
+            $existeJuego   = $em->getRepository(JuegoTipo::class)->find($juego);
+            if($existeJugador) {
+                if($existeJuego){
+                    $qb = $em->createQueryBuilder()->from(JugadorClan::class, 'jugador_clan')
+                        ->select('clan.codigoClanPk as codigo_clan')
+                        ->addSelect('clan.nombre')
+                        ->addSelect('clan.rating')
+                        ->leftJoin('jugador_clan.clanRel', 'clan')
+                        ->leftJoin('jugador_clan.jugadorRel', 'jugador')
+                        ->where("jugador_clan.codigoJugadorFk <> {$jugador}")
+                        ->andWhere("clan.codigoTipoJuegoFk = {$juego}");
+                    return $qb->getQuery()->getResult();
+                } else {
+                    return [
+                        'error_controlado' => Utilidades::validacion(6),
+                    ];
+                }
+            } else {
+                return [
+                    'error_controlado' => Utilidades::error(3),
+                ];
+            }
+        } else {
+            return [
+                'error_controlado' => Utilidades::error(2),
+            ];
+        }
+    }
 }

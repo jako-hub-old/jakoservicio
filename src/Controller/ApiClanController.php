@@ -351,4 +351,40 @@ class ApiClanController extends FOSRestController {
             ];
         }
     }
+
+    /**
+     * @Rest\Post("/v1/clanes/jugador")
+     * @param Request $request
+     * @return array
+     */
+    public function clanesJugador(Request $request){
+        try{
+            $em  = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->clanesJugador($raw);
+        } catch (\Exception $e){
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/clanes/rivales")
+     * @param Request $request
+     * @return array|bool
+     */
+    public function clanesRivales(Request $request){
+        try{
+            $em  = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->clanesRivales($raw);
+        } catch (\Exception $e){
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
 }
