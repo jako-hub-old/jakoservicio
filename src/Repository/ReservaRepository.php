@@ -81,13 +81,13 @@ class ReservaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
         $qb->from(Reserva::class, "r")
-            ->select("r.codigoReservaPk as codigo_reserva")
-            ->where("r.codigoEscenarioFk = {$codigoEscenario}")
-            ->andWhere(" (((r.fechaDesde BETWEEN '$fechaDesde' AND '$fechaHasta') OR (r.fechaHasta BETWEEN '$fechaDesde' AND '$fechaHasta')) "
-                . "OR (r.fechaDesde > '$fechaDesde' AND r.fechaDesde < '$fechaHasta') "
-                . "OR (r.fechaHasta > '$fechaHasta' AND r.fechaDesde < '$fechaDesde'))");
-        $arReservas = $qb->getQuery()->getResult();
-
-        return false;
+            ->select("COUNT(r.codigoReservaPk)")
+            ->where("r.codigoEscenarioFk = {$codigoEscenario} ")
+            ->andWhere(
+                    "(r.fechaDesde > '{$fechaDesde}' AND r.fechaDesde < '{$fechaHasta}') "
+                  . " OR (r.fechaHasta > '{$fechaDesde}' AND r.fechaHasta < '{$fechaHasta}')"
+                  . " OR ('{$fechaDesde}' >= r.fechaDesde AND  '{$fechaDesde}' <=  r.fechaHasta) AND ('{$fechaHasta}' >= r.fechaDesde AND  '{$fechaHasta}' <=  r.fechaHasta)"
+            );
+        return intval($qb->getQuery()->getSingleScalarResult()) === 0;
     }
 }

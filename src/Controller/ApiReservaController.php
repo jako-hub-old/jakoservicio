@@ -50,4 +50,32 @@ class ApiReservaController extends FOSRestController {
         }
     }
 
+    /**
+     * Este endpoint permite validar si un escenario está ya reservado
+     * para determinada hora
+     * data : {
+     *      "escenario" : 1,
+     *      "desde" : "yyyy-mm-dd h:i:s",
+     *      "hasta" : "yyyy-mm-dd h:i:s"
+     * }
+     * @Rest\Post("/v1/reserva/validar")
+     */
+    public function validarReserva(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Reserva::class)
+                        ->validarDisponibilidad(
+                            $raw['desde']?? null,
+                            $raw['hasta']?? null,
+                            $raw['escenario']?? 0
+                        );
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
 }

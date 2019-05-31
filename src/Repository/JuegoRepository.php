@@ -46,6 +46,9 @@ class JuegoRepository extends ServiceEntityRepository
             } else if($fechaDesde < $fechaActual) {
                 return [ 'error_controlado' => 'La hora de inicio del juego no puede ser menor a la hora y día actual'];
             }
+            if(!$em->getRepository(Reserva::class)->validarDisponibilidad($fechaDesde->format("Y-m-d H:i:s"), $fechaHasta->format("Y-m-d H:i:s"), $escenario)) {
+                return ['error_controlado' => 'El espacio ya fue reservado en el horario seleccionado'];
+            }
             //if($em->getRepository(Reserva::class)->validarDisponibilidad($fechaDesde->format('Y-m-d H:i:s'), $fechaHasta->format('Y-m-d H:i:s'), $escenario)) {
                 $arTipoJuego = $em->getRepository(JuegoTipo::class)->find($tipoJuego);
                 $arJugador = $em->getRepository(Jugador::class)->find($jugador);
@@ -72,6 +75,14 @@ class JuegoRepository extends ServiceEntityRepository
                         $jugadores += $arrEquipo['jugadores'];
                     }
                 }
+
+                $arReserva = new Reserva();
+                $arReserva->setJugadorRel($arJugador);
+                $arReserva->setEscenarioRel($arEscenario);
+                $arReserva->setFechaDesde($fechaDesde);
+                $arReserva->setFechaHasta($fechaHasta);
+                $em->persist($arReserva);
+
                 $arJuego->setJugadores($jugadores);
                 $em->persist($arJuego);
 
