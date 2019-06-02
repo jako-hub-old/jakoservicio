@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 class ApiJugadorClanController extends FOSRestController
 {
     /**
+     * Función utilizada para listar los jugadores por clan
+     * Recibe como parámetro por body (clan)
      * @Rest\Post("/v1/clan/jugadores")
      * @param Request $request
      * @return array

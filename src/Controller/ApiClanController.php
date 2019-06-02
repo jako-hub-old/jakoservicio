@@ -7,6 +7,7 @@ use App\Entity\Clan;
 use App\Entity\Jugador;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use http\Message\Body;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -353,6 +354,8 @@ class ApiClanController extends FOSRestController {
     }
 
     /**
+     * Función utilizada para listar los clanes por jugador y tipo de juego
+     * Recibe como parámetro por body (jugador, juego)
      * @Rest\Post("/v1/clanes/jugador")
      * @param Request $request
      * @return array
@@ -371,6 +374,9 @@ class ApiClanController extends FOSRestController {
     }
 
     /**
+     * Función utilizada para listar los clanes diferentes a los que esta asociado un jugador
+     * Se consulta por jugador y tipo de juego.
+     * Recibe como parámetro por body (jugador, juego)
      * @Rest\Post("/v1/clanes/otros")
      * @param Request $request
      * @return array|bool
