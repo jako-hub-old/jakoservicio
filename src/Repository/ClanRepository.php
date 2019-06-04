@@ -525,6 +525,7 @@ class ClanRepository extends ServiceEntityRepository
                         ->select('clan.codigoClanPk as codigo_clan')
                         ->addSelect('clan.nombre')
                         ->addSelect('clan.rating')
+                        ->addSelect('clan.fotoMiniatura as clan_foto')
                         ->where("clan.codigoJugadorFk = {$jugador}")
                         ->andWhere("clan.codigoTipoJuegoFk = {$juego}");
                     return $qb->getQuery()->getResult();
@@ -564,6 +565,7 @@ class ClanRepository extends ServiceEntityRepository
                         ->select('clan.codigoClanPk as codigo_clan')
                         ->addSelect('clan.nombre')
                         ->addSelect('clan.rating')
+                        ->addSelect('clan.fotoMiniatura as clan_foto')
                         ->where("clan.codigoJugadorFk <> {$jugador}")
                         ->andWhere("clan.codigoTipoJuegoFk = {$juego}");
                     return $qb->getQuery()->getResult();

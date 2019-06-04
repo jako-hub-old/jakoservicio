@@ -82,6 +82,11 @@ class Juego
     private $estadoCerrado = false;
 
     /**
+     * @ORM\Column(name="desafio", type="boolean", options={"default" : false}, nullable=true)
+     */
+    private $desafio;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="juegosJugadorRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -474,5 +479,21 @@ class Juego
     public function setTipoJuegoRel($tipoJuegoRel): void
     {
         $this->tipoJuegoRel = $tipoJuegoRel;
+    }
+
+    /**
+     * @param mixed $desafio
+     */
+    public function setDesafio($desafio): void
+    {
+        $this->desafio = $desafio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDesafio()
+    {
+        return $this->desafio;
     }
 }
