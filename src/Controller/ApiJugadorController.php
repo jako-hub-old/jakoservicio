@@ -104,7 +104,7 @@ class ApiJugadorController extends FOSRestController {
                 $urlImagen = "/fotos_usuario/{$nombreImagen}.{$ext}";
                 if($guardado) {
                     $origenImagen = "{$directorioDestino}/{$nombreImagen}.{$ext}";
-                    $urlMiniatura = Utilidades::get()->generarImagenMiniatura($origenImagen, $nombreImagen, $directorioDestino, 100, "jpg");
+                    $urlMiniatura = "/fotos_usuario/" . Utilidades::get()->generarImagenMiniatura($origenImagen, $nombreImagen, $directorioDestino, 100, "jpg");
                     $resultado = $em->getRepository(Jugador::class)->guardarFoto($codigoJugador, $urlImagen, $urlMiniatura);
                     if($resultado !== true) { # Si la imagen no se guardó correctamente en la entidad, la borramos.
                         unlink($directorioDestino) . "/{$nombreImagen}.{$ext}";

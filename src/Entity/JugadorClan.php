@@ -27,6 +27,21 @@ class JugadorClan
     private $codigoClanFk;
 
     /**
+     * @ORM\Column(name="confirmado", type="boolean", nullable=true)
+     */
+    private $confirmado=false;
+
+    /**
+     * @ORM\Column(name="invitacion", type="boolean", nullable=true)
+     */
+    private $invitacion=false;
+
+    /**
+     * @ORM\Column(name="solicitud", type="boolean", nullable=true)
+     */
+    private $solicitud=false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Jugador", inversedBy="clanJugadorClanRel")
      * @ORM\JoinColumn(name="codigo_jugador_fk", referencedColumnName="codigo_jugador_pk")
      */
@@ -96,5 +111,53 @@ class JugadorClan
     public function setClanRel($clanRel): void
     {
         $this->clanRel = $clanRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmado()
+    {
+        return $this->confirmado;
+    }
+
+    /**
+     * @param mixed $confirmado
+     */
+    public function setConfirmado($confirmado): void
+    {
+        $this->confirmado = $confirmado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvitacion()
+    {
+        return $this->invitacion;
+    }
+
+    /**
+     * @param mixed $invitacion
+     */
+    public function setInvitacion($invitacion): void
+    {
+        $this->invitacion = $invitacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitud()
+    {
+        return $this->solicitud;
+    }
+
+    /**
+     * @param mixed $solicitud
+     */
+    public function setSolicitud($solicitud): void
+    {
+        $this->solicitud = $solicitud;
     }
 }

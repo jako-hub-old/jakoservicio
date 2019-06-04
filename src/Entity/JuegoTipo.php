@@ -27,6 +27,11 @@ class JuegoTipo
     private $descripcion;
 
     /**
+     * @ORM\Column(type="text", nullable=true, name="icono")
+     */
+    private $icono;
+
+    /**
      * @ORM\OneToMany(targetEntity="Juego", mappedBy="tipoJuegoRel")
      */
     protected $tipoJuegoJuegoRel;
@@ -116,5 +121,21 @@ class JuegoTipo
     public function setTipoJuegoClanRel($tipoJuegoClanRel): void
     {
         $this->tipoJuegoClanRel = $tipoJuegoClanRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIcono()
+    {
+        return $this->icono;
+    }
+
+    /**
+     * @param mixed $icono
+     */
+    public function setIcono($icono): void
+    {
+        $this->icono = $icono;
     }
 }

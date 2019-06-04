@@ -7,6 +7,7 @@ use App\Entity\Clan;
 use App\Entity\Jugador;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use http\Message\Body;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,12 +19,12 @@ class ApiClanController extends FOSRestController {
 
     /**
      * @return array
-     * @Rest\Post("/v1/clan/lista")
+     * @Rest\Post("/v1/clan/buscar")
      */
-    public function lista() {
+    public function buscar() {
         try {
             $em = $this->getDoctrine()->getManager();
-            return $em->getRepository(Clan::class)->lista();
+            return $em->getRepository(Clan::class)->buscar();
         } catch (\Exception $e) {
             return [
                 'error' => true,
@@ -118,13 +119,13 @@ class ApiClanController extends FOSRestController {
         if($imagen !== false && $imagen->esValido()) {
             $ext = $imagen->getExtension();
             $tiempo = time();
-            $nombreImagen = "foto_jugador_{$nombreClan}_$tiempo";
+            $nombreImagen = "foto_clan_{$nombreClan}_$tiempo";
             $guardado = $imagen->guardar($directorioDestino, $nombreImagen, true);
             $urlImagen = "{$dirFotos}/{$nombreImagen}.{$ext}";
 
             if($guardado) {
                 $origenImagen = "{$directorioDestino}/{$nombreImagen}.{$ext}";
-                $urlMiniatura = Utilidades::get()
+                $urlMiniatura = "{$dirFotos}/" . Utilidades::get()
                                         ->generarImagenMiniatura(
                                             $origenImagen,
                                             $nombreImagen,
@@ -153,6 +154,239 @@ class ApiClanController extends FOSRestController {
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(Clan::class)->detalle($raw);
         } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/clan/invitar/amigos")
+     */
+    public function invitarAmigos(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $respuesta = $em->getRepository(Clan::class)->invitarJugadores($raw);
+            if (isset($respuesta['notificar_jugadores'])) {
+                $jugador = $respuesta['jugador_seudonimo'];
+                $titulo = "Invitación a clan";
+                $mensaje = "{$jugador} Te invita a hacer parte de su clan";
+                $this->get('notificacion')->notificarAJugadores($respuesta['notificar_jugadores'] ?? [], $titulo, $mensaje, [
+                    'type'      => 'clan-invitation',
+                    'path_data' => $respuesta['codigo_clan'],
+                    'action'    => 'yes',
+                ]);
+                return true;
+            } else {
+                return $respuesta;
+            }
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/clan/invitaciones")
+     */
+    public function listarInvitaciones(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->listarInvitacionesJugador($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/clan/invitacion/aceptar")
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function aceptarInvitacion(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->aceptarInvitacion($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/clan/invitacion/rechazar")
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function cancelarInvitacion(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->rechazarInvitacion($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @Rest\Post("/v1/clan/invitacion/aprobar")
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function aprobarSolicitud(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->aprobarSolicitud($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/unirse")
+     */
+    public function unirse(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->unirse($raw, $this->get('notificacion'));
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/solicitudes/enviadas")
+     */
+    public function solicitudesAClan(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->solicitudesEnviadas($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/solicitudes/recibidas")
+     */
+    public function solicitudesRecibidas(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->solicitudesRecibidas($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/solicitudes/rechazar")
+     * @Rest\Post("/v1/clan/solicitudes/cancelar")
+     */
+    public function rechazarSolicitud(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->cancelarSolicitud($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     * @Rest\Post("/v1/clan/abandonar")
+     */
+    public function abandonar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->abandonar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Función utilizada para listar los clanes por jugador y tipo de juego
+     * Recibe como parámetro por body (jugador, juego)
+     * @Rest\Post("/v1/clanes/jugador")
+     * @param Request $request
+     * @return array
+     */
+    public function clanesJugador(Request $request){
+        try{
+            $em  = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->clanesJugador($raw);
+        } catch (\Exception $e){
+            return [
+                'error' => true,
+                'mensaje' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Función utilizada para listar los clanes diferentes a los que esta asociado un jugador
+     * Se consulta por jugador y tipo de juego.
+     * Recibe como parámetro por body (jugador, juego)
+     * @Rest\Post("/v1/clanes/otros")
+     * @param Request $request
+     * @return array|bool
+     */
+    public function otrosClanes(Request $request){
+        try{
+            $em  = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(Clan::class)->otrosClanes($raw);
+        } catch (\Exception $e){
             return [
                 'error' => true,
                 'mensaje' => $e->getMessage(),

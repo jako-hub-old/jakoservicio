@@ -174,6 +174,10 @@ class UsuarioRepository extends ServiceEntityRepository
 
     private function enviarCodigo($telefono, $codigo) {
             $basic  = new \Nexmo\Client\Credentials\Basic(getenv('NEXMO_KEY'), getenv('NEXMO_SECRET'));
+            $telefonoDesarrollador = getenv('DEVELOPER_PHONE');
+            if($telefonoDesarrollador === $telefono) { # Validación para evitar consumir mensajes de texto en desarrollo.
+                return false;
+            }
             $client = new \Nexmo\Client($basic);
             $message = $client->message()->send([
                 'to' => "57{$telefono}",
